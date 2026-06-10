@@ -9,20 +9,14 @@
 :root{--pri:#1b2e4b;--acc:#2563eb;--grn:#16a34a;--red:#dc2626;--org:#d97706;
       --bg:#f1f5f9;--card:#fff;--txt:#0f172a;--sub:#64748b;--bdr:#e2e8f0}
 html,body{height:100%;font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--txt)}
-
-/* screens */
 .screen{display:none;min-height:100vh}
 .screen.on{display:flex}
-.center{align-items:center;justify-content:center;background:var(--pri);padding:20px}
-
-/* boxes */
+.center{align-items:center;justify-content:center;background:var(--pri);padding:20px;flex-direction:column;gap:16px}
 .box{background:var(--card);border-radius:16px;width:100%;max-width:460px;overflow:hidden}
 .box-hdr{background:var(--pri);color:#fff;padding:22px 24px}
 .box-hdr h1{font-size:17px;font-weight:800}
 .box-hdr p{font-size:12px;color:#94a3b8;margin-top:3px}
 .box-body{padding:22px 24px}
-
-/* step */
 .step{display:flex;gap:12px;margin-bottom:18px}
 .sn{width:26px;height:26px;background:var(--acc);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;margin-top:2px}
 .sc h3{font-size:13px;font-weight:700;color:var(--pri);margin-bottom:3px}
@@ -30,35 +24,24 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,sans-serif;background:var
 .sc ul{padding-left:14px}
 .sc strong{font-weight:600;color:var(--txt)}
 code{background:var(--bg);border-radius:3px;padding:1px 5px;font-family:monospace;font-size:11px}
-
-/* url field */
-.url-row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
-.url-inp{flex:1;min-width:200px;border:1.5px solid var(--bdr);border-radius:9px;padding:10px 12px;font-size:13px;font-family:monospace;color:var(--txt);background:#fff;outline:none}
+.url-inp{width:100%;border:1.5px solid var(--bdr);border-radius:9px;padding:10px 12px;font-size:13px;font-family:monospace;color:var(--txt);background:#fff;outline:none;margin-top:8px}
 .url-inp:focus{border-color:var(--acc)}
-
-/* status */
 .status-box{margin-top:10px;border-radius:9px;padding:10px 13px;font-size:12px;line-height:1.7;display:none}
 .status-box.info{background:#fef3c7;border:1px solid #fcd34d;color:#78350f}
 .status-box.ok{background:#dcfce7;border:1px solid #86efac;color:#15803d}
 .status-box.err{background:#fee2e2;border:1px solid #fca5a5;color:#991b1b}
 .debug{font-size:10px;font-family:monospace;margin-top:6px;white-space:pre-wrap;word-break:break-all;opacity:.7}
-
-/* buttons */
 .btn{border:none;border-radius:9px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .12s;font-family:inherit}
 .btn:active{transform:scale(.97)}
-.btn-pri{background:var(--acc);color:#fff}
-.btn-pri:hover{background:#1d4ed8}
-.btn-grn{background:var(--grn);color:#fff}
-.btn-grn:hover{background:#15803d}
-.btn-ghost{background:var(--bg);color:var(--txt);border:1px solid var(--bdr)}
-.btn-ghost:hover{background:var(--bdr)}
+.btn-pri{background:var(--acc);color:#fff}.btn-pri:hover{background:#1d4ed8}
+.btn-grn{background:var(--grn);color:#fff}.btn-grn:hover{background:#15803d}
+.btn-ghost{background:var(--bg);color:var(--txt);border:1px solid var(--bdr)}.btn-ghost:hover{background:var(--bdr)}
+.btn-red{background:var(--red);color:#fff}.btn-red:hover{background:#b91c1c}
 .btn-sm{padding:5px 11px;font-size:12px;border-radius:6px}
 .btn-full{width:100%;justify-content:center}
 .btn-ico{background:none;border:none;cursor:pointer;padding:4px;border-radius:6px;color:var(--sub);font-size:16px;line-height:1}
 .btn-ico:hover{background:var(--bg)}
-
-/* app layout */
-.app{display:flex;height:100vh;overflow:hidden;flex-direction:row}
+.app{display:flex;height:100vh;overflow:hidden}
 .sidebar{width:220px;background:var(--pri);color:#fff;display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;transition:transform .25s}
 .sb-logo{padding:16px 15px 10px;border-bottom:1px solid rgba(255,255,255,.1)}
 .sb-logo h1{font-size:13px;font-weight:800}
@@ -67,6 +50,7 @@ code{background:var(--bg);border-radius:3px;padding:1px 5px;font-family:monospac
 .sb-user{padding:9px 15px;border-bottom:1px solid rgba(255,255,255,.1)}
 .sb-name{font-weight:700;font-size:13px}
 .sb-role{font-size:9px;color:#94a3b8;text-transform:uppercase;letter-spacing:.6px;margin-top:2px}
+.sb-device{font-size:9px;color:#475569;margin-top:3px;font-family:monospace}
 .sb-badge{display:inline-block;border-radius:4px;padding:2px 7px;font-size:9px;font-weight:700;margin-top:4px}
 .b-admin{background:#7c3aed;color:#fff}.b-supervisor{background:#0ea5e9;color:#fff}
 .b-staff{background:#16a34a;color:#fff}.b-viewer{background:#64748b;color:#fff}
@@ -89,8 +73,6 @@ code{background:var(--bg);border-radius:3px;padding:1px 5px;font-family:monospac
 @keyframes spin{to{transform:rotate(360deg)}}
 .pages{flex:1;overflow-y:auto;padding:16px}
 .pg{display:none}.pg.on{display:block}
-
-/* cards */
 .card{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:15px 17px;margin-bottom:13px}
 .card-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
 .card-t{font-size:13px;font-weight:700;color:var(--pri)}
@@ -100,8 +82,6 @@ code{background:var(--bg);border-radius:3px;padding:1px 5px;font-family:monospac
 .st-n{font-size:22px;font-weight:800;line-height:1}
 .st-l{font-size:10px;color:var(--sub);margin-top:2px;text-transform:uppercase;letter-spacing:.4px}
 .dash2{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:13px}
-
-/* table */
 .tw{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:12px}
 th{background:var(--bg);padding:8px 10px;text-align:left;font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--bdr);white-space:nowrap}
@@ -109,27 +89,20 @@ td{padding:9px 10px;border-bottom:1px solid var(--bdr);vertical-align:middle}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#f8fafc}
 .mono{font-family:monospace;font-size:11px}
-
-/* tags */
 .tag{display:inline-block;border-radius:5px;padding:2px 7px;font-size:10px;font-weight:700;white-space:nowrap}
 .t-admin{background:#f3e8ff;color:#6b21a8}.t-supervisor{background:#e0f2fe;color:#0369a1}
 .t-staff{background:#dcfce7;color:#15803d}.t-viewer{background:#f1f5f9;color:#475569}
 .t-open{background:#dcfce7;color:#15803d}.t-closed{background:#f1f5f9;color:#475569}
 .t-shop{background:#dbeafe;color:#1e40af}.t-wh{background:#f3e8ff;color:#6b21a8}
-.t-surplus{background:#dcfce7;color:#15803d}.t-short{background:#fee2e2;color:#991b1b}
-.t-exact{background:#dbeafe;color:#1e40af}.t-pend{background:#fef3c7;color:#92400e}
-.t-uom{background:#f0fdf4;color:#166534}.t-on{background:#dcfce7;color:#15803d}
-.t-off{background:#fee2e2;color:#991b1b}
-
-/* forms */
+.t-uom{background:#f0fdf4;color:#166534}
+.t-on{background:#dcfce7;color:#15803d}.t-off{background:#fee2e2;color:#991b1b}
+.t-pend{background:#fef3c7;color:#92400e}.t-exact{background:#dbeafe;color:#1e40af}
 .fld{display:flex;flex-direction:column;margin-bottom:11px}
 .fld label{font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
 .fld input,.fld select,.fld textarea{border:1.5px solid var(--bdr);border-radius:8px;padding:9px 11px;font-size:14px;color:var(--txt);background:#fff;outline:none;width:100%;font-family:inherit}
 .fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--acc)}
 .fld textarea{resize:vertical;min-height:58px}
 .f2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-
-/* modal */
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;align-items:center;justify-content:center;padding:14px}
 .modal-bg.on{display:flex}
 .modal{background:var(--card);border-radius:13px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;animation:mIn .18s ease}
@@ -138,8 +111,6 @@ tr:hover td{background:#f8fafc}
 .modal-hdr h2{font-size:14px;font-weight:700;color:var(--pri)}
 .modal-body{padding:15px 17px}
 .modal-foot{padding:11px 17px;border-top:1px solid var(--bdr);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:var(--card)}
-
-/* bottom sheet */
 .sh-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:90;align-items:flex-end;justify-content:center}
 .sh-bg.on{display:flex}
 .sheet{background:var(--card);border-radius:18px 18px 0 0;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;animation:shUp .2s ease}
@@ -160,8 +131,6 @@ tr:hover td{background:#f8fafc}
 .pb{flex:1;border:1.5px solid var(--bdr);border-radius:8px;padding:8px 4px;text-align:center;font-size:13px;font-weight:700;cursor:pointer;background:var(--card)}
 .pb:active{background:var(--bg)}
 .blind{background:#fefce8;border:1px solid #fde047;border-radius:8px;padding:8px 11px;font-size:12px;color:#713f12;margin-bottom:11px}
-
-/* camera */
 .cam-wrap{display:none;position:fixed;inset:0;background:#000;z-index:95;flex-direction:column}
 .cam-wrap.on{display:flex}
 .cam-hdr{background:var(--pri);color:#fff;padding:12px 15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
@@ -174,8 +143,6 @@ tr:hover td{background:#f8fafc}
 .cam-res{width:100%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:8px;padding:9px 11px;font-size:14px;margin-bottom:9px;outline:none;font-family:monospace}
 .cam-res::placeholder{color:rgba(255,255,255,.35)}
 .cam-add{width:100%;background:var(--acc);color:#fff;border:none;border-radius:8px;padding:11px;font-size:14px;font-weight:700;cursor:pointer}
-
-/* misc */
 .loading{display:flex;align-items:center;gap:10px;padding:34px;color:var(--sub);font-size:13px;justify-content:center}
 .spinner{width:18px;height:18px;border:2.5px solid var(--bdr);border-top-color:var(--acc);border-radius:50%;animation:spin .7s linear infinite}
 .empty{text-align:center;padding:34px;color:var(--sub);font-size:13px}
@@ -202,6 +169,15 @@ tr:hover td{background:#f8fafc}
 .toast.on{opacity:1}
 .alert-w{background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:9px 12px;font-size:12px;color:#78350f;margin-bottom:11px;line-height:1.7}
 
+/* Active sessions table */
+.sess-mgmt{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:15px 17px;margin-bottom:13px}
+.sess-mgmt h3{font-size:13px;font-weight:700;color:var(--pri);margin-bottom:12px}
+.act-sess-row{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-radius:8px;background:var(--bg);margin-bottom:6px;gap:10px}
+.act-sess-info{flex:1;min-width:0}
+.act-sess-user{font-size:13px;font-weight:600}
+.act-sess-meta{font-size:10px;color:var(--sub);margin-top:2px}
+.act-sess-device{font-size:10px;font-family:monospace;color:var(--sub)}
+
 @media(max-width:768px){
   .sidebar{position:fixed;top:0;left:0;bottom:0;z-index:50;transform:translateX(-220px)}
   .sidebar.open{transform:translateX(0)}
@@ -215,7 +191,7 @@ tr:hover td{background:#f8fafc}
 </head>
 <body>
 
-<!-- SETUP ─────────────────────────────────────────────── -->
+<!-- SETUP -->
 <div id="scSetup" class="screen on center">
   <div class="box">
     <div class="box-hdr"><h1>📦 Stock Count System</h1><p>One-time setup — connect to Google Sheets</p></div>
@@ -225,29 +201,20 @@ tr:hover td{background:#f8fafc}
         <p>Go to <strong>sheets.google.com</strong> → <strong>Blank</strong> → rename it <strong>Stock Count DB</strong></p>
       </div></div>
       <div class="step"><div class="sn">2</div><div class="sc">
-        <h3>Open Apps Script &amp; paste Code.gs</h3>
-        <p>In the sheet: <strong>Extensions → Apps Script</strong> → select all code → delete → paste the <strong>Code.gs</strong> file → <strong>Save (Ctrl+S)</strong></p>
+        <h3>Paste Code.gs &amp; run setup</h3>
+        <p>Extensions → Apps Script → delete all code → paste <strong>Code.gs</strong> → Save → select <strong>setupAllSheets</strong> → ▶ Run → Authorize</p>
       </div></div>
       <div class="step"><div class="sn">3</div><div class="sc">
-        <h3>Run <code>setupAllSheets</code> once</h3>
-        <p>In Apps Script: change the function dropdown to <strong>setupAllSheets</strong> → click <strong>▶ Run</strong> → authorize when asked. This creates all tabs and default accounts.</p>
-      </div></div>
-      <div class="step"><div class="sn">4</div><div class="sc">
         <h3>Deploy as Web App</h3>
         <ul>
-          <li>Click <strong>Deploy → New deployment</strong></li>
-          <li>Type: <strong>Web app</strong></li>
-          <li>Execute as: <strong>Me</strong></li>
-          <li>Who has access: <strong>Anyone</strong></li>
-          <li>Click <strong>Deploy → Authorize → Allow</strong></li>
-          <li>Copy the <code>/exec</code> URL</li>
+          <li>Deploy → New deployment → <strong>Web app</strong></li>
+          <li>Execute as: <strong>Me</strong> &nbsp;|&nbsp; Who has access: <strong>Anyone</strong></li>
+          <li>Deploy → Authorize → Allow → copy <code>/exec</code> URL</li>
         </ul>
       </div></div>
-      <div class="step"><div class="sn">5</div><div class="sc">
-        <h3>Paste URL and test</h3>
-        <div class="url-row">
-          <input id="apiUrlInp" class="url-inp" placeholder="https://script.google.com/macros/s/AKfycb.../exec" />
-        </div>
+      <div class="step"><div class="sn">4</div><div class="sc">
+        <h3>Paste URL and connect</h3>
+        <input id="apiUrlInp" class="url-inp" placeholder="https://script.google.com/macros/s/AKfycb.../exec"/>
         <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
           <button class="btn btn-pri" onclick="doTest()">🔗 Test Connection</button>
           <button class="btn btn-grn" id="launchBtn" style="display:none" onclick="goLogin()">🚀 Launch App</button>
@@ -258,8 +225,8 @@ tr:hover td{background:#f8fafc}
   </div>
 </div>
 
-<!-- LOGIN ─────────────────────────────────────────────── -->
-<div id="scLogin" class="screen center" style="flex-direction:column">
+<!-- LOGIN -->
+<div id="scLogin" class="screen center">
   <div class="box" style="max-width:360px">
     <div class="box-hdr" style="text-align:center;padding:26px 22px 18px">
       <div style="font-size:38px;margin-bottom:8px">📦</div>
@@ -276,9 +243,10 @@ tr:hover td{background:#f8fafc}
       </div>
     </div>
   </div>
+  <div style="text-align:center;font-size:10px;color:rgba(255,255,255,.3);margin-top:8px" id="deviceIdLabel"></div>
 </div>
 
-<!-- APP ───────────────────────────────────────────────── -->
+<!-- APP -->
 <div id="scApp" class="screen app">
   <div class="sidebar" id="sidebar">
     <div class="sb-logo">
@@ -290,6 +258,7 @@ tr:hover td{background:#f8fafc}
       <div class="sb-name" id="sbName">—</div>
       <div class="sb-role" id="sbRole">—</div>
       <span class="sb-badge" id="sbBadge">—</span>
+      <div class="sb-device" id="sbDevice"></div>
     </div>
     <nav class="sb-nav" id="sbNav"></nav>
     <div class="sb-foot"><div class="logout" onclick="doLogout()">🚪 Sign Out</div></div>
@@ -302,14 +271,12 @@ tr:hover td{background:#f8fafc}
     </div>
     <div class="pages">
 
-      <!-- DASHBOARD -->
       <div class="pg" id="v-dash">
         <div class="stats" id="dStats"></div>
         <div class="dash2" id="dGrid"></div>
         <div class="card"><div class="card-h"><span class="card-t">🕐 Recent Activity</span></div><div id="dAudit"></div></div>
       </div>
 
-      <!-- SESSIONS -->
       <div class="pg" id="v-sessions">
         <div class="row-b"><h2 style="font-size:15px;font-weight:700;color:var(--pri)">Stock Count Sessions</h2>
         <button class="btn btn-pri btn-sm" onclick="openNewSess()">+ New Session</button></div>
@@ -319,19 +286,23 @@ tr:hover td{background:#f8fafc}
         </div></div>
       </div>
 
-      <!-- USERS -->
       <div class="pg" id="v-users">
         <div class="row-b"><h2 style="font-size:15px;font-weight:700;color:var(--pri)">User Management</h2>
         <button class="btn btn-pri btn-sm" onclick="openAddUser()">+ Add User</button></div>
         <div class="card"><div class="tw">
-          <table><thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Branch</th><th>Status</th><th>Actions</th></tr></thead>
+          <table><thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Branch</th><th>Status</th><th>Logged In</th><th>Actions</th></tr></thead>
           <tbody id="userTb"></tbody></table>
         </div></div>
       </div>
 
-      <!-- COUNT -->
+      <div class="pg" id="v-active-sessions">
+        <div class="row-b"><h2 style="font-size:15px;font-weight:700;color:var(--pri)">Active Device Sessions</h2>
+        <button class="btn btn-ghost btn-sm" onclick="loadActiveSessions()">↻ Refresh</button></div>
+        <div id="activeSessionsList"></div>
+      </div>
+
       <div class="pg" id="v-count">
-        <div id="noSessMsg" class="alert-w" style="display:none">No active session assigned to you. Ask your supervisor to open a session and assign you to it.</div>
+        <div id="noSessMsg" class="alert-w" style="display:none">No active session assigned. Ask your supervisor.</div>
         <div id="countArea" style="display:none">
           <div class="sess-banner" id="sessBanner"></div>
           <div class="row" style="margin-bottom:10px;gap:8px">
@@ -350,14 +321,12 @@ tr:hover td{background:#f8fafc}
         </div>
       </div>
 
-      <!-- SUBMISSIONS -->
       <div class="pg" id="v-subs">
         <div class="row-b"><h2 style="font-size:15px;font-weight:700;color:var(--pri)">Staff Submissions</h2>
         <select class="srch" id="subFilter" style="max-width:200px" onchange="loadSubs()"><option value="">All Sessions</option></select></div>
         <div id="subCards"></div>
       </div>
 
-      <!-- COMPILED -->
       <div class="pg" id="v-compiled">
         <div class="row-b"><h2 style="font-size:15px;font-weight:700;color:var(--pri)">Compiled Report</h2>
         <div class="row">
@@ -367,7 +336,6 @@ tr:hover td{background:#f8fafc}
         <div id="compiledArea"></div>
       </div>
 
-      <!-- PRODUCTS -->
       <div class="pg" id="v-products">
         <div class="row-b"><h2 style="font-size:15px;font-weight:700;color:var(--pri)">Products — 956 SKUs</h2>
         <input class="srch" id="prodSrch" style="max-width:240px" placeholder="🔍 Search…" oninput="renderProds()"/></div>
@@ -377,7 +345,6 @@ tr:hover td{background:#f8fafc}
         </div></div>
       </div>
 
-      <!-- AUDIT -->
       <div class="pg" id="v-audit">
         <div class="row-b"><h2 style="font-size:15px;font-weight:700;color:var(--pri)">Audit Log</h2></div>
         <div class="card"><div class="tw" style="max-height:65vh;overflow-y:auto">
@@ -390,7 +357,7 @@ tr:hover td{background:#f8fafc}
   </div>
 </div>
 
-<!-- COUNT SHEET ─────────────────────────────────────────── -->
+<!-- COUNT SHEET -->
 <div class="sh-bg" id="shBg" onclick="shBgClick(event)">
   <div class="sheet">
     <div class="drag"></div>
@@ -425,7 +392,7 @@ tr:hover td{background:#f8fafc}
   </div>
 </div>
 
-<!-- USER MODAL ─────────────────────────────────────────── -->
+<!-- USER MODAL -->
 <div class="modal-bg" id="mUser">
   <div class="modal">
     <div class="modal-hdr"><h2 id="mUserTitle">Add User</h2><button class="btn-ico" onclick="closeM('mUser')" style="font-size:20px">✕</button></div>
@@ -459,7 +426,7 @@ tr:hover td{background:#f8fafc}
   </div>
 </div>
 
-<!-- SESSION MODAL ─────────────────────────────────────── -->
+<!-- SESSION MODAL -->
 <div class="modal-bg" id="mSess">
   <div class="modal">
     <div class="modal-hdr"><h2>New Session</h2><button class="btn-ico" onclick="closeM('mSess')" style="font-size:20px">✕</button></div>
@@ -486,7 +453,7 @@ tr:hover td{background:#f8fafc}
   </div>
 </div>
 
-<!-- SUBMISSION DETAIL ─────────────────────────────────── -->
+<!-- SUBMISSION DETAIL -->
 <div class="modal-bg" id="mSub">
   <div class="modal">
     <div class="modal-hdr"><h2 id="mSubTitle">Submission</h2><button class="btn-ico" onclick="closeM('mSub')" style="font-size:20px">✕</button></div>
@@ -495,7 +462,7 @@ tr:hover td{background:#f8fafc}
   </div>
 </div>
 
-<!-- CAMERA ─────────────────────────────────────────────── -->
+<!-- CAMERA -->
 <div class="cam-wrap" id="camWrap">
   <div class="cam-hdr">
     <span style="font-size:14px;font-weight:700">📷 Scan Barcode / QR</span>
@@ -518,240 +485,404 @@ tr:hover td{background:#f8fafc}
 const CAT={"01030001": ["BABY TOWEL 100X120CM #32578-KSK-617", [["EACH", 29.9]]], "01030002": ["BABY COTTON BLANKET 2PCS #RF-871", [["EACH", 29.9]]], "01030003": ["BABY WATERPROOF MAT #MH5003", [["EACH", 19.9]]], "01030004": ["BABY RABBIT PILLOW #A-162", [["EACH", 19.9]]], "01030005": ["BABY WATERPROOF BIB YZ-23 #32578-5", [["EACH", 7.9]]], "01030006": ["BABY FLUFFY FLEECE BLANKET #32578-2-KSK602", [["EACH", 29.9]]], "01030007": ["BABY BLANKET #32610-2-8022", [["EACH", 35.9]]], "01030008": ["BABY TOWEL #32610-4-6015", [["EACH", 25.9]]], "01030009": ["BABY BEAR BLANKET #32596-1-219", [["EACH", 49.9]]], "01030010": ["BABY TOWEL 60*120 #32610-1", [["EACH", 25.9]]], "01030011": ["BABY FLUFFY FLEECE BLANKET #32578-3-KSK609", [["EACH", 29.9]]], "01030012": ["BABY TOWEL BIB #31241-3", [["EACH", 5.9], ["PACK", 65.9]]], "01030013": ["HK BABY TOWEL #31241-5", [["EACH", 6.9], ["PACK", 64.9]]], "01030014": ["BABY FLU FLEECE TOWEL 1832#32610-3-1012", [["EACH", 25.9]]], "01030015": ["HANG HAND TOWEL 0458 #306756-2", [["EACH", 4.9]]], "01030016": ["FANCY ASSORTED TOWEL PACK 12PCS #CT025", [["3", 3.9], ["EACH", 12.9]]], "01030017": ["FANCY TOWEL MICRO FIBER (CRT)#TW-CTMFC", [["EACH", 19.9]]], "01030018": ["FANCY BLANKET #BLK002", [["EACH", 39.9]]], "01030019": ["BABY TOWEL 0870 #1990 #RK1", [["EACH", 7.9]]], "01030020": ["BABY HAMPER RM99 #RK1", [["EACH", 99.0]]], "01030021": ["BABY HAMPER RM109 #RK1", [["EACH", 109.0]]], "01430001": ["FANCY KIDS CAP WITH NETTING 1140 #7721-2 #RK1", [["EACH", 12.9]]], "01430002": ["FANCY KIDS CAP 1329 #7721-1 #RK1", [["EACH", 15.9]]], "01430003": ["FANCY CAP WITH NET 1451 #4053 #RK1", [["EACH", 15.9]]], "01430004": ["FANCY CAP 1548 #4053 #RK1", [["EACH", 15.9]]], "02050001": ["NW SHOPPING BAG SMALL #KS", [["EACH", 3.5]]], "02050002": ["NW SHOPPING BAG MEDIUM #KS", [["EACH", 4.9]]], "02050003": ["NW SHOPPING BAG MEDIUM 2 #KS", [["EACH", 4.5]]], "02050004": ["NW SHOPPING BAG WITH OPEN HANDLE #KS", [["EACH", 3.9]]], "02050005": ["NW 23*20 BAG 0293 #306765-1", [["EACH", 3.5]]], "02050006": ["NW 30*20 BAG 0311 #306765-2", [["EACH", 4.5]]], "02050007": ["NW 33*27  BAG 0366 #306765-3", [["EACH", 4.9]]], "02050008": ["NW 40*30  BAG 0421 #306765-4", [["EACH", 5.9]]], "02050009": ["NW SHOPPING 69X55CM #RK1", [["EACH", 14.9]]], "02050010": ["NW SHOPPING 60X45CM #RK1", [["EACH", 12.9]]], "02050011": ["NW SHOPPING 39X45CM #RK1", [["EACH", 9.9]]], "02050012": ["NW SHOPPING 54X63CM #RK1", [["EACH", 12.9]]], "02050013": ["NW SHOPPING 50X54CM #RK1", [["EACH", 10.9]]], "02060001": ["SHOPPING BAG #ZD002", [["PCS", 15.9]]], "02060002": ["SHOPPING BAG #FB-001", [["PCS", 11.9]]], "02060003": ["METAL VASE 40CM WHITE #32594-3", [["EACH", 35.9]]], "02060004": ["METAL VASE 35CM WHITE #32594-4", [["EACH", 29.9]]], "02060005": ["HANDMADE BAG SMALL 1132 #682480-2", [["EACH", 9.9]]], "02060006": ["FABRICBAG BIG 2299 #682480-3", [["EACH", 25.9]]], "02060007": ["ARROWBAG BIG 1980 #682480-4", [["EACH", 21.9]]], "02060008": ["LEATHER STRIP HANDLE 1650 #682480-5", [["EACH", 19.9]]], "02060009": ["WALL HANG STORAGE FABRIC 1471 #5004346-2", [["EACH", 15.9]]], "02060010": ["40X30X13CM CARPET SHOPPING BAG 2940 #6614854-39 #RK1", [["EACH", 25.9]]], "02160001": ["HAPPY BIRTHDAY PAPER BAG 31X44X12 0600 #52167", [["EACH", 6.9]]], "02160002": ["HAPPY BIRTHDAY PAPER BAG 26X32X12 0450 #52167", [["EACH", 5.9]]], "02260001": ["N.WOVEN BAG 10PCS 40*30 1362 #682499-22", [["EACH", 2.5], ["PACK", 9.9]]], "02260002": ["PAPERBAG PBSDK-012M004M009M002M #IS", [["EACH", 5.9]]], "02260003": ["PAPERBAG PB-195/143B/009B012 #IS", [["EACH", 6.5]]], "02260004": ["PAPERBAG PBSDK-007S/013S/012S/001S/004S/008S #IS", [["EACH", 2.9]]], "02260005": ["PAPERBAG PBFG-134M/097M/153-03M/129M", [["EACH", 4.9]]], "02260006": ["ASSORTED GIFT BAG 10PCS 0600 #KS", [["EACH", 6.5]]], "02260007": ["XM 22X33X45CM PAPERBAG 0900 #PRB-450 0898/0937/0941/0905", [["EACH", 7.9]]], "02260008": ["XM 14X29X39.5CM PAPER BAG 0600 #4557-PRB-290-0902/0912/1004", [["EACH", 6.5]]], "02260009": ["FANCY PAPERBAG(M)0567 #1700-BJB404M", [["EACH", 6.5]]], "02260010": ["FANCY PAPERBAG(S)0396#1700-BJB404S", [["EACH", 3.6]]], "02260011": ["FANCY PAPERBAG(SS)0282 #1700-BJB404SS", [["EACH", 2.7]]], "02260012": ["PAPER BAG 25*20*10 0197 #708530-3", [["EACH", 3.6]]], "02260013": ["THANK YOU FLORAL PAPER BAG #484-PB1020", [["EACH", 18.9]]], "02260014": ["PAPER BAG 10PCS 1650 #6067772-7", [["10", 12.9], ["EACH", 2.9]]], "02260015": ["PAPERBAG 13.5*17.5*6.5CM 0600 #29082-PB199M", [["EACH", 4.9]]], "02260016": ["PAPERBAG 17*21*7 0840 #484-PB1004", [["EACH", 6.9]]], "02260017": ["RG PLASTIC BAG 100PCS 0840 #6178-CB50-15X20", [["EACH", 7.9]]], "02260018": ["RG PLASTIC BAG 100PCS 0840 #6178-CB50-20X25", [["EACH", 9.9]]], "02260019": ["RG PLASTIC BAG 100PCS 0840 #6178-CB50-23X33", [["EACH", 12.9]]], "02260020": ["RG TERIMA KASIH 1050 M #6178-3052", [["EACH", 7.4]]], "02260021": ["RG TERMIA KASIH PAPER BAG 1950 #6178-BB3051-XL", [["EACH", 15.9]]], "02260022": ["RG RAINBOW PAPER BAG 0660#6178BB3044-S", [["EACH", 4.6]]], "02260023": ["RG SATIN BAG RIBBON 2700 #6330-CB37", [["EACH", 27.2]]], "02260024": ["PAPER BAG SQUARE WITH HANDLE", [["EACH", 3.9]]], "02260025": ["PAPER BAG WITH ROUND HANDLE", [["EACH", 2.7]]], "02260026": ["XM 43X55X15CM PAPER BAG 1050 #48581-PRB-011/6181M", [["EACH", 12.1]]], "02260027": ["XM 70X50X20CM PAPERBAG 1350 #48581-6181/011/4C", [["EACH", 18.9]]], "02260028": ["ANIMAL PAPERBAG 0284 #1601316-1500", [["EACH", 6.5]]], "02260029": ["OY THANKYOU 33X25X10CM 2040 #29862-PB226", [["EACH", 15.9]]], "02260030": ["OY THANKYOU 30X20X10CM 1740 #29862-PB221", [["EACH", 13.9]]], "02260031": ["OY THANKYOU 21X18X7CM 0900 #29862-PB220L", [["EACH", 6.9]]], "02260032": ["OY THANKYOU 18X14X7CM 0660 #29862-PB220", [["EACH", 4.9]]], "02260033": ["XM 26.5X19.9X9 PAPERBAG 0300#50175-PRB-190-001-002-003-004-005-006", [["EACH", 2.7]]], "02260034": ["XM 32X24X10 PAPERBAG 0450#50175-PRB-240-001-002-003-004-005-006", [["EACH", 4.6]]], "02260035": ["XM 36.5X28X15 PAPERBAG 0555#50175-PRB-280-001-002-003-004-005-006", [["EACH", 6.5]]], "02260036": ["OY THANKYOU 18X10X7CM 0660 30297-PB220H", [["EACH", 4.9]]], "02260037": ["ASSORTED BROWN PAPERBAG 0180#51141-", [["EACH", 3.9]]], "02260038": ["BROWN PAPER31.5X42CM 0225 #51141", [["EACH", 4.9]]], "02260039": ["26.5X11X35CM PAPERBAG 0450 #52167", [["EACH", 5.9]]], "02260040": ["OU PAPER BAG 13.5X17CM 0750 #32064-PB246M", [["EACH", 5.9]]], "02260041": ["OU PAPER BAG 18X20.5CM 0960#32064-PB246M", [["EACH", 6.9]]], "02260042": ["OU PAPER BAG 10X21CM 0750 #32064-PB246M", [["EACH", 5.9]]], "02260043": ["OY SMALL GIFTBOX 0540 #32064-PB243", [["EACH", 3.9]]], "02260044": ["XM 24.5X14X24.5 PAPERBAG 0315 #53647-6322", [["EACH", 3.5]]], "02260045": ["26X11X35CM PAPERBAG 0315 #53647-PRB-6323", [["EACH", 3.9]]], "02260046": ["XM UNICORN PAPERBAG 0540 #55433-PRB-6415L", [["EACH", 7.9]]], "02260047": ["XM UNICORN PAPERBAG 0450#55433-PRB-6415M", [["EACH", 6.5]]], "02260048": ["XM UNICORN PAPERBAG 0540 #55433-PRB-6415S", [["EACH", 3.9]]], "02260049": ["HK CHROME FACE PAPERBAG 0999 #6228630-1 #RK1", [["10", 29.9], ["EACH", 3.5]]], "02260050": ["HK PAPERBAG 0999 #6228630-2 #RK1", [["10", 35.9], ["EACH", 3.9]]], "02260051": ["RG GRASS PAPERBAG 1950 #23907-BB6613", [["EACH", 13.9]]], "02260052": ["RG PAPERBAG A4 1650 #23907-BB3304-A", [["EACH", 13.9]]], "02260053": ["RG PAPERBAG XL 1650 #23907-BB3304-XK", [["EACH", 15.9]]], "02260054": ["RG PAPERBAG 16X14X11 1260 #23907-BB3309", [["EACH", 9.9]]], "02260055": ["RG PAPERBAG 18X16X11 1500#23907-BB3309", [["EACH", 10.9]]], "02260056": ["RG PAPERBAG 21X18X7 0990#23907-BB3314-BC", [["EACH", 7.9]]], "02260057": ["RG PAPERBAG L SIZE 1020 #27322-BB3374L", [["EACH", 7.9]]], "02260058": ["RG PAPERBAG L SIZE 1020 #27322-BB3364L", [["EACH", 7.9]]], "02260059": ["RG PAPERBAG 21X7X12CM 0780 #27322-BB3332", [["EACH", 9.9]]], "02260060": ["RG PAPER BAG 23.5X9.5X19CM 1050 #27322-BB3334", [["EACH", 12.9]]], "02260061": ["TIRIANGLE TRAN TWIST TIES 0750 #27322-CB39-13X25", [["EACH", 7.9]]], "02260062": ["PLASTIC BAG 34X24CM #RK1", [["EACH", 15.9]]], "02260063": ["PLASTIC BAG 40X30CM 1500 #RK1", [["EACH", 19.9]]], "02260064": ["PAPER BAG 28*20*10 1950 #12159-PB-275", [["EACH", 14.9]]], "02260065": ["PAPERBAG L SIZE 18*21*7 1080 #12159-PB-250", [["EACH", 6.9]]], "02260066": ["XM 17.5X23X9.5CM PAPERBAG 0270 #65668-PRB-19011A B C D", [["EACH", 2.5]]], "02260067": ["XM UNICORN 17.5X23X9.5CM PAPERBAG 0270 #65668-PRB-6001A-S", [["EACH", 2.5]]], "02260068": ["XM UNICORN 17.5X23X9.5CM PAPERBAG 0270 #65668-PRB-6001B-S", [["EACH", 2.5]]], "02260069": ["XM BLINK FEATHER 31X11X42CM 0750#65668-YM35001-L", [["EACH", 7.9]]], "02260070": ["XM BLINK HB 31X11X42CM 0750#65668-SR6001-L", [["EACH", 7.9]]], "02260071": ["XM BLINK DONUT 31X11X42CM 0750#65668-SR3005-L", [["EACH", 7.9]]], "02260072": ["XM BLINK LOVE 31X11X42CM 0750#65668-YM32001-L", [["EACH", 7.9]]], "02260073": ["XM BLINK FEATHER 31X11X42CM 0750#65668-YM32001-L", [["EACH", 7.9]]], "02260074": ["XM BLINK FANCY 31X11X42CM 0750#65668-YM32001-L", [["EACH", 7.9]]], "02260075": ["PLASTIC SHOPPING BAG WITH HANDLE  25X30CM #RK1", [["EACH", 29.9]]], "02260076": ["PLASTIC SHOPPING BAG WITH HANDLE 30X35CM #RK1", [["EACH", 35.9]]], "02260077": ["GIFT QUICK BOX 216*165*310 #S-020985-HBX220", [["EACH", 11.9]]], "02260078": ["45*33*22 PAPERBAG #S-020985-16-PBA", [["EACH", 8.9]]], "02260079": ["35*32*15 PAPERBAG #S-020985-16-PBB", [["EACH", 5.9]]], "02260080": ["25*21*10 PAPERBAG #S-020985-16-PBC", [["EACH", 3.5]]], "02260081": ["37*28*15 GIFT PAPERBAG #S-020985-16-GBAA", [["EACH", 5.9]]], "02260082": ["31.5*24.5*12.5 GIFT PAPERBAG #S-020985-16-GBA", [["EACH", 4.9]]], "02260083": ["27*19.4*8.6 GIFT PAPERBAG #S-020985-16-GBB", [["EACH", 3.9]]], "02260084": ["XM 31X11X42CM PAPERBAG 0750 #66336-PRB-SH35001-L", [["EACH", 7.9]]], "02260085": ["XM 31X11X42CM PAPERBAG 0750 #66336-PRB-DJS6006-L", [["EACH", 7.9]]], "02260086": ["XM 31X11X42CM PAPERBAG 0750 #66336-PRB-YM32002-L", [["EACH", 7.9]]], "02260087": ["XM 25X11X32CM PAPERBAG 0570 #66336-PRB-SH35001-M", [["EACH", 5.9]]], "02260088": ["XM 25X11X32CM PAPERBAG 0570 #66336-PRB-DJS6006-M", [["EACH", 5.9]]], "02260089": ["XM 25X11X32CM PAPERBAG 0570 #66336-PRB-XYC1001D-M", [["EACH", 5.9]]], "02260090": ["XM 17.5X9.5X23CM PAPERBAG 0570 #66336-HD21001-S", [["EACH", 3.9]]], "02260091": ["25X11X32CM PAPERBAG 0675#67640-PRB-220415AB-M", [["EACH", 5.9]]], "02260092": ["25X11X32CM PAPERBAG 0675#67640-PRB-220428AB-M", [["EACH", 5.9]]], "02260093": ["25X11X32CM PAPERBAG 0675#67640-PRB-220505AB-M", [["EACH", 5.9]]], "02260094": ["25X11X32CM PAPERBAG 0675#67640-PRB-220410AB-M", [["EACH", 5.9]]], "02260095": ["25X11X32CM PAPERBAG 0675#67640-PRB-116001AD-M", [["EACH", 5.9]]], "02260096": ["31X42X11CM PAPERBAG 0540 #67640-PRB-19001A-L", [["EACH", 7.9]]], "02260097": ["31X42X11CM PAPERBAG 0540 #67640-PRB-19001B-L", [["EACH", 7.9]]], "02260098": ["31X42X11CM PAPERBAG 0540 #67640-PRB-19001C-L", [["EACH", 7.9]]], "02260099": ["31X42X11CM PAPERBAG 0540 #67640-PRB-19001D-L", [["EACH", 7.9]]], "02260100": ["31X42X11CM PAPERBAG 0540 #67640-PRB-16001ABCD-L", [["EACH", 7.9]]], "02260101": ["31X42X11CM PAPERBAG 0540 #67640-PRB-200410AB-L", [["EACH", 7.9]]], "02260102": ["31X42X11CM PAPERBAG 0540 #67640-PRB-220428AB-L", [["EACH", 7.9]]], "02260103": ["31X42X11CM PAPERBAG 0540 #67640-PRB-220415AB-L", [["EACH", 7.9]]], "02260104": ["31X42X11CM PAPERBAG 0540 #67640-PRB-220505AB-L", [["EACH", 7.9]]], "02260105": ["RG CRAFT PAPER BAG 5X8 1950#2212-338-BB3505", [["EACH", 15.9]]], "02260106": ["RG 24X13X7 PAPER BAG NO HANDLE 1950 #2212-338-BB3487", [["EACH", 19.9]]], "02260107": ["RG PAPER BAG XL 2340#2212-351-BB3394XL", [["EACH", 19.9]]], "02260108": ["RG PAPER BAG 21X10X7CM S 0450#2212-303-BB3481S", [["EACH", 6.9]]], "02260109": ["RG PAPER BAG L 21X18X7CM 1140 #2212-453-BB3481L", [["EACH", 7.9]]], "02260110": ["RG PAPER BAG M 17X14X7CM 0960 #2212-453-BB3481M", [["EACH", 6.9]]], "02260111": ["KOTAK TELUR 50PCS 0825 #2033995-KT-HTC-KT8000-21", [["EACH", 5.9]]], "02260112": ["IC PAPERBAG 16X18X11CM 1740 #IN-022635-PB1860", [["EACH", 12.9]]], "02260113": ["IC PAPERBAG 33X25X10CM 3450 #IN-022635-PB1846", [["EACH", 35.9]]], "02260114": ["HT PAPERBAG 21.5X18X7 1350#2033995-PP5588", [["EACH", 7.9]]], "02260115": ["HT PAPERBAG 18X13.5X17 1140#2033995-PP6688", [["EACH", 6.9]]], "02260116": ["HT PAPERBAG 18X24X7.5 0600#2033995-PROMO", [["EACH", 1.0], ["PACK", 7.9]]], "02260117": ["IC 32X26X8 NW BAG 1680 #IN-022635-BW1083", [["EACH", 15.9]]], "02260118": ["IC NW 24S24S9CM 1080 #IN-022635-BW1633", [["EACH", 9.9]]], "02260119": ["IC BAG ORGANZA 9X12CM 100PCS  #IN-022635-BO1210", [["EACH", 29.9]]], "02260120": ["PP PLASTIC FLOWER BAG L 0501 #2716-26*24*11 #RK1", [["EACH", 7.9]]], "02260121": ["PP PLASTIC FLOWER BAG M 0441 #2716-20*18*10*10 #RK1", [["EACH", 5.9]]], "02260122": ["PP PLASTIC FLOWER BAG S 0381 #2716-16*16*8*8 #RK1", [["EACH", 3.9]]], "02260123": ["XMAS WINDOW PAPERBAG 0501 #2716-35*15*25 #RK1", [["EACH", 4.9]]], "02260124": ["PINK WHITE WINDOW PAPERBAG 0501 #2716-35*15*25 #RK1", [["EACH", 4.9]]], "02260125": ["PLASTIC BAG 50X42CM 4800 #6614854-36 #RK1", [["EACH", 35.9]]], "02260126": ["PLASTIC BAG 55X46CM 4800 #6614854-35 #RK1", [["EACH", 49.9]]], "02260127": ["PLASTIC BAG THICK 35X25 1950#6614854-37 #RK1", [["EACH", 15.9]]], "02260128": ["PP PLASTIC FLOWER BAG S 0390 #2716-16x15x17cm #RK1", [["EACH", 4.9]]], "02260129": ["PP PLASTIC FLOWER BAG M 0510#2716-23x18x24cm #RK1", [["EACH", 6.9]]], "02260130": ["PP PLASTIC FLOWER BAG M 0441 #2716-25x22x25cm #RK1", [["EACH", 7.9]]], "02260131": ["PAPER BAG PB-288XL", [["EACH", 14.9]]], "02260132": ["PAPERBAG PB-601M", [["EACH", 6.9]]], "02260133": ["PAPERBAG PB603L", [["EACH", 8.9]]], "02260134": ["THANK YOU PAPER BAG 21.5X16CM #KS", [["EACH", 1.9]]], "02260135": ["42CM X31 PAPERBAG TX3011A-L #KS", [["EACH", 7.9]]], "02260136": ["SLIVER BLINK PAPERBAG #KS", [["EACH", 3.5]]], "02260137": ["THE WEDDING SWEET HEART PAPERBAG #KS", [["EACH", 3.9]]], "02260138": ["BROWN FLOWER VASE PAPERBAG #KS", [["EACH", 5.9]]], "02260139": ["TRANSPARENT LONG PLASTIC BAG #KS", [["EACH", 6.9]]], "02260140": ["SQUARE TRANSPARENT PAPERBAG WHITE #KS", [["EACH", 6.9]]], "02260141": ["SQUARE TRANSPARENT PAPERBAG BLACK #KS", [["EACH", 6.9]]], "02260142": ["TRANSPARENT PLASTIC BAG WITH LEATHER WHITE HANDLE #RK1", [["EACH", 5.9]]], "02260143": ["TRANSPARENT PLASTIC BAG WITH LEATHER GOLD HANDLE #RK1", [["EACH", 4.9]]], "02260144": ["TRANSPARENT PLASTIC BAG WITH LEATHER GOLD HANDLE #RK1", [["EACH", 3.9]]], "02260145": ["BB3590 PAPERBAG 21X12X7CM #RK1", [["EACH", 9.9]]], "02260146": ["BB3601 PAPERBAG 21X15X8CM #RK1", [["EACH", 12.9]]], "02260147": ["THANK YOU PAPERBAG 26X32.5X12CM BB3445-01# #RK1", [["EACH", 4.9]]], "02260148": ["PP SELAMAT DATANG BAG 19.5CM X 24CM #RK1", [["EACH", 10.9]]], "02260149": ["THANK YOU SEAL PLASTIC BAG #RK1 #KS", [["EACH", 7.9]]], "02260150": ["THANKYOU SEAL PLASTIC BAG TRANSPARENT #RK1 KS", [["EACH", 17.9]]], "02400001": ["POUCH WITH DOUBLE ZIP #1356-122 #RK1", [["EACH", 17.9]]], "02400002": ["COSMETIC POUCH WITH MIRROR #1356-107-1 #RK1", [["EACH", 15.9]]], "02400003": ["COSMETIC POUCH #1356-531 #RK1", [["EACH", 15.9]]], "02400004": ["COSMETIC POUCH #1356-532 #RK1", [["EACH", 19.9]]], "02400005": ["FANCY SHOPPING BAG 0916#306771-1/2 #RK1", [["EACH", 9.9]]], "02400006": ["FANCY FOLDABLE LAUNDRY BAG 2550 682472-1", [["EACH", 16.8]]], "02400007": ["FOLDABLE LAUNDRY BAG 600D 3600 682472-2", [["EACH", 24.4]]], "02400008": ["FOLDABLE LAUNDRY BAG LINEN 3600 682471-3", [["EACH", 24.4]]], "02400009": ["VELVET FACING SHOPPING BAG 1136 #306771-3", [["EACH", 11.9]]], "02400010": ["OWL SHOPPING BAG 1191 #306771-4", [["EACH", 12.9]]], "02400011": ["3IN1 SET FANCY SCHOOL BAG 11992 #306782-4-8188", [["EACH", 94.2]]], "02400012": ["FANCY SCHOOL BAG PRINT 2490 #306782-8116", [["EACH", 19.9]]], "02400013": ["FANCY SCHOOL BAG 3D 3136 #306782-8117", [["EACH", 25.9]]], "02400014": ["100% COTTON SHOPPING BAG 1568 #306759-2", [["EACH", 17.9]]], "02400015": ["100% COTTON BACKPACK 3690 #306759-1", [["EACH", 29.9]]], "02400016": ["ASSORTED SHOPPING BAG", [["EACH", 4.9]]], "02400017": ["SMALL VINTAGE BAG WITH LACE", [["EACH", 9.9]]], "02400018": ["FANCY LUNCHBOX BAG 1291 #7721-3 #RK1", [["EACH", 13.1]]], "02400019": ["COMETIC POUCH NET 1161 117-17 #RK1", [["EACH", 9.9]]], "02400020": ["COMETIC POUCH 0967 #RK1", [["EACH", 11.9]]], "02400021": ["COSMETIC BAG NETTING #RK1", [["EACH", 15.9]]], "02400022": ["COSMETIC BAG 2129 #RK1", [["EACH", 20.6]]], "02400023": ["COSMETIC BAG 1800 0967 #RK1", [["EACH", 9.3]]], "02400024": ["KT POUCH WITH CHAINR HANDLE 3677 #RK1", [["EACH", 37.6]]], "02400025": ["COSMETIC POUCH 330 0770 #RK1", [["EACH", 8.9]]], "02400026": ["COSMETIC BAG 61261451 #RK1", [["EACH", 15.0]]], "02400027": ["FANCY HARD COVER 3483 #RK1", [["EACH", 37.6]]], "02400028": ["KT SLING BAG 2516 #1990 #RK1", [["EACH", 25.9]]], "02400029": ["KT SLING BAG 2322 #1990 #RK1", [["EACH", 22.5]]], "02400030": ["KT HANDLE PEARL BAG 1838 #1990 #RK1", [["EACH", 18.7]]], "02400031": ["KT SLING BAG 1935 #1990 #RK1", [["EACH", 18.7]]], "02400032": ["FANCY SCHOOL BAG 3D 3ZIP 4838 #1601314-8183", [["EACH", 39.9]]], "02400033": ["FANCY SLING BAG 1354 #1601314-7", [["EACH", 13.9]]], "02400034": ["FANCY 3D SCHOOLBAG 5032 #1601314-8108", [["EACH", 45.9]]], "02400035": ["FANCY COIN BOX WITH LOCK 1451 #1601314-8600", [["EACH", 12.1]]], "02400036": ["EMOJI KIDS BAG 1440 #1601301-801-2", [["EACH", 15.0]]], "02400037": ["FANCY DOLL BAG 2112 #1601301-801-1", [["EACH", 19.9]]], "02400038": ["FANCY KID SLING BAG 1632 #1601301-1601301", [["EACH", 17.9]]], "02400039": ["FANCY SQUARE LAUNDRY BAG 0826 #1601310-XJ-2004", [["EACH", 7.9]]], "02400040": ["FANCY ROUND LAUNDRY BAG1884 #1601310-XJ-2502,2504,2507,2514", [["EACH", 17.9]]], "02400041": ["FANCY ROUND LARGE 2115 #1601310-XJ", [["EACH", 21.9]]], "02400042": ["ZAKKA FOLDABLE LAUNDRY BAG 2169 #5004346-3", [["EACH", 24.4]]], "02400043": ["ZAKKA GOLDEN WORD LAUNDRY BAG 2264 #5004346-4", [["EACH", 25.9]]], "02400044": ["ZAKKA CLOSER LAUNDRY BAG 2264 #5004346-5", [["EACH", 27.9]]], "02400045": ["ZAKKA LEATHER HANDLE BAG 2250 #5004346-7", [["EACH", 18.7]]], "02400046": ["ZAKKA ZIPPED TOTEBAG 2250 #5004346-8", [["EACH", 17.8]]], "02400047": ["FANCY SCHOOL BAG 8289 4615 #6067779-8189 #RK1", [["EACH", 39.9]]], "02400048": ["FANCY SCHOOL BAG 4230 #6067779-8938 #RK1", [["EACH", 29.9]]], "02400049": ["FANCY SCHOOL BAG 3269 #6067779-9002 #RK1", [["EACH", 23.9]]], "02400050": ["SUPERHERO SCHOOLBAG 6153 #6067779-9230 #RK1", [["EACH", 55.9]]], "02400051": ["SHOPPING BAG #RK1", [["EACH", 9.3]]], "02400052": ["FANCY 3 CARTOON  BAG7070 #6067782 2082 #RK1", [["EACH", 55.9]]], "02400053": ["FANCY HARD 6305 #6067782 717-03 #RK1", [["EACH", 49.9]]], "02400054": ["2IN1 SPIDER CAPT AMERICA 6114 #6067782 12095 #RK1", [["EACH", 47.0]]], "02400055": ["3IN1 SET FANCY BOY SCHOOL BAG 11992 #306782-4-8188 1602 #RK1", [["EACH", 109.0]]], "02400056": ["HK HEAD HARD 3439 #4125-11 #RK1", [["EACH", 33.8]]], "02400057": ["HK PVC BAG 3821 #4126-16 #RK1", [["EACH", 37.6]]], "02400058": ["DOUBLE ZIP PURSE 0859 #2904 #RK1", [["EACH", 8.9]]], "02400059": ["ROUND PURSE KEYCHAIN 1050 #2904 #RK1", [["EACH", 9.3]]], "02400060": ["COMETIC BAG 0764 #8067840 330 #RK1", [["EACH", 7.4]]], "02400061": ["COSMETIC BAG 2197#8067840 014-77 #RK1", [["EACH", 21.9]]], "02400062": ["COSMETIC BAG 1242 #8067840 118-17 #RK1", [["EACH", 12.9]]], "02400063": ["COSMETIC BAG 1815#8067840 975-409 #RK1", [["EACH", 19.9]]], "02400064": ["COSMETIC BAG 1242#8067840 118-98 #RK1", [["EACH", 13.1]]], "02400065": ["COSMETIC BAG 1337 #8067840 118-67 #RK1", [["EACH", 14.9]]], "02400066": ["COSMETIC BAG 2197#8067840 624-77 #RK1", [["EACH", 21.9]]], "02400067": ["COSMETIC BAG 2197 #8067840 12025-87 #RK1", [["EACH", 21.9]]], "02400068": ["COSMETIC BAG 0859#8067840 105-8 #RK1", [["EACH", 9.9]]], "02400069": ["COSMETIC BAG 1050 #106-8 #RK1", [["EACH", 11.9]]], "02400070": ["PVC COSMETIC BAG 1337 #8067840 724-51 #RK1", [["EACH", 13.1]]], "02400071": ["COSMETIC BAG 1624 #8067840 727-418 #RK1", [["EACH", 16.8]]], "02400072": ["COSMETIC BAG 1624#8067840235-47 #RK1", [["EACH", 18.7]]], "02400073": ["COSMETIC BAG 1242#8067840 107-8 #RK1", [["EACH", 19.9]]], "02400074": ["COSMETIC BAG 2197 #8067840 161-499 #RK1", [["EACH", 21.9]]], "02400075": ["COSMETIC BAG 2197 #8067840 12050-42 #RK1", [["EACH", 19.9]]], "02400076": ["3IN 1 COSMETIC BAG 2484#8067840 #RK1", [["EACH", 27.9]]], "02400077": ["COSMETIC POUCH 1388 #1701624 118 #RK1", [["EACH", 15.9]]], "02400078": ["TRANGLE COSMETIC POUCH 2129 #1701623-2188-521 #RK1", [["EACH", 23.9]]], "02400079": ["REC COSMETIC POUCH 2129 #1701623-2188-521 #RK1", [["EACH", 24.4]]], "02400080": ["FANCY SCHOOLBAG 3075 #6067787-9012/9002", [["EACH", 25.9]]], "02400081": ["MK PVC POUCH 2499 #RK1 #2188-491", [["EACH", 23.9]]], "02400082": ["LINE PVC POUCH 1851 #403 #RK1", [["EACH", 18.7]]], "02400083": ["KITTY MELO PUU SMALL BAG 2314 #RK1", [["EACH", 19.9]]], "02400084": ["MELO KITTY BIG PU BAG 3148 #RK1", [["EACH", 28.2]]], "02400085": ["FANCY COIN POUCH 0518 #RK1", [["EACH", 5.5]]], "02400086": ["PVC COIN POUCH 0555 #RK1", [["EACH", 5.5]]], "02400087": ["SMALL COSMETIC POUCH 0925 #RK1", [["EACH", 11.2]]], "02400088": ["THOMAS KIDS BAG 4158 #6067790-3008/326-1", [["EACH", 39.9]]], "02400089": ["FANCY BAG 14\" 4523 #6067787-70216", [["EACH", 39.9]]], "02400090": ["SUPERHERO SMALL BAG 3618 #6067787-1008", [["EACH", 39.9]]], "02400091": ["HELLO KITTY BACKPACK 5427 #6067787-908", [["EACH", 45.9]]], "02400092": ["3IN1 TROLLEY SCHOOL BAG 11761 #6067787-2626", [["EACH", 99.9]]], "02400093": ["BIG FANCY TROLLEY BAG 13389 #6067787-33-248", [["EACH", 89.9]]], "02400094": ["VELVET BAG OWL FLAMINGO 0999 #6228631 #RK1", [["EACH", 12.9]]], "02400095": ["FILA BAG 0945 #6228631 #RK1", [["EACH", 15.9]]], "02400096": ["FLAMINGO SHOPPING BAG 1454 #6228631 #RK1", [["EACH", 15.9]]], "02400097": ["FLAMINGO BIG SHOPPING BAG 1636 #6228631 #RK1", [["EACH", 17.9]]], "02400098": ["FANCY 3IN1  SCHOOL BAG 12810#6067791-6688", [["EACH", 99.9]]], "02400099": ["FANCY SCHOOL BAG 4392 #6067791-2035", [["EACH", 35.9]]], "02400100": ["FANCY SCHOOL BAG 6040 #6067791-1604 1605", [["EACH", 45.9]]], "02400101": ["FANCY SCHOOL BAG 6040 #6067791-1603", [["EACH", 45.9]]], "02400102": ["FANCY SCHOOL BAG 5308 #6067791-1130 1139", [["EACH", 39.9]]], "02400103": ["FANCY SCHOOL BAG 4026 #6067791-8802", [["EACH", 35.9]]], "02400104": ["FANCY SCHOOL FLOAT BAG 3294 #6067792-11", [["EACH", 25.9]]], "02400105": ["AVENGER SCHOOL BAG 4392#6067791-933", [["EACH", 45.9]]], "02400106": ["FANCY SCHOOL BAG 4392 #6067791-231", [["EACH", 45.9]]], "02400107": ["FANCY SCHOOL BAG 4392 #6067791-232", [["EACH", 45.9]]], "02400108": ["FANCY SCHOOL BAG 4392 #6067791-1622", [["EACH", 45.9]]], "02400109": ["FANCY 12\" SCHOOL BAG 4392 #6067791-12", [["EACH", 23.9]]], "02400110": ["SCHOOL BAG 42X32X18 9900 #6228643-1848", [["EACH", 65.9]]], "02400111": ["SCHOOL BAG 42X32X16 9900#6228643-1842", [["EACH", 65.9]]], "02400112": ["TRANSPARENT SCHOOL BAG 10500#6228643-A699", [["EACH", 65.9]]], "02400113": ["3 IN 1 SET SCHOOL TROLLEY BAG 18900#6228643 #RK1", [["EACH", 109.0]]], "02400114": ["3 IN 1 SET SCHOOL TROLLEY BAG 18600 #6228643-3183 #RK1", [["EACH", 109.0]]], "02400115": ["3 IN 1 SET SCHOOL TROLLEY BAG 18900#6228643-3185", [["EACH", 109.0]]], "02400116": ["FANCY SCHOOL BAG 9000 #6228652-1845 #RK1", [["EACH", 65.9]]], "02400117": ["FANCY SCHOOL BAG 8700 #6228652-1661 #RK1", [["EACH", 65.9]]], "02400118": ["FANCY 3 LAYER WARM LUNCH BAG 25.5X14X23CM 2400 #RK1", [["EACH", 17.9]]], "02400119": ["FANCY LUNCH BAG 22.5X11.5X20.5CM 2400 #RK1", [["EACH", 13.9]]], "02400120": ["23*14*20CM 3 LAYER LUNCH BAG WARM 1050 #RK1", [["EACH", 15.9]]], "02400121": ["22.8*19*7CM TRANSPARENT BAG 3750 #RK1", [["EACH", 19.9]]], "02400122": ["14\" FANCY SCHOOL BAG+ PENCIL CASE 9000 #6228654-2167-2180 #RK1", [["EACH", 59.9]]], "02400123": ["14\" FANCY SCHOOL BAG+ PENCIL CASE 9000 #6228654-2103 #RK1", [["EACH", 59.9]]], "02400124": ["16\" FANCY SCHOOL BAG+ PENCIL CASE 7500#6228654-19A1 #RK1", [["EACH", 55.9]]], "02400125": ["16\" FANCY SCHOOL BAG 6600 #6228654-6183 #RK1", [["EACH", 49.9]]], "02400126": ["14\" FANCY SCHOOL BAG+PENCILCASE 6900#6228654-1940/1941 #RK1", [["EACH", 49.9]]], "02400127": ["3IN1 SET FANCY BOY SCHOOL BAG 18000 #6228654-3185 #RK1", [["EACH", 109.0]]], "02400128": ["16\" USHAPE SCHOOLBAG 9000 #622864-2155 #RK1", [["EACH", 59.9]]], "02400129": ["FANCY LUNCH BAG 27X25X14 2400 #6614854-40 #RK1", [["EACH", 15.9]]], "02400130": ["FANCY LUNCH BAG 29X30X12 2400 #6614854-40 #RK1", [["EACH", 17.9]]], "02400131": ["BOTTLE BAG 1350 #6614854-42 #RK1", [["EACH", 7.9]]], "02400132": ["FANCY COIN POUCH 1740 #6614854-41 #RK1", [["EACH", 9.9]]], "02400133": ["3IN1 SET FANCY SCHOOL BAG 18000 #6228657-3199 #RK1", [["EACH", 109.0]]], "02400134": ["3IN1 SET 3D FANCY SCHOOL BAG 18600 #6228657-2 #RK1", [["EACH", 109.0]]], "02400135": ["3IN1 SET 3D HARD FANCY SCHOOL BAG 18900 #6228657-3#RK1", [["EACH", 109.0]]], "02400136": ["MELODY KUROMI VELVET KIDS HANDBAG 2040 #2716 #RK1", [["EACH", 13.9]]], "02400137": ["MELODY KUROMI VELVET KIDS HANDBAG WITH TAIL 2550 #2716 #RK1", [["EACH", 15.9]]], "02400138": ["18CM MELODY KUROMI VELVET KIDS HANDBAG 2100 #2716 #RK1", [["EACH", 15.9]]], "02400139": ["MELODY KUROMI VELVET KIDS HANDBAG 2250 #2716 #RK1", [["EACH", 15.9]]], "02400140": ["20CM MELODY KUROMI VELVET KIDS HANDBAG 2250 #2716 #RK1", [["EACH", 15.9]]], "02400141": ["FANCY CANVAS SCHOOL BAG 43X30X14 6900#RK1 8219", [["EACH", 43.9]]], "02400142": ["FANCY CANVAS 13\" SCHOOL BAG 8100 #RK1", [["EACH", 39.9]]], "02400143": ["FANCY 15\" CARTOON HEAD SCHOOL BAG 8700 #RK1 902#", [["EACH", 49.9]]], "02400144": ["FANCY 16\" SCHOOL BAG WITH TOYS 9750 #RK1 6013#", [["EACH", 49.9]]], "02400145": ["FANCY BLUE SCHOOL BAG 7500 #RK1 2001", [["EACH", 45.9]]], "02400146": ["MOUNTAIN BAG 50X31X14CM 12000 #RK1", [["EACH", 79.9]]], "02400147": ["FANCY 18\" SCHOOL BAG 10500 #RK1", [["EACH", 55.9]]], "02400148": ["FANCY 13\" SCHOOL BAG 5100 #RK1", [["EACH", 35.9]]], "02400149": ["SANRIO PLUSH DOLL CROSSBAG 3900 #2716 #RK1", [["EACH", 19.9]]], "02400150": ["SANRIO PLUSH DOLL CROSSBAG 2550 #2716 #RK1", [["EACH", 13.9]]], "02400151": ["SAN L SIZE TUITION BAG 30*12.5*33CM 2250 #RK1", [["EACH", 15.9]]], "02400152": ["SAN LUNCH BOX BAG 2370 #RK1", [["EACH", 15.9]]], "02400153": ["SAN PU LUNCH BOXBAG 23*14*16.5CM 3750 #RK1", [["EACH", 19.9]]], "02400154": ["SAN BIG SIZE LUNCHBOX BAG 28*20*19.5CM 3300 #RK1", [["EACH", 19.9]]], "02400155": ["SAN FOLDABLE LUNCHBOX BAG 25*30*14CM #RK1", [["EACH", 19.9]]], "02400156": ["SAN BIG SIZE LUNCHBOX BAG 28*20*19CM 3150 #RK1", [["EACH", 19.9]]], "02400157": ["LABUBU SCHOOL BAG WITH PLUSH HEAD 7290 #2716 #RK1", [["EACH", 43.9]]], "02400158": ["LABUBU SCHOOL BAG L SIZE 7185 #2716 #RK1", [["EACH", 39.9]]], "02400159": ["KUROM1 SCHOOL BAG 5847 #2716 #RK1", [["EACH", 39.9]]], "02400160": ["CAPYBARA SCHOOL BAG BIG HEAD 7194 #2716 #RK1", [["EACH", 43.9]]], "02400161": ["LABUBU SCHOOLD BAG L BIG HEAD 6294 #2716 #RK1", [["EACH", 43.9]]], "02400162": ["KUROMI SCHOOLBAG WITH PLUSH POUCH 7050 #2716 #RK1", [["EACH", 45.9]]], "02400163": ["KUROMI SCHOOL BAG 201 6750 #RK1", [["EACH", 45.9]]], "02400164": ["SANRI0 SCHOOL BAG 205 8670 #RK1", [["EACH", 49.9]]], "02400165": ["SANRI0 KIDS SLING BAG 96914 2388 #RK1", [["EACH", 15.9]]], "02400166": ["SANRI0 KIDS SMALL SLING BAG 1560 #RK1 97975", [["EACH", 13.9]]], "02400167": ["SANRI0 PLUSH TOYS SLING BAG 2097 #RK1 A7992", [["EACH", 13.9]]], "02400168": ["SARI0 KIDS M SCHOOL BAG WITH TOYS 4347 #RK1", [["EACH", 29.9]]], "02400169": ["KUR0MI SCHOOL BAG L 209 7140 #RK1", [["EACH", 45.9]]], "02400170": ["SANRI0 17\" SCHOOL BAG WITH PENCIL CASE 8085 #RK1", [["EACH", 49.9]]], "02430001": ["DINNER POUCH 01-KS-A", [["EACH", 47.0]]], "02430002": ["DINNER POUCH 02-KS-B", [["EACH", 56.5]]], "02430003": ["DINNER POUCH 03-KS-C", [["EACH", 65.9]]], "02430004": ["ASSORTED SINGLE ZIP WALLET 1935 #1988-1 #RK1", [["EACH", 19.9]]], "02430005": ["FOLDABLE WALLET 2516#1988-2 #RK1", [["EACH", 24.4]]], "03070001": ["MARINA BEAUTY EYELASHES #3383-224 #RK1", [["EACH", 15.0]]], "03070002": ["MARINA BEAUTY EYELASHES #3383-165 #RK1", [["EACH", 15.0]]], "03070003": ["MARINA BEAUTY EYELASHES #3383-071 #RK1", [["EACH", 15.0]]], "03070004": ["MARINA BEAUTY EYELASHES #3383-226 #RK1", [["EACH", 15.0]]], "03070005": ["MARINA BEAUTY EYELASHES #3383-163 #RK1", [["EACH", 15.0]]], "03070006": ["MARINA BEAUTY EYELASHES #3383-XX2 #RK1", [["EACH", 15.0]]], "03070007": ["MARINA BEAUTY EYELASHES #3383-F7 #RK1", [["EACH", 17.9]]], "03070008": ["MARINA BEAUTY EYELASHES #3383-XM37 #RK1", [["EACH", 17.9]]], "03070009": ["MARINA BEAUTY EYELASHES #3383-XM35 #RK1", [["EACH", 17.9]]], "03070010": ["MARINA BEAUTY EYELASHES #3383-025 #RK1", [["EACH", 14.0]]], "03070011": ["MARINA BEAUTY EYELASHES #3383-068 #RK1", [["EACH", 14.0]]], "03070012": ["MARINA BEAUTY EYELASHES #3383-T232 #RK1", [["EACH", 14.9]]], "03070013": ["TRAVEL BOTTLE KITS #6361-SB6553 #RK1", [["EACH", 9.9]]], "03070014": ["TRAVEL BOTTLE KITS #6361-6556 #RK1", [["EACH", 12.1]]], "03070015": ["BOBO TRAVEL REFILL BOTTLE 35ML SPRAY #8629-7 #RK1", [["EACH", 4.6]]], "03070016": ["BOBO TRAVEL REFILL BOTTLE 30ML SPRAY #8629-8-022L #RK1", [["EACH", 2.9]]], "03070017": ["BOBO TRAVEL SET REFILL CREAM #8629-9 #RK1", [["EACH", 3.9]]], "03070018": ["PEIYEN SEXY FASHION LIPSTICK 0322 #7717 #RK1", [["EACH", 5.9]]], "03070019": ["99% PEIYEN ALOE VERA 0346 #7717 #RK1", [["EACH", 6.9]]], "03070020": ["HF LIPSTICK 0290 #7717 #RK1", [["EACH", 5.9]]], "03070021": ["EFOLAR E3D LIPSTICK 0346 #7717 #RK1", [["EACH", 5.9]]], "03070022": ["SALLY DUCK MASCARA 4D 0580 #7717 #RK1", [["EACH", 7.4]]], "03070023": ["PIBAMY NOSE CLEAN 1064 #7717 #RK1", [["EACH", 11.9]]], "03070024": ["PIBAMY CRYSTAL EYE MASK 1064 #7717 #RK1", [["EACH", 11.9]]], "03070025": ["PY LIPS TINT KISS YOU 0290 #7717 #RK1", [["EACH", 2.9]]], "03070026": ["QL EYELINER WATER PROOF 0870 #7717 #RK1", [["EACH", 9.3]]], "03070027": ["BOUB EYE SHADOW 1354 #7717 #RK1", [["EACH", 14.0]]], "03070028": ["HF LIPSTICK 9001/9064 0298 #1151 #RK1", [["EACH", 6.9]]], "03070029": ["DXR MATTE LIPSTICK 0483 #1151 #RK1", [["EACH", 6.9]]], "03070030": ["BB CREAM 0870 #1151 #RK1", [["EACH", 9.9]]], "03070031": ["AINUO POWDER FOUNDATION 1161 #1151 #RK1", [["EACH", 12.9]]], "03070032": ["MZL XXL MASCARA 1064  #1151 #RK1", [["EACH", 11.2]]], "03070033": ["XYZ THICK MASCARA SILICONE BRUSH 0870  #1151 #RK1", [["EACH", 10.2]]], "03070034": ["FAYASI HAIR DYE 0967 #1151 #RK1", [["EACH", 9.3]]], "03070035": ["HW GLUE DOUBLE EYELID 0870 #1151 #RK1", [["EACH", 8.3]]], "03070036": ["B.B NATURAL COLORFUL BLUSH 0774  #1151 #RK1", [["EACH", 8.9]]], "03070037": ["HF MAGIC COLOUR LIPSTICK 0258 #1151 #RK1", [["EACH", 4.9]]], "03070038": ["FAYASI COLOR CREAM HAIR DYE 0774  #1151 #RK1", [["EACH", 7.9]]], "03070039": ["PY MAGIC COLOUR LIPSTICK 0209  #1151 #RK1", [["EACH", 4.9]]], "03070040": ["ADS MAKE UP KIT 2129 #1151 #RK1", [["EACH", 22.5]]], "03070041": ["HONZY EYEBROW PENCIL 0870  #1151 #RK1", [["EACH", 9.3]]], "03070042": ["LC PRETTY PASSWORD 1161 #1151 #RK1", [["EACH", 11.2]]], "03070043": ["THEFACESHOP MASCARA 0254 #3237 #RK1", [["EACH", 9.3]]], "03070044": ["EFOLAR WONDER STICK 0318 #3237-E528 #RK1", [["EACH", 11.2]]], "03070045": ["PERFUME 3PCS PACK SET 1740 #25011", [["EACH", 10.0]]], "03070046": ["TYA FASHION MAKEUP KIT 2499 #1701635-1 #RK1", [["EACH", 27.9]]], "03070047": ["TYA MAKEUP SET 2203 #1701635-6173 #RK1", [["EACH", 23.9]]], "03070048": ["TYA MAKEUP SET 1759 #1701635-5020 #RK1", [["EACH", 18.7]]], "03070049": ["TYA MAKEUP SET 2777 #1701635-5037 #RK1", [["EACH", 28.2]]], "03070050": ["TYA MAKEUP KIT 2870 #1701635-6077 #RK1", [["EACH", 31.9]]], "03070051": ["ADS MAKEUPKIT 1203 #1701635-6077 #RK1", [["EACH", 13.9]]], "03070052": ["ADS MAEUP KIT 1574 #1701635-6563 #RK1", [["EACH", 15.9]]], "03070053": ["MAYEYSGIRL COLOR MYBROWS 1203 #1701635-CA02 #RK1", [["EACH", 13.9]]], "03070054": ["EYEBROW PENCIL 0833 #1701635-883 #RK1", [["EACH", 9.9]]], "03070055": ["EFOLAR CLEANSING WATER 1111 #1701635-E719 #RK1", [["EACH", 12.9]]], "03070056": ["MALIAN CLEANSING TISSUE 0925 #1701635-7602 #RK1", [["EACH", 9.9]]], "03070057": ["FLAMINGO LIPSTICK 0270 #1701635-5014 #RK1", [["EACH", 5.9]]], "03070058": ["RIHAO EYE SHADOW 1388 #1701635-8041 #RK1", [["EACH", 15.0]]], "03070059": ["RIHAO EYE SHADOW 1388 #1701635-8013 #RK1", [["EACH", 15.9]]], "03070060": ["ANGEL MASK EYESHADOW 1296 #1701635-7820 #RK1", [["EACH", 15.9]]], "03070061": ["LED MAKEUP EYESHADOW 1111 #1701635-8008 #RK1", [["EACH", 12.1]]], "03070062": ["RIHAO EYE SHADOW 1203 #1701635-8020 #RK1", [["EACH", 13.9]]], "03070063": ["PHANTOM EYE SHADOW 2037 #1701635-K221 #RK1", [["EACH", 23.9]]], "03070064": ["LOVE ATTI EYE SHADOW 1574 #1701635-AT6806 #RK1", [["EACH", 17.9]]], "03070065": ["RIHAO PLAY COLOR EYES 1296 #1701635-8058 #RK1", [["EACH", 14.9]]], "03070066": ["RIHAO CRYSTAL EYESHADOW 1018 #1701635-8842 #RK1", [["EACH", 11.9]]], "03070067": ["VIBRANT TRICOLOR EYEBROW 1018 #1701635-8306 #RK1", [["EACH", 11.9]]], "03070068": ["BABYGAGA BLUSH 0740 #1701635-B28 #RK1", [["EACH", 9.9]]], "03070069": ["HK MAKEUP BRUSH 1481 #1701635-31 #RK1", [["EACH", 17.9]]], "03070070": ["HK MAKEUP BRUSH 1111 #1701635-QL0193 #RK1", [["EACH", 12.9]]], "03070071": ["WATERPROOF PROTECTIVE 0277 #1701635-33 #RK1", [["EACH", 3.5]]], "03070072": ["3CE SNOW BB SMOOTHING CUSHION 2777", [["EACH", 29.9]]], "03070073": ["BBM EYEBOW PENCIL 0185 #1701635-688 #RK1", [["EACH", 3.2]]], "03070074": ["1PC NON ALCOHOL PERFUME OIL ROLLER 27760-AT15", [["EACH", 3.0]]], "03080001": ["LAMEILA HAIR CURLER #C096 #RK1", [["EACH", 6.5]]], "03080002": ["LAMEILA MAKE UP TOOL #3161 #RK1", [["EACH", 6.9]]], "03080003": ["LAMEILA HAIRHOLDSHEET #C078 #RK1", [["EACH", 2.7]]], "03080004": ["LAMEILA BROWCLASS #A0422 #RK1", [["EACH", 5.1]]], "03080005": ["LAMEILA FOOTFILE #C0307 #RK1", [["EACH", 5.5]]], "03080006": ["LAMEILA FOOTFILE #C0315 #RK1", [["EACH", 5.9]]], "03080007": ["LAMEILA PUFF #B0810 #RK1", [["EACH", 3.6]]], "03080008": ["LAMEILA ACNE NEEDLE GOLD #B0710 #RK1", [["EACH", 5.5]]], "03080009": ["LAMEILA BEAUTY SCISSORS #A0402 #RK1", [["EACH", 5.5]]], "03080010": ["LAMEILA EYEBROW RAZOR #A0267 #RK1", [["EACH", 3.9]]], "03080011": ["LAMEILA EYELASH GLUE -W #A0529 #RK1", [["EACH", 7.9]]], "03080012": ["LAMEILA BEAUTY BRUSH SET #L0804 #RK1", [["EACH", 12.1]]], "03080013": ["YOUSHA NAIL CLIPPER #YZ004 #RK1", [["EACH", 4.6]]], "03080014": ["YOUSHA NAIL CLIPPER #YZ002 #RK1", [["EACH", 6.5]]], "03080015": ["YOUSHA NAIL CLIPPER #YZ005 #RK1", [["EACH", 4.6]]], "03080016": ["YOUSHA NAIL CLIPPER #YZ003 #RK1", [["EACH", 4.6]]], "03080017": ["LAMEILA PET SET 5PCS #LA1092  #RK1", [["EACH", 11.9]]], "03080018": ["LAMEILA EYELASH CURLER #3118 #RK1", [["EACH", 5.5]]], "03080019": ["LAMEILA MANICURE ACC 3IN1 #3158 #RK1", [["EACH", 5.9]]], "03080020": ["LAMEILA NAIL SURFACE POLISHER #9017 #RK1", [["EACH", 4.6]]], "03080021": ["LAMEILA PUFF #212 #RK1", [["EACH", 1.5]]], "03080022": ["LAMEILA DOUBLE PUFF #212D #RK1", [["EACH", 1.7]]], "03080023": ["LAMEILA FOOTFILE WITH BRUSH #C0316 #RK1", [["EACH", 6.9]]], "03080024": ["LAMEILA SHARPENER #42 #RK1", [["EACH", 3.9]]], "03080025": ["LAMEILA EYEBROW RAZOR #A0370 #RK1", [["EACH", 4.9]]], "03080026": ["LAMEILA HAIR CURLER #C034 #RK1", [["EACH", 7.9]]], "03080027": ["LAMEILA FRINGE CUTTER SET #C185 #RK1", [["EACH", 15.9]]], "03080028": ["LAMEILA BEAUTY TURBAN #C0813 #RK1", [["EACH", 6.5]]], "03080029": ["LAMEILA FOOR PEELING KNIFE #3315 #RK1", [["EACH", 7.4]]], "03080030": ["YOUSHA NAIL CLIPER #YZ001 #RK1", [["EACH", 6.5]]], "03080031": ["LAMEILA COSMETIC BRUSH SETS #L0774 #RK1", [["EACH", 8.3]]], "03080032": ["LAMEILA BEAUTY SCISSORS #A0403 #RK1", [["EACH", 5.5]]], "03080033": ["LAMEILA BB PUFF #B0864 #RK1", [["EACH", 4.6]]], "03080034": ["LAMEILA EYELASH CURLER #SB0898 #RK1", [["EACH", 9.3]]], "03080035": ["LAMEILA BRUSH #B0458 #RK1", [["EACH", 8.3]]], "03080036": ["LAMEILA EYEBROW CLIP #A0172 #RK1", [["EACH", 5.5]]], "03080037": ["YOUSHA EYELID STICKER -L #YS013-L #RK1", [["EACH", 7.9]]], "03080038": ["RIMEI CUTICLE KNIFE #8628-6 #RK1", [["EACH", 1.7]]], "03080039": ["RIMEI EYEBROW RAZOR #8628-7 #RK1", [["EACH", 6.9]]], "03080040": ["RIMEI MANICURE SCISSORS #8630-7 #RK1", [["EACH", 7.9]]], "03080041": ["RIMEI EAR PICK #8630-4 #RK1", [["EACH", 1.7]]], "03080042": ["RIMEI PIMPLE PICKS #8630-6 #RK1", [["EACH", 3.3]]], "03080043": ["RIMEI SAFE RAZOR #8628-5 #RK1", [["EACH", 7.4]]], "03080044": ["RIMEI EYEBROW CLIP #8630-5 #RK1", [["EACH", 4.6]]], "03080045": ["RIMEI NAIL CLIPPER #8628-1-610 #RK1", [["BOX", 39.6], ["EACH", 3.6]]], "03080046": ["RIMEI NAIL CLIPPER 0699#8628-1-608 #RK1", [["BOX", 45.0], ["EACH", 4.5]]], "03080047": ["RIMEI NAIL CLIPPER 0875#8628-2-618 #RK1", [["BOX", 69.9], ["EACH", 5.9]]], "03080048": ["RIMEI NAIL CLIPPER #8629-6  #RK1", [["EACH", 4.9]]], "03080049": ["BOBO NAIL CLIPPER #8629-5 #RK1", [["EACH", 4.6]]], "03080050": ["SCISSORS #8628-3 #RK1", [["EACH", 5.5]]], "03080051": ["BARBER SCISSOR #8628-4 #RK1", [["EACH", 6.5]]], "03080052": ["MUSIC FLOWER LIPSTICK M2084 #4043-5 #RK1", [["EACH", 5.9]]], "03080053": ["CLEAN NAIL POLISH REMOVER 45ML #4043-3 #RK1", [["EACH", 2.9], ["PACK", 0.0]]], "03080054": ["MUSIC FLOWER LIPSTICK M3037 #4043-6", [["EACH", 5.9]]], "03080055": ["KUNUHAI NAIL CARE SET A981 #4043-12 #RK1", [["EACH", 15.0]]], "03080056": ["NAIL POLISH COLOR #4043-2 #RK1", [["EACH", 4.9]]], "03080057": ["NAIL POLISH REMOVER TOWELS #2570-1 #RK1", [["EACH", 3.9]]], "03080058": ["RIMEI PIMPLE PICKS #8630-6-1", [["EACH", 3.9]]], "03080059": ["NAILS STICKER 12PCS 0329 #1307-1 #RK1", [["EACH", 3.9]]], "03080060": ["OPI SURFACE POLISHER 0193 #1307 #RK1", [["EACH", 1.9]]], "03080061": ["FOOT POLISHER 0193 #1307-4  #RK1", [["EACH", 1.7]]], "03080062": ["FOOT SKIN SHAVER 0580 #1307-5 #RK1", [["EACH", 5.5]]], "03080063": ["10PCS SKIN SHAVER KNIFE INSERT 0483 #1307-6 #RK1", [["EACH", 4.6]]], "03080064": ["WATERPROOF EYELINER 0600 #1307 #RK1", [["EACH", 4.9]]], "03080065": ["EYEBROW PENCIL LC2528 0354 #1307 #RK1", [["EACH", 3.6]]], "03080066": ["DISPOSABLE HAND SANITIZER 0567 #5004345-S968156 10987", [["EACH", 4.6]]], "03080067": ["DISPOSABLE HAND SANITIZER 0423 #5004345-1099", [["EACH", 4.5]]], "03080068": ["DISPOSABLE HAND SANITIZER 0567 #5004345-S9688155", [["EACH", 5.9]]], "03080069": ["LML MANICURE SET 0859 #1701667-C0171 #RK1", [["EACH", 7.4]]], "03080070": ["HK NAIL CLIPPER 0343 #4125-2 #RK1", [["EACH", 4.6]]], "03080071": ["401 NAIL GLUE 0382 #4370 #RK1", [["EACH", 4.6]]], "03080072": ["MEINI Q NAIL DECORATION 1910 #4370 #RK1", [["EACH", 15.0]]], "03080073": ["NAIL STICKER 0152 #4370 #RK1", [["EACH", 1.4]]], "03080074": ["HK MAKEUP BRUSH 1242 #4370 #RK1", [["EACH", 13.9]]], "03080075": ["DESIGN NAIL 0668 #4370 #RK1", [["EACH", 6.9]]], "03080076": ["COSMETIC BAG 1719 #8067840 809-418 #RK1", [["EACH", 11.2]]], "03080077": ["COSMETIC BAG 2388 #8067840 12050-77 #RK1", [["EACH", 19.9]]], "03080078": ["UV NAIL LIGHT 8437#RK1", [["EACH", 56.5]]], "03080079": ["LSKIN CLEAR WATER POLISH 0375 #RK1", [["EACH", 3.5]]], "03080080": ["RIMEI NAIL CLIPPER 0563 #6614855-602Q #RK1", [["EACH", 3.9]]], "03080081": ["NAIL CLIPPER SET 7 IN1 1650 #6614853-23 #RK1", [["EACH", 9.9]]], "03080082": ["RIMEI PREMIUM NAIL CLIPPERS BIG 1140 #6614853-A6528 #RK1", [["EACH", 7.9]]], "03080083": ["RIMEI PREMIUM NAIL CLIPPERS 0750 #6614853-A602E #RK1", [["EACH", 5.9]]], "03080084": ["BOBO EARPICK 0750 #6614863-792L #RK1", [["EACH", 4.9]]], "03090001": ["ONYX MELLOW EYELASH 007 #RK1", [["BOX", 23.5], ["EACH", 2.7]]], "03090002": ["ONYX MELLOW EYELASH 002 #RK1", [["BOX", 25.0], ["EACH", 2.9]]], "03090003": ["ONYX MELLOW EYELASH 006 #RK1", [["BOX", 23.5], ["EACH", 2.7]]], "03090004": ["ONYX MELLOW EYELASH 010 #RK1", [["BOX", 25.0], ["EACH", 2.9]]], "03090005": ["F.BIRD LASH 10PAIRS #41 #RK1", [["EACH", 11.2]]], "03090006": ["F.BIRD LASH 10PAIRS #P31 #RK1", [["EACH", 11.9]]], "03090007": ["F.BIRD LASH 10PAIRS #728B #RK1", [["EACH", 11.2]]], "03090008": ["OVAL BEAUTY MIRROR #19489-005-4 #RK1", [["EACH", 24.4]]], "03090009": ["BEAUTY MIRROR #19489-3 #RK1", [["EACH", 13.9]]], "03090010": ["BEAUTY MIRROR #19489-D45 #RK1", [["EACH", 12.9]]], "03090011": ["BEAUTY MIRROR #19489-511 #RK1", [["EACH", 13.1]]], "03090012": ["BEAUTY MIRROR SET WITH COMB #19489-11 #RK1", [["EACH", 11.9]]], "03090013": ["SMALL BEAUTY MIRROR #19489-D60 #RK1", [["EACH", 4.9]]], "03090014": ["SQUARE SMALL BEAUTY MIRROR #19489-D20 #RK1", [["EACH", 5.9]]], "03090015": ["SMALL BEAUTY MIRROR #19489-7 #RK1", [["EACH", 4.6]]], "03090016": ["SMALL BEAUTY MIRROR #19489-9 #RK1", [["EACH", 5.5]]], "03090017": ["BEAUTY COMB WITH HANDLE #19489-5 #RK1", [["EACH", 3.9]]], "03090018": ["BEAUTY COMB WITH HANDLE #19489-5A #RK1", [["EACH", 3.6]]], "03090019": ["BEAUTY COMB WITH HANDLE #19489-8 #RK1", [["EACH", 2.9]]], "03090020": ["BEAUTY TABLE MIRROR #19489-12 #RK1", [["EACH", 18.7]]], "03090021": ["FOLI EYELASH CURLER #6361-SB5305 #RK1", [["EACH", 9.9]]], "03090022": ["FOLI EYELASH CURLER #6361-A461 #RK1", [["EACH", 9.3]]], "03090023": ["FANCY MIRROR 9.5*9CM #8629-852 #RK1", [["EACH", 3.6]]], "03090024": ["FANCY MIRROR 11*8CM #8629-851 #RK1", [["EACH", 3.6]]], "03090025": ["FANCY MIRROR 16.5*12.5CM #8629-831 #RK1", [["EACH", 6.9]]], "03090026": ["BOBO FANCY COMB BIG 0360#8628-11 #RK1", [["EACH", 3.9]]], "03090027": ["BOBO FANCY COMB SMALL 0240#8628-10 #RK1", [["EACH", 1.9]]], "03090028": ["BOBO FANCY COMB MEDIUM 0300#8628-12 #RK1", [["EACH", 2.9]]], "03090029": ["HAIR COMB WITH HANDLE #8628-15 #RK1", [["EACH", 5.9]]], "03090030": ["HAIR COMB WITH HANDLE #8629-1 #RK1", [["EACH", 4.9]]], "03090031": ["HAIR COMB WITH HANDLE #8629-2 #RK1", [["EACH", 4.2]]], "03090032": ["HAIR COMB WITH HANDLE #8629-3 #RK1", [["EACH", 3.6]]], "03090033": ["FOLDABLE HAIR COMB WITH HANDLE 0300 #8628-13 #RK1", [["EACH", 1.9]]], "03090034": ["HAIR COMB WITH HANDLE #8629-4 #RK1", [["EACH", 2.7]]], "03090035": ["KING BROWN COMB #8629-13-73 #RK1", [["EACH", 2.7], ["PACK", 0.0]]], "03090036": ["KING BROWN COMB #8629-13-62/80/94/60 #RK1", [["EACH", 2.9], ["PACK", 0.0]]], "03090037": ["KING BROWN COMB #8629-13-95 #RK1", [["EACH", 2.7], ["PACK", 0.0]]], "03090038": ["KING BROWN COMB #8629-14-18 #RK1", [["EACH", 1.7], ["PACK", 0.0]]], "03090039": ["KING BROWN COMB #8629-14-29 #RK1 29# 12#", [["EACH", 1.9], ["PACK", 0.0]]], "03090040": ["KING BROWN COMB #8629-15-8 #RK1", [["EACH", 1.4], ["PACK", 0.0]]], "03090041": ["KING BROWN COMB #8629-15-34 #RK1", [["EACH", 1.4], ["PACK", 0.0]]], "03090042": ["KING BROWN COMB #8630-1-38#25 #RK1", [["EACH", 1.7], ["PACK", 0.0]]], "03090043": ["KING BROWN COMB #8630-2-24 #RK1", [["EACH", 2.9], ["PACK", 0.0]]], "03090044": ["KING BROWN COMB #8630-3-13 #RK1", [["EACH", 2.3], ["PACK", 0.0]]], "03090045": ["BLACK COMB ANTISTATIC 0240#8628-8 #RK1", [["EACH", 2.5]]], "03090046": ["BUMEEK RESIN COMB #8628-9 #RK1", [["EACH", 4.9]]], "03090047": ["FOLDABLE COMB #8628-13 #RK1", [["EACH", 3.9]]], "03090048": ["FANCY MIRROR 21*15CM #8629-835", [["EACH", 8.9]]], "03090049": ["MUSIC FLOWER LIPSTICK M3017 #4043-8 #RK1", [["EACH", 5.9]]], "03090050": ["PEIYEN BB MAGIC FASHION LIPSTICK #4043-7 #RK1", [["BOX", 110.0], ["EACH", 4.9]]], "03090051": ["PEIYEN COLOR LIPSTICK P8027 #4044-17 #RK1", [["BOX", 90.0], ["EACH", 3.9]]], "03090052": ["PEIYEN COLOR LIPSTICK P8019 #4044-15 #RK1", [["BOX", 47.1], ["EACH", 2.7]]], "03090053": ["XYZ LASH QUEEN SEXY BLACK MASCARA #4043-13 #RK1", [["EACH", 12.1]]], "03090054": ["QN EYELINER SOFT FINE 2403 #4043-10 #RK1", [["EACH", 6.9]]], "03090055": ["QC EYELINER ASSEMBLED 4007 #4303-9 #RK1", [["EACH", 6.9]]], "03090056": ["CLIO DOIAMOND GLOW POWDER 8400 #4044-14 #RK1", [["EACH", 12.9]]], "03090057": ["PEIYEN FLOWER GIRL LIPSTICK 8020 #4044-18 #RK1", [["BOX", 23.0], ["EACH", 2.5]]], "03090058": ["EYEBROW PENCIL&BRUSH #4044-16 #RK1", [["EACH", 3.9]]], "03090059": ["THREE TREE EYELASH #4043-11 #RK1", [["EACH", 6.5]]], "03090060": ["EYELASH ONE PAIRS 101#1146-1 #RK1", [["EACH", 3.6]]], "03090061": ["SHOWER CAP 710 #1146-9 #RK1", [["EACH", 5.5]]], "03090062": ["EFOLAR CONCEALER PEN 016 #1146-12 #RK1", [["EACH", 6.5]]], "03090063": ["VER BLUSH 8817 #1146-6 #RK1", [["EACH", 9.9]]], "03090064": ["EYELID GLUE 6151 #1146-7 #RK1", [["EACH", 12.9]]], "03090065": ["LOVELY GIRL LIP BALM 8115 #1146-13 #RK1", [["EACH", 5.5]]], "03090066": ["TRANSPARENT EYELID STICKER 2240 #1146-11 #RK1", [["EACH", 7.4]]], "03090067": ["LIPBALM FRUIT #1146-14 #RK1", [["EACH", 3.6]]], "03090068": ["18K EYELASH CURLER 8115 #1146-8 #RK1", [["EACH", 12.1]]], "03090069": ["STAINLESS PIMPER NEEDLE 8171 #1147-2 #RK1", [["EACH", 2.3]]], "03090070": ["NAIL POLISH BOARD 100/180 #1146-10 #RK1", [["EACH", 2.3]]], "03090071": ["EYE SHADOW 8004 #1146-4 #RK1", [["EACH", 7.9]]], "03090072": ["DOUBLE EYE LID GLUE #3383-5 #RK1", [["EACH", 12.9]]], "03090073": ["FACIAL SHAVE KNIFE #3383-6 #RK1", [["EACH", 17.9]]], "03090074": ["SHOWER CAP FANCY #3284-9 #RK1", [["EACH", 4.2]]], "03090075": ["FABRIC HAIR BAND #3284-3 #RK1", [["EACH", 6.5]]], "03090076": ["RUBBERBAND PACKET #3284-1 #RK1", [["EACH", 1.7]]], "03090077": ["RUBBERBAND PACKET #3284-2 #RK1", [["EACH", 1.4]]], "03090078": ["HAIRPIN 20PCS #3284-5 #RK1", [["EACH", 2.3], ["PACK", 18.8]]], "03090079": ["HAIRPIN 36PCS #3284-10 #RK1", [["EACH", 3.9]]], "03090080": ["HK MIRROR WITH COMB #3284-11 #RK1", [["EACH", 5.5]]], "03090081": ["HAIRBAND ASSORTED #3284-12 #RK1", [["EACH", 1.1]]], "03090082": ["HAIRBAND ASSORTED L #3284-13 #RK1", [["EACH", 1.7]]], "03090083": ["HAIRBAND ASSORTED #3284-14 #RK1", [["EACH", 1.7]]], "03090084": ["BLACK COMB ANTISTATIC #8628-8-1", [["EACH", 3.9]]], "03090085": ["HAIR COMB 9511 0870 #682475-1", [["EACH", 5.5]]], "03090086": ["HAIR COMB 9550 0870 #682475-2", [["EACH", 5.9]]], "03090087": ["HAIR COMB 9552 0870 #682475-1", [["EACH", 5.9]]], "03090088": ["HAIR COMB 9543 0870 #682475-1", [["EACH", 5.9]]], "03090089": ["HAIR COMB 9551  0870 #682475-5", [["EACH", 5.9]]], "03090090": ["THREE TREE EYELASH #KS", [["EACH", 6.1]]], "03090091": ["EYELID GLUE #KS", [["EACH", 3.6]]], "03090092": ["2 WAY BRUSH #KS", [["EACH", 4.9]]], "03090093": ["2 PCS ROUND POWDER PUFF #KS", [["EACH", 3.6]]], "03090094": ["2 PCS REC POWDER PUFF #KS", [["EACH", 3.6]]], "03090095": ["2 PCS ROUND POWDER PUFF WITH HOLDER #KS", [["EACH", 3.6]]], "03090096": ["ROUND FACIAL SPOUNGE #KS", [["EACH", 3.9]]], "03090097": ["2 PCS MAKEUP EYES BRUSH #KS", [["EACH", 1.7]]], "03090098": ["FANCY COMB 0255 #1700-KTS003", [["EACH", 3.6]]], "03090099": ["HAIR DYE COMB BLACK", [["EACH", 4.9]]], "03090100": ["EYEBROW BRUSH #KS", [["EACH", 4.9]]], "03090101": ["BLUSHER BRUSH #KS", [["EACH", 8.9]]], "03090102": ["EYEBROW PENCIL SHARPENER #KS", [["EACH", 3.6]]], "03090103": ["BAOLISHI GLAMOUR MASCARA#KS", [["EACH", 9.3]]], "03090104": ["BAOLISHI LIPSTICK #KS", [["EACH", 5.9]]], "03090105": ["ALOE LIPSTICK #KS", [["EACH", 4.6]]], "03090106": ["HENGFANG COSMETIC LIPSTICK", [["EACH", 6.9]]], "03090107": ["HENGFANG LIPSTICK  #KS", [["EACH", 5.9]]], "03090108": ["KISS BEAUTY MATTE LIPSTICK #KS", [["EACH", 5.9]]], "03090109": ["MISS ROSE LIP GLOSS", [["EACH", 11.2]]], "03090110": ["HENGFENG EYELINER 1081428", [["EACH", 7.9]]], "03090111": ["PEIYEN 99% LIPSTICK #RK1", [["EACH", 6.9]]], "03090112": ["MISS ROSE FOUNDATION", [["EACH", 8.3]]], "03090113": ["BAOLISHI EYE SHADOW", [["EACH", 8.9]]], "03090114": ["MISS ROSE 5 COLOR EYE SHADOW", [["EACH", 9.9]]], "03090115": ["KISS BEAUTY BLUSHER", [["EACH", 8.3]]], "03090116": ["CITRA WHITE BEAUTY POWDER", [["EACH", 12.9]]], "03090117": ["FANCY HAIR CLIP #KS", [["EACH", 12.9]]], "03090118": ["HAIR WRAPPING BAND #KS", [["EACH", 1.7]]], "03090119": ["FANCY COLORFUL HAIRBAND #KS", [["EACH", 1.9]]], "03090120": ["3PCS BLACK HAIRBAND #KS", [["EACH", 1.7]]], "03090121": ["OVAL VITTAGE MIRROR D-22 1258 #821 #RK1", [["EACH", 13.9]]], "03090122": ["BUTTERFLY VINTAGE MIRROR 0387 #821 #RK1", [["EACH", 4.9]]], "03090123": ["BEAUTY MIRROR 332 SMALL FOLD 0483 #821 #RK1", [["EACH", 5.9]]], "03090124": ["VINTAGE MIRROR D7 #821 #RK1", [["EACH", 11.9]]], "03090125": ["VINTAGE MIRROR 67 #821 #RK1", [["EACH", 10.9]]], "03090126": ["BEAUTY MIRROR SMALL 0290 #821 #RK1", [["EACH", 3.6]]], "03090127": ["BEAUTY MIRROR FOLD 0870 #821 #RK1", [["EACH", 9.3]]], "03090128": ["EYE LINNER PENCIL EL05 0251 #1151 #RK1", [["EACH", 2.7]]], "03090129": ["MAKE UP BRUSH 1040 #1151 #RK1", [["EACH", 1.7]]], "03090130": ["MAKEUP BRUSH SET 1258 #1151 #RK1", [["EACH", 12.1]]], "03090131": ["SHENGXISHI BRA STRAP 0290 #1324-40 #RK1", [["EACH", 2.9]]], "03090132": ["SHENGXISHI BRA BLINK STRAP 0387#1324-41 #RK1", [["EACH", 3.9]]], "03090133": ["KING BROWN COMB #1325-28 72# #RK1", [["EACH", 2.9]]], "03090134": ["KING BROWN COMB #1601326-31 41# 21# #RK1", [["EACH", 1.7]]], "03090135": ["FANCY CONTACT LENS SET HOLDER 0348 #501327 #RK1", [["EACH", 4.5]]], "03090136": ["FANCY COMB 0290 #1601324 #RK1", [["EACH", 3.9]]], "03090137": ["BLACK COMB ELEGANT 0193 #1601325 #RK1", [["EACH", 2.9]]], "03090138": ["BOBO 1000ML CREAM BOTTLE 0387 #1601326 #RK1", [["EACH", 4.9]]], "03090139": ["BOBO 1000ML SPRAY BOTTLE 0289#1601326 #RK1", [["EACH", 4.2]]], "03090140": ["BOBO 50ML CREAM BOTTLE 0348 #1601326 -18Z #RK1", [["EACH", 3.9]]], "03090141": ["BOBO 75ML CREAM BOTTLE 0329 #1601327 #RK1", [["EACH", 3.9]]], "03090142": ["MAGIC BAND 0232 #4353-29 #RK1", [["EACH", 3.6]]], "03090143": ["BLACK HAIR MAGIC BAND 0080 #4353-2 #RK1", [["EACH", 0.9]]], "03090144": ["MEIRENJI BOWKNOT 0290 #4352-30 #RK1", [["EACH", 3.9]]], "03090145": ["WANME HAIR ARRANGE 0387 #4352-19 #RK1", [["EACH", 3.6]]], "03090146": ["HAIRPIN 0087 4352-9 #RK1", [["EACH", 1.4]]], "03090147": ["HAIRPIN 0193 #4352-7 #RK1", [["EACH", 2.3]]], "03090148": ["HAIR COVER 0110 #4352-11 #RK1", [["EACH", 1.4]]], "03090149": ["MAGIC HAIR TAPE 0096 #4352-25 #RK1", [["EACH", 1.9]]], "03090150": ["PRINCESS HAIR 0483 #4352-27 #RK1", [["EACH", 4.9]]], "03090151": ["WEAVING CAP NET 0232 #4352-12 #RK1", [["EACH", 2.7]]], "03090152": ["WANME UPSTYLIST 0290 #4352-28 #RK1", [["EACH", 3.9]]], "03090153": ["HAIRBAND SET 0251 #4352-26 #RK1", [["EACH", 2.7]]], "03090154": ["12HAIRPIN 0290 #4353-23 #RK1", [["EACH", 3.6]]], "03090155": ["10 HAIRPINS 0387 #4352-24 #RK1", [["EACH", 4.9]]], "03090156": ["10 HAIRPINS 0290 #4352-19 #RK1", [["EACH", 3.9]]], "03090157": ["RIBBON HAIRCLIP 1161 #4352-5 #RK1", [["EACH", 11.9]]], "03090158": ["10PAIRS HAIRPIN 0387 #4352-6 #RK1", [["EACH", 3.6]]], "03090159": ["VELINA HAIRPIN 0193 #4352-8 #RK1", [["EACH", 2.7]]], "03090160": ["HAIR CLAW CLIPS 0735 #4352-10 #RK1", [["EACH", 7.9]]], "03090161": ["PINK HAIRBAND 0125 #4352-20 #RK1", [["EACH", 1.7]]], "03090162": ["DIAMOND HAIRBAND SINGLE 0290 #4352-15 #RK1", [["EACH", 5.9]]], "03090163": ["DIAMOND HAIRBAND DOUBLE 0580 #4352-59 #RK1", [["EACH", 7.9]]], "03090164": ["DIAMOND HAIRBAND TRIPLE 0870 #4352-17 #RK1", [["EACH", 9.9]]], "03090165": ["HEADBAND BAG 0193 #4352-18 #RK1", [["EACH", 3.6]]], "03090166": ["POCKET BLACK HAIRBAND 0193 #4352-1 #RK1", [["EACH", 2.9]]], "03090167": ["BLACK STEEL HEADBAND 0096 #4352-3 #RK1", [["EACH", 1.1]]], "03090168": ["DOUBLE BLACK STEEL HEADBAND 0290 #4352-4 #RK1", [["EACH", 2.5]]], "03090169": ["HAIR BUD SMALL 0232 #4352-32 #RK1", [["EACH", 1.7]]], "03090170": ["HAIR BUD BIG 0290 #4352-33 #RK1", [["EACH", 2.5]]], "03090171": ["FANCY ACC SET 1451 #4352-13 #RK1", [["EACH", 14.0]]], "03090172": ["VINTAGE MIRROR 0677 #1601324-0861 #RK1", [["EACH", 7.4]]], "03090173": ["ELEGANT HAND MIRROR 0967 #1601324-865 #RK1", [["EACH", 11.2]]], "03090174": ["FANCY MIRROR 0174 #1601324-854 #RK1", [["EACH", 1.9]]], "03090175": ["FANCY MIRROR 0174 #1601324-853 #RK1", [["EACH", 1.9]]], "03090176": ["FANCY STEEL MIRROR 0967 #1601324-528EA #RK1", [["EACH", 9.9]]], "03090177": ["FANCY STEEL MIRROR 0677#1601324-525EA #RK1", [["EACH", 6.9]]], "03090178": ["FANCY STEEL MIRROR 0774#1601324-527EA #RK1", [["EACH", 7.9]]], "03090179": ["FOLDABLE MIRROR COMB 0232 #1601325-0853 #RK1", [["EACH", 3.9]]], "03090180": ["FANCY MIRROR15X11CM 0445 #1601324-830 #RK1", [["EACH", 5.9]]], "03090181": ["FANCY GEL ROUND MIRROR 0967 #1601325-827 #RK1", [["EACH", 9.3]]], "03090182": ["FANCY GEL SQUARE MIRROR 0967 #1601325-828 #RK1", [["EACH", 9.3]]], "03090183": ["FANCY LEATHER ROUND MIRROR 0967 #1601325-817 #RK1", [["EACH", 9.9]]], "03090184": ["FANCY LEATHER SQUARE MIRROR 0967 #1601325-818 #RK1", [["EACH", 9.3]]], "03090185": ["LAMEILA HAIR CURLER 1122 #1601328-C226 #RK1", [["EACH", 9.9]]], "03090186": ["LAMEILA 2 RAZOR 0735 #1601328-A0910", [["EACH", 6.9]]], "03090187": ["LAMEILA HIGH RAZOR 0580 #1601328-A0904", [["EACH", 5.5]]], "03090188": ["LAMEILA NATURAL EYETAPE 0929 #1601328-A192", [["EACH", 9.9]]], "03090189": ["LAMEILA AUXILIARY CLIP 0541 #1601328-A0334", [["EACH", 5.5]]], "03090190": ["LAMEILA ANCE NEEDLE 0483 #1601328--B0724", [["EACH", 4.6]]], "03090191": ["LAMEILA EAR CLEANER 0677 #1601328-B0757", [["EACH", 6.1]]], "03090192": ["LAMEILA DEADSKIN PLIERS 1316 #1601328-E251", [["EACH", 12.5]]], "03090193": ["LAMEILA ALOE FACE SPONCE 0774 #1601328-B2067", [["EACH", 7.4]]], "03090194": ["LAMEILA EMPTY BOTTLE SET 4PCS 1065 #1601328-LA1069", [["EACH", 9.3]]], "03090195": ["LAMEILA EMPTY BOTTLE SET 4PCS 1065 #1601328-LA1070", [["EACH", 9.3]]], "03090196": ["LAMEILA EYELIDS STICK 0774 #1601328-A126", [["EACH", 7.9]]], "03090197": ["LAMEILA FACIAL CLEANSING SPONGE 0871 #1601328-B2040", [["EACH", 8.5]]], "03090198": ["LAMEILA FACIAL CLEANSING SPONGE 0871 #1601328-B2045", [["EACH", 8.0]]], "03090199": ["LAMEILA HONEY FACE SPONGE 0774 #1601328-B2065", [["EACH", 7.4]]], "03090200": ["LAMEILA HEADBAND 1452 #1601328-C0744", [["EACH", 13.9]]], "03090201": ["LAMEILA SHOWERCAP SET 1065 #1601328-C0802", [["EACH", 9.9]]], "03090202": ["LAMEILA BEAUTY RABBIT BAND 0968 #1601328-C0820", [["EACH", 8.9]]], "03090203": ["LAMEILA HAIR TOOLS 1123 #1601328-C176", [["EACH", 10.5]]], "03090204": ["LAMEILA NAIL POLISHING FILE 0426 #1601328-C0134", [["EACH", 3.6]]], "03090205": ["LAMEILA EYEBROW RAZOR 0677 #1601328-A0800", [["EACH", 6.5]]], "03090206": ["LAMEILA NAIL SET 0677 #1601328-F0106", [["EACH", 6.5]]], "03090207": ["LAMEILA NAIL SET 0677 #1601328-3036", [["EACH", 6.9]]], "03090208": ["LAMEILA EYEBROW TWEEZERS 0484 #1601328--A0172", [["EACH", 4.6]]], "03090209": ["LAMEILA SHOWER BALL 0677 #1601328-C052", [["EACH", 6.5]]], "03090210": ["LAMEILA TRAVEL SET 10PCS 2323 #1601328-LA1078", [["EACH", 25.9]]], "03090211": ["LAMEILA 2 PUFF 0542 #1601328-B0201", [["EACH", 4.6]]], "03090212": ["LAMEILA 3PCS EYEBROW RAZOR 0735 #1601328-A0368", [["EACH", 6.9]]], "03090213": ["LAMEILA EMPTY BOTTLE 1123 #1601328-LM122", [["EACH", 10.5]]], "03090214": ["LAMEILA DEADSKIN 0232 #1601328-3130", [["EACH", 2.5]]], "03090215": ["LAMEILA 3IN1HAIR CURL 0581 #1601328-C017", [["EACH", 5.1]]], "03090216": ["LAMEILA 3PCS BEAUTY TOOL 0735 #1601328-A0816", [["EACH", 6.9]]], "03090217": ["LAMEILA COMPRESSED MASK 0968 #1601328-D0834", [["EACH", 9.9]]], "03090218": ["LAMEILA RAZOR 0677 #1601328-A0909", [["EACH", 6.5]]], "03090219": ["LAMEILA COMPRESSED MASK 0542 #1601328-3157", [["EACH", 5.5]]], "03090220": ["LAMEILA MAKEUP TOOL 0929 #1601328-A0876", [["EACH", 8.9]]], "03090221": ["LAMEILA EYEBOW TWEEZERS 0484 #1601328-A0170", [["EACH", 4.2]]], "03090222": ["MEILAMEI OIL CONTROL PAPER 0290 #1601328-A500", [["EACH", 2.9]]], "03090223": ["LAMEILA NAIL POLISHER 0426 #1601328--025", [["EACH", 3.6]]], "03090224": ["LAMEILA EYEBROW TWEEZERS 0232 #1601328-A011", [["EACH", 2.3]]], "03090225": ["LAMEILA DOLPHIN RAZOR 0484 #1601328-A0827", [["EACH", 4.5]]], "03090226": ["LAMEILA DRAW EYEBROW 0252 #1601328-A0147", [["EACH", 2.7]]], "03090227": ["LAMEILA EYEBROW STENCILS 0290 #1601328-A0189", [["EACH", 3.3]]], "03090228": ["LAMEILA EYEBROW TWEEZER 0387 #1601328-A0419", [["EACH", 3.6]]], "03090229": ["LAMEILA EYEBROW STENCIL 0252 #1601328-A0146", [["EACH", 2.7]]], "03090230": ["LAMEILA BEAUTY SET 0677 #1601328-9064 #RK1", [["EACH", 7.9]]], "03090231": ["LAMEILA EYEBROW RAZOR 0542 #1601328-A0218", [["EACH", 5.9]]], "03090232": ["LAMEILA EYEBROW RAZOR 0348 #1601328-A0228", [["EACH", 3.3]]], "03090233": ["LAMEILA ACNE NEEDLE 0310 #1601328-B0725", [["EACH", 2.7]]], "03090234": ["LAMEILA EYEBROW RAZOR 0484 #1601328-A0370", [["EACH", 4.5]]], "03090235": ["LAMEILA EYELASHES 0290 #1601328-B0230", [["EACH", 2.9]]], "03090236": ["LAMEILA EYE TAPE 0290 #1601328-A118", [["EACH", 2.9]]], "03090237": ["LAMEILA EYE TAPE 0484 #1601328-A453", [["EACH", 4.6]]], "03090238": ["LAMEILA EYE TAPE 0484 #1601328-A452", [["EACH", 4.9]]], "03090239": ["LAMEILA ACNE NEEDLE 0968 #1601328-B0735", [["EACH", 9.3]]], "03090240": ["LAMEILA EYELID TAPE 0735 #1601328-A124", [["EACH", 6.9]]], "03090241": ["LAMEILA TRIMMED SCISSOR 0484 #1601328-A0403", [["EACH", 4.6]]], "03090242": ["LAMEILA SHARO TRIMMER 0484 #1601328-A0401", [["EACH", 4.9]]], "03090243": ["LAMEILA EYELASHES SCISSOR 0484 #1601328-A0402", [["EACH", 4.6]]], "03090244": ["LAMEILA EARPICK 0194 #1601328-B0762", [["EACH", 1.7]]], "03090245": ["LAMEILA ANCE 0290 #1601328-B0730", [["EACH", 2.7]]], "03090246": ["LAMEILA EARPICK 0310 #1601328-B0765", [["EACH", 2.9]]], "03090247": ["LAMEILA EYELASH SCISSOR 0581 #1601328-A0422", [["EACH", 5.5]]], "03090248": ["LAMEILA LIP BRUSH 0677 #1601328-3317", [["EACH", 6.5]]], "03090249": ["LAMEILA BATH BALL 0387 #1601328-C047", [["EACH", 3.9]]], "03090250": ["LAMEILA LIP STICK 0581 #1601328-3318", [["EACH", 5.9]]], "03090251": ["LAMEILA GRAPES CLEANSING SPONGE 0871 #1601328-B2046", [["EACH", 8.0]]], "03090252": ["LAMEILA APPLE CLEANSING SPONGE 0871 #1601328-B2047", [["EACH", 8.0]]], "03090253": ["LAMEILA CHAMOMILE CLEANSING SPONGE", [["EACH", 8.0]]], "03090254": ["LAMEILA EYELASH CURLER 0929 #1601328-SB0898", [["EACH", 9.3]]], "03090255": ["LAMEILA EYELASH CURLER BLACK 0348 #1601328-3118", [["EACH", 5.5]]], "03090256": ["LAMEILA EYELASH CURLER 0774 #1601328-A0301", [["EACH", 7.4]]], "03090257": ["LAMEILA PERFECT EYELASH CURLER 0774 #1601328-A0361", [["EACH", 7.4]]], "03090258": ["LAMEILA EYELASH CURLER 0871 #1601328-A0375", [["EACH", 8.3]]], "03090259": ["LAMEILA EYELID GLUE 0871 #1601328-A0528", [["EACH", 7.9]]], "03090260": ["LAMEILA HAIR CURLER 0968 #1601328-C211", [["EACH", 9.3]]], "03090261": ["LAMEILA TRAVEL BOTTLE SET 1065 #1601328-LA1091", [["EACH", 9.3]]], "03090262": ["LAMEILA HAIR CURLER 0890 #1601328-C210", [["EACH", 8.5]]], "03090263": ["LAMEILA HAIR CURLER 0968 #1601328-C243", [["EACH", 8.9]]], "03090264": ["LAMEILA DOUBLE FOLD EYELID GLUE 0871 #1601328-A0529", [["EACH", 7.4]]], "03090265": ["LAMEILA EYELASH GLUE MINI 0774 #1601328-A0521", [["EACH", 7.4]]], "03090266": ["LAMEILA EYELID GLUE 0871 #1601328-A0530", [["EACH", 7.4]]], "03090267": ["LAMEILA POWDERPUFF 0677 #1601328-B0296 #RK1", [["EACH", 5.9]]], "03090268": ["LAMEILA TRAVEL BOTTLE SET 1123 #1601328-LM121", [["EACH", 10.5]]], "03090269": ["LAMEILA SHOWER CAP 0484 #1601328-C0705", [["EACH", 4.5]]], "03090270": ["LAMEILA HAIR CURLER 1065 #1601328-C209", [["EACH", 9.9]]], "03090271": ["LAMEILA BB SPONGE 0484 #1601328-B2042", [["EACH", 4.5]]], "03090272": ["LAMEILA BRUSH SET 0871 #1601328-L0774", [["EACH", 8.3]]], "03090273": ["LAMEILA BRUSH SET 1065 #1601328-L0781", [["EACH", 11.9]]], "03090274": ["LAMEILA CLEANSING SPONGE 0484 #1601328-B2043", [["EACH", 4.5]]], "03090275": ["LAMEILA NAIL POLISHING FILE 0232 #1601328-C0336", [["EACH", 1.7]]], "03090276": ["ONYX MELLOW EYELASH 1935 #1601328-ONYX", [["10", 23.5], ["EACH", 2.7]]], "03090277": ["BECAUSE OF YOU LASHES 1123 #1601328", [["EACH", 11.9]]], "03090278": ["LAMEILA MAKEUP COTTON 0232 #1601329-B0110 B0112 B1064 B0115", [["EACH", 2.5]]], "03090279": ["LAMEILA EYEBROW TWEEZERS 0484 #1601329-A0173", [["EACH", 4.2]]], "03090280": ["LINE MAKEUP REMOVER 1258 #1601329-S251 S252 S253", [["EACH", 12.9]]], "03090281": ["LAMEILA POWDER PUFF 0155 #1601329-212", [["EACH", 1.5]]], "03090282": ["LAMEILA RUBYCELL MAKEUP PUFF 0426 #1601329-B0865", [["EACH", 3.6]]], "03090283": ["LAMEILA EYEBROW RAZOR 0484 #1601328-9011", [["EACH", 4.5]]], "03090284": ["YOBEKA EYESLASH 1242 #1701667 #RK1", [["EACH", 15.9]]], "03090285": ["BOUB 8COLOR EYESHADOW 1146 #3237 #RK1", [["EACH", 12.1]]], "03090286": ["BOUB 10COLOR EYESHADOW 1433 #3237-7050 #RK1", [["EACH", 15.9]]], "03090287": ["TYA MAKEUP KIT 1624 #3237-528 #RK1", [["EACH", 17.9]]], "03090288": ["SHINNY PEARL BB CREAM 0859 #3237 #RK1", [["EACH", 9.3]]], "03090289": ["8 COLOR EYESHADOW 1337 #3237-7006 #RK1", [["EACH", 13.9]]], "03090290": ["PLAY COLOR LIPSTICK 0238 #3237-8110 #RK1", [["EACH", 3.9]]], "03090291": ["PY LIPSTICK 0358 #3237-8094 #RK1", [["EACH", 4.9]]], "03090292": ["MAC EYELINER PENCIL 0191 #3237 #RK1", [["EACH", 3.5]]], "03090293": ["LAMEILA COSMETIC COTTON 1050 #1701667-B228 #RK1", [["EACH", 9.9]]], "03090294": ["COTTON SWABS 0859 #1701667-B0128 #RK1", [["EACH", 5.9]]], "03090295": ["GRINDING FOOT STONE 0420 #1701667 #RK1", [["EACH", 3.9]]], "03090296": ["LAMEILA BOTTLE 30ML 0152 #1701667-LM503 #RK1", [["EACH", 2.7]]], "03090297": ["LAMEILA BOTTLE 20ML 0152 #1701667-LM501 #RK1", [["EACH", 1.7]]], "03090298": ["LAMEILA BOTTLE 100ML 0210#1701667-LM509 #RK1", [["EACH", 4.2]]], "03090299": ["LAMEILA BOTTLE 75ML 0191#1701667-LM511 #RK1", [["EACH", 3.6]]], "03090300": ["LAMEILA BOTTLE 50ML 0191#1701667-LM510 #RK1", [["EACH", 3.3]]], "03090301": ["LAMEILA BOTTLE 75ML 0191#1701667-LM508 #RK1", [["EACH", 3.4]]], "03090302": ["LAMEILA BOTTLE 50ML 0191#1701667-LM507 #RK1", [["EACH", 3.1]]], "03090303": ["LAMEILA BOTTLE 35ML 0191#1701667-LM504 #RK1", [["EACH", 3.2]]], "03090304": ["LAMEILA BOTTLE 40ML 0191#1701667-LM505 #RK1", [["EACH", 3.0]]], "03090305": ["LAMEILA BOTTLE 40ML 0191#1701667-LM506 #RK1", [["EACH", 3.1]]], "03090306": ["LAMEILA FALSE EYELASH GLUE 0477 #1701666-3323 #RK1", [["EACH", 5.9]]], "03090307": ["LAMEILA EYELASH CURLER 0439 #1701666-368 #RK1", [["EACH", 5.9]]], "03090308": ["LAMEILA KITTY PUFF 0496 #1701668 B0959 #RK1", [["EACH", 5.9]]], "03090309": ["YH MAKEUP PUFF 0668 #1701666-Y0108 Y0109 #RK1", [["EACH", 5.5]]], "03090310": ["LML FOAMING NET 0477 #1701667 B0025 #RK1", [["EACH", 4.9]]], "03090311": ["LML HAIR CURLER 1050 #1701667-C225 #RK1", [["EACH", 8.9]]], "03090312": ["LML EYELASH GLUE 0955 #1701666 A0540 #RK1", [["EACH", 5.0]]], "03090313": ["LML MAKE UP COTTON 0573 #1701666 B209 #RK1", [["EACH", 5.9]]], "03090314": ["FASHIONAL EYELASH 2292 #1701667 #RK1", [["EACH", 12.9]]], "03090315": ["LAMEILA BOTTLE 100ML 0210#1701667-LM509 #RK1", [["EACH", 4.9]]], "03090316": ["HK BIG FOLDABLE MIRROR 1242 #1057 #RK1", [["EACH", 12.9]]], "03090317": ["HK COMB MIRROR SET 0955 #1057 #RK1", [["EACH", 9.9]]], "03090318": ["SHUNFA EXQUISITE COMB 0764 #9805-JQ-0182 #RK1", [["EACH", 7.9]]], "03090319": ["BOBO 50ML CREAM BOTTLE 0305#1601326 #RK1", [["EACH", 3.3]]], "03090320": ["FLASHLIGHT EARPICK 0171 #9805 XY3188 #RK1", [["EACH", 1.7]]], "03090321": ["BOBO 1000ML CREAM BOTTLE 0305 #9805 #RK1", [["EACH", 4.2]]], "03090322": ["HK NAIL POLISH 0343 #9805 #RK1", [["EACH", 3.9]]], "03090323": ["FANCY GLASSES CASE 0955 #9805 #RK1", [["EACH", 9.9]]], "03090324": ["QIANGREN NAILCLIPPER 0278 #9805 #RK1", [["EACH", 2.5]]], "03090325": ["HK MASK 0726 #2904 #RK1", [["EACH", 7.9]]], "03090326": ["HK MIRROR AND COMB 1018 #RK1 K1052", [["EACH", 12.9]]], "03090327": ["21.5*15CM PAPER MIRROR 1111 #RK1", [["EACH", 7.9]]], "03090328": ["HK MIRROR AND COMB 1018 #RK1 K1043", [["EACH", 12.1]]], "03090329": ["HK MIRROR AND COMB 1018 #RK1 K1076", [["EACH", 11.9]]], "03090330": ["HK MIRROR RECTANGLE 0648 #RK1 3318", [["EACH", 7.4]]], "03090331": ["29*21.5CM PAPER MIRROR 1111 #RK1", [["EACH", 12.9]]], "03090332": ["25.5*19.5CM PAPER MIRROR 0925 #RK1 163JF", [["EACH", 11.9]]], "03090333": ["PAPER MIRROR 21.5*15CM  #RK1", [["EACH", 7.9]]], "03090334": ["SMALL MIRROR CIRCLE 0148  #RK1", [["EACH", 1.7]]], "03090335": ["POWDER PUFF 0833 #RK1 #1701632-B0821", [["EACH", 9.9]]], "03090336": ["POWDER PUFF 0648 #RK1 #1701632-B0876", [["EACH", 7.9]]], "03090337": ["POWDER PUFF 0648 #RK1 #1701632-B0896", [["EACH", 7.9]]], "03090338": ["LAMEILA EYEBROW KNIFE 1203 #RK1 #1701632-A903", [["EACH", 12.9]]], "03090339": ["LAMEILA EYEBROW TWEEZERS 0833 #RK1 #1701632-A212", [["EACH", 7.9]]], "03090340": ["EYELID STICKER 0518 #RK1 #1701632-A176", [["EACH", 5.5]]], "03090341": ["LINE EYE TAPE 0833 #RK1 #1701632-S212", [["EACH", 9.9]]], "03090342": ["LINE MAKEUP BRUSH 1018 #RK1 #1701632-D303", [["EACH", 11.9]]], "03090343": ["LML EYEBROW KNIFE 0370 #RK1 #1701632-A0867", [["EACH", 3.9]]], "03090344": ["LML EYELID TAPE 0370 #RK1 #1701632-A462", [["EACH", 4.5]]], "03090345": ["LINE EYELID TAPE 0648 #RK1 #1701632-S201", [["EACH", 7.5]]], "03090346": ["LML FACIAL MASSAGE 0555 #RK1 #1701632-C0327", [["EACH", 6.1]]], "03090347": ["LML TRANSPARENT PUFF 0518 #RK1 #1701632-B0990", [["EACH", 5.9]]], "03090348": ["LML HAIR CURLER 1018 #RK1 #1701632-C227", [["EACH", 11.5]]], "03090349": ["LML HAIR CURLER 1018 #RK1 #1701632-C201", [["EACH", 10.9]]], "03090350": ["LML EYEBROW RAZOR 0833 #RK1 #1701632-A0849", [["EACH", 9.9]]], "03090351": ["LML AIR CUSHION PUFF 0888 #RK1 #1701632-A715", [["EACH", 9.9]]], "03090352": ["LML SPONGE CURLING SPONGE 0555 #RK1 #1701632-C195", [["EACH", 6.5]]], "03090353": ["LML LEG MASSAGER 0925 #RK1 #1701632-M1032", [["EACH", 9.9]]], "03090354": ["LML FACE MASSAGE 0555 #RK1 #1701632-M1066", [["EACH", 6.5]]], "03090355": ["LML HEAD MASSAGER 0462 #RK1 #1701632-M1028", [["EACH", 5.9]]], "03090356": ["LML ARM ROLLER 1018 #RK1 #1701632-M1069", [["EACH", 11.9]]], "03090357": ["LML BRUSH EGG 0666 #RK1 #1701632-C0348", [["EACH", 6.9]]], "03090358": ["LML MODULATING LEG MASSAGE 1018 #RK1 #1701632-M1013", [["EACH", 11.9]]], "03090359": ["LINE EYELID TAPS 0648 #RK1 #1701632-S202", [["EACH", 7.5]]], "03090360": ["LML BODY ROLLER 0925 #RK1 #1701632-M1075", [["EACH", 9.9]]], "03090361": ["LML HIP ROLLER 1018 #RK1 #1701632-M1030", [["EACH", 11.2]]], "03090362": ["LML EYE MASSAGER 0833 #RK1 #1701632-M1093", [["EACH", 9.9]]], "03090363": ["LML HAIR CURLER 1074 #RK1 #1701632-C232", [["EACH", 11.9]]], "03090364": ["LML MAKEUP BRUSH SET1074 #RK1 #1701632-L0762", [["EACH", 11.9]]], "03090365": ["LML 3PCS KNIFE 0648 #RK1 #1701632-A0890", [["EACH", 7.9]]], "03090366": ["LML 5PCS MAKEUP BRUSHES 6481 #RK1 #1701632-L0881", [["EACH", 69.9]]], "03090367": ["LML EYE TAPE 0555 #RK1 #1701632-A197", [["EACH", 6.9]]], "03090368": ["POWDER PUFF WITH STAND 1018 #RK1 #1701632-B0969", [["EACH", 9.3]]], "03090369": ["LML NAIL REMOVER WIPE 0296 #RK1 #1701632-E2095", [["EACH", 3.6]]], "03090370": ["LML HAIR CURLER 0555 #RK1 #1701632-C106", [["EACH", 5.9]]], "03090371": ["LAMEILA BEAUTY SET 0677 #1601328-9064 #RK1", [["EACH", 8.9]]], "03090372": ["HK CONTACT LENS MIRROR SET 0636 #3518 #RK1", [["EACH", 9.9]]], "03090373": ["BOBO 25ML SPRAY BOTTLE 0243#0002421-014Z #RK1", [["EACH", 2.9]]], "03090374": ["BOBO 30ML SPRAY BOTTLE 0337#0002421-028Z RK1", [["EACH", 3.9]]], "03090375": ["BOBO 30ML SPRAY BOTTLE 0243#0002421-013Z #RK1", [["EACH", 3.3]]], "03090376": ["BOBO 60ML 0375  SPRAY BOTTLE 0243#0002421-014Z #RK1", [["EACH", 4.2]]], "03090377": ["BOBO 25ML SPRAY BOTTLE 0243#0002421-022AJ #RK1", [["EACH", 2.9]]], "03090378": ["FOLDABLE HAIR COMB WITH HANDLE 0750 #6614852-3545 #RK1", [["EACH", 4.9]]], "03090379": ["FOLDABLE HAIR COMB WITH HANDLE 0750 #6614852-3543 #RK1", [["EACH", 4.9]]], "03090380": ["FOLDABLE HAIR COMB WITH HANDLE 0750 #6614852-3544#RK1", [["EACH", 4.9]]], "03090381": ["TPU BRA STRAP 0450 #6614853-885 #RK1", [["EACH", 2.5]]], "03090382": ["KING BROWN COMB 0250#41 #RK1", [["EACH", 1.9], ["PACK", 0.0]]], "03090383": ["KING BROWN COMB 0225#38 #RK1", [["EACH", 1.9], ["PACK", 0.0]]], "03090384": ["KING BROWN COMB 0225#62 #RK1", [["EACH", 2.5], ["PACK", 0.0]]], "03090385": ["KING BROWN COMB 0225#6 #RK1", [["EACH", 1.9], ["PACK", 0.0]]], "03090386": ["KING BROWN COMB 0225#7 #RK1", [["EACH", 1.9], ["PACK", 0.0]]], "03090387": ["KING BROWN COMB 0225#8 #RK1", [["EACH", 1.9], ["PACK", 0.0]]], "03090388": ["KING BROWN COMB 0225#70 #RK1", [["EACH", 2.9], ["PACK", 0.0]]], "03090389": ["KING BROWN COMB 0225#24 #RK1", [["EACH", 2.9], ["PACK", 0.0]]], "03090390": ["KING BROWN COMB 0225#29 #RK1", [["EACH", 2.5], ["PACK", 0.0]]], "03090391": ["KING BROWN COMB 0225#34 #RK1", [["EACH", 1.9], ["PACK", 0.0]]], "03090392": ["MIRROR COMB 0540#6614853-888 #RK1", [["EACH", 3.9]]], "03090393": ["MIRROR COMB 0540#6614853-889 #RK1", [["EACH", 3.9]]], "03090394": ["FOLDABLE MIRROR COMB 0480 #6614852-0853 #RK1", [["EACH", 3.9]]], "03090395": ["FORK SHAMPOO HAIR COMB 0750#6614852-12L #RK1", [["EACH", 5.9]]], "03090396": ["FORK SHAMPOO HAIR COMB 0750#6614852-13M #RK1", [["EACH", 4.9]]], "03090397": ["HAIR WOODEN ROLLING BRUSH L 1350 #6614852-2 #RK1", [["EACH", 9.9]]], "03090398": ["HAIR BLACK ROLLING BRUSH L 1350 #6614852-3 #RK1", [["EACH", 8.9]]], "03090399": ["WOODEN MASSGAE COMB 1950 #6614852-BH710M #RK1", [["EACH", 12.9]]], "03090400": ["WOODEN MASSGAE COMB 2100 #6614852-BH131M #RK1", [["EACH", 13.9]]], "03090401": ["SQUARE HAIR COMB 1200 #6614852-1 #RK1", [["EACH", 7.9]]], "03090402": ["DIY FLOWER FOAM HAIRBAND WITH PEARL CHAIN #RK1", [["EACH", 9.9]]], "03290001": ["FLOWER HAIRBAND #KS00001", [["EACH", 8.9]]], "03290002": ["BD TULLE&BOW KIDDO HEADBAND 150325-2", [["EACH", 8.9]]], "03290003": ["BD LITTLE SNAILS TURTLE 150190-35", [["EACH", 4.9]]], "03290004": ["BD CHECKERS SHIMMERY 150155-18", [["EACH", 3.9]]], "03290005": ["BD POLKA DOTS STAR TULLE 150200-32", [["EACH", 5.9]]], "03290006": ["BD SOFT PASTEL CHECKERS 150330-31", [["EACH", 6.9]]], "03290007": ["BD BOHEMIA HORSEY 150275-29", [["EACH", 6.9]]], "03290008": ["BD LITTLE WHALES 150155-4", [["EACH", 5.9]]], "03290009": ["BD FLOWER PETALS PEARL 150415-25", [["EACH", 9.9]]], "03290010": ["BD POLKA DOTS FRUITY 150140-4", [["EACH", 3.6]]], "03290011": ["BD COTTON FABRIC BOW 150215-6", [["EACH", 4.6]]], "03290012": ["BD PUFFY PUFF 150165-30", [["EACH", 3.9]]], "03290013": ["BD KOREA DOUBLE FLOWER PEARL 150240-10", [["EACH", 6.9]]], "03290014": ["BD ROUNDIES HAIRCLIP 150215-5", [["EACH", 4.9]]], "03290015": ["BD ZAKKA PUFFY HONEYBEAR 150270-27", [["EACH", 6.5]]], "03290016": ["BD LINE BEAR 150240-17", [["EACH", 6.5]]], "03290017": ["BD COTTON LACEY BRAIDE 150140-9", [["EACH", 3.9]]], "03290018": ["BD CUTE KITTEN 150240-22", [["EACH", 6.9]]], "03290019": ["BD HONEYBEAR PEARLY 150300-34", [["EACH", 9.9]]], "03290020": ["BD RED SCARFY TEDDY TED 150190-23", [["EACH", 6.9]]], "03290021": ["BD CHANEL INSPIRED BALLERINA 150330-24", [["EACH", 9.9]]]};
 const SKUS=Object.keys(CAT);
 
-// ═══ CONFIG ════════════════════════════════════════════
-var API_KEY='scs_v4';
-var LOC={shop:'🏪 Shop Floor',warehouse:'🏭 Warehouse',papar:'Papar Branch',kota_belud:'Kota Belud',tuaran:'Tuaran',ranau:'Ranau',keningau:'Keningau',hq:'HQ / Main Store',all:'All Branches'};
-var RNAV={
-  admin:[{s:'Overview'},{id:'dash',i:'📊',l:'Dashboard'},{s:'Stock Count'},{id:'sessions',i:'📋',l:'Sessions'},{id:'subs',i:'📨',l:'Submissions'},{id:'compiled',i:'📈',l:'Compiled'},{s:'Admin'},{id:'users',i:'👥',l:'Users'},{id:'products',i:'📦',l:'Products'},{id:'audit',i:'🔍',l:'Audit Log'}],
-  supervisor:[{id:'dash',i:'📊',l:'Dashboard'},{id:'sessions',i:'📋',l:'Sessions'},{id:'subs',i:'📨',l:'Submissions'},{id:'compiled',i:'📈',l:'Compiled'},{id:'products',i:'📦',l:'Products'}],
+// ═══ DEVICE ID ═════════════════════════════════════════════
+// Permanent unique ID for this browser/device — never changes
+var DEVICE_ID = localStorage.getItem('scs_device_id');
+if (!DEVICE_ID) {
+  DEVICE_ID = 'dev_' + Date.now() + '_' + Math.random().toString(36).substr(2,9);
+  localStorage.setItem('scs_device_id', DEVICE_ID);
+}
+var SESSION_TOKEN_KEY = 'scs_token_v4';
+var API_KEY           = 'scs_api_v4';
+var API_URL           = localStorage.getItem(API_KEY) || '';
+
+// Show device ID on login screen so staff/admin can identify it
+document.getElementById('deviceIdLabel').textContent = 'Device: ' + DEVICE_ID.substring(0,20);
+
+var LOC = {
+  shop:'🏪 Shop Floor', warehouse:'🏭 Warehouse', papar:'Papar Branch',
+  kota_belud:'Kota Belud', tuaran:'Tuaran', ranau:'Ranau',
+  keningau:'Keningau', hq:'HQ / Main Store', all:'All Branches'
+};
+var RNAV = {
+  admin:[
+    {s:'Overview'},{id:'dash',i:'📊',l:'Dashboard'},
+    {s:'Stock Count'},
+    {id:'sessions',i:'📋',l:'Sessions'},
+    {id:'subs',i:'📨',l:'Submissions'},
+    {id:'compiled',i:'📈',l:'Compiled'},
+    {s:'Admin'},
+    {id:'users',i:'👥',l:'Users'},
+    {id:'active-sessions',i:'🖥',l:'Device Sessions'},
+    {id:'products',i:'📦',l:'Products'},
+    {id:'audit',i:'🔍',l:'Audit Log'}
+  ],
+  supervisor:[
+    {id:'dash',i:'📊',l:'Dashboard'},
+    {id:'sessions',i:'📋',l:'Sessions'},
+    {id:'subs',i:'📨',l:'Submissions'},
+    {id:'compiled',i:'📈',l:'Compiled'},
+    {id:'products',i:'📦',l:'Products'}
+  ],
   staff:[{id:'dash',i:'📊',l:'Dashboard'},{id:'count',i:'🔢',l:'Count'}],
   viewer:[{id:'dash',i:'📊',l:'Dashboard'},{id:'compiled',i:'📈',l:'Compiled'},{id:'products',i:'📦',l:'Products'}]
 };
 
-// ═══ STATE ════════════════════════════════════════════
-var API_URL=localStorage.getItem(API_KEY)||'';
-var me=null,myCounts={},mySession=null;
-var curSku=null,curUom=null,curQty=0,cfFilter='all';
-var camStream=null,zxR=null,camActive=false;
-var C={users:[],sessions:[],subs:[],audit:[]};
+// ═══ STATE ══════════════════════════════════════════════════
+var me = null;
+var myCounts  = {};
+var mySession = null;
+var curSku = null, curUom = null, curQty = 0, cfFilter = 'all';
+var camStream = null, zxR = null, camActive = false;
+var C = {users:[], sessions:[], subs:[], audit:[]};
 
-// ═══ INIT ═════════════════════════════════════════════
-document.getElementById('lgDate').textContent=new Date().toLocaleDateString('en-MY',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-if(API_URL){show('scLogin');document.getElementById('apiUrlInp').value=API_URL;}
+// ═══ INIT ════════════════════════════════════════════════════
+document.getElementById('lgDate').textContent =
+  new Date().toLocaleDateString('en-MY',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+// On load: try to restore session from saved token
+(function init() {
+  if (!API_URL) { show('scSetup'); return; }
+  document.getElementById('apiUrlInp').value = API_URL;
+  var token = localStorage.getItem(SESSION_TOKEN_KEY);
+  if (token) {
+    api({action:'checkSession', deviceId:DEVICE_ID, token:token})
+      .then(function(r) {
+        if (r && r.valid) {
+          // Session still valid — need full user record, so we still go to login
+          // but pre-fill username hint
+          show('scLogin');
+        } else {
+          localStorage.removeItem(SESSION_TOKEN_KEY);
+          show('scLogin');
+        }
+      })
+      .catch(function() { show('scLogin'); });
+  } else {
+    show('scLogin');
+  }
+})();
 
 document.getElementById('lgUser').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('lgPass').focus();});
 document.getElementById('lgPass').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
 
-function show(id){['scSetup','scLogin','scApp'].forEach(function(s){var el=document.getElementById(s);if(el)el.classList.toggle('on',s===id);});}
+function show(id) {
+  ['scSetup','scLogin','scApp'].forEach(function(s){
+    var el = document.getElementById(s);
+    if (el) el.classList.toggle('on', s === id);
+  });
+}
 
-// ═══ API — THE KEY FIX ════════════════════════════════
-// Apps Script only reliably responds to plain GET requests.
-// We encode ALL parameters in the URL query string.
-// No custom headers, no JSON body, no mode:'cors'.
-// fetch() follows the redirect automatically and returns JSON.
+// ═══ API ══════════════════════════════════════════════════════
 function api(params) {
   syncState('busy');
-  if(!API_URL){syncState('err');return Promise.reject(new Error('No API URL set'));}
-
-  // Encode every param value — objects become JSON strings
-  var qs=Object.keys(params).map(function(k){
-    var v=params[k];
-    if(v===null||v===undefined) return null;
-    if(typeof v==='object') v=JSON.stringify(v);
-    return encodeURIComponent(k)+'='+encodeURIComponent(String(v));
+  if (!API_URL) { syncState('err'); return Promise.reject(new Error('No API URL set')); }
+  var qs = Object.keys(params).map(function(k) {
+    var v = params[k];
+    if (v === null || v === undefined) { return null; }
+    if (typeof v === 'object') { v = JSON.stringify(v); }
+    return encodeURIComponent(k) + '=' + encodeURIComponent(String(v));
   }).filter(Boolean).join('&');
-
-  var url=API_URL+(API_URL.indexOf('?')>=0?'&':'?')+qs;
-
+  var url = API_URL + (API_URL.indexOf('?') >= 0 ? '&' : '?') + qs;
   return fetch(url, {method:'GET'})
-    .then(function(r){
-      if(!r.ok) throw new Error('HTTP '+r.status);
-      return r.json();
-    })
-    .then(function(d){
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
       syncState('ok');
-      if(!d.ok) throw new Error(d.error||'Server error');
+      if (!d.ok) { throw new Error(d.error || 'Server error'); }
       return d.data;
     })
-    .catch(function(e){
-      syncState('err');
-      throw e;
-    });
+    .catch(function(e) { syncState('err'); throw e; });
 }
 
-function syncState(s){
-  var dot=document.getElementById('sdot'),txt=document.getElementById('stxt');
-  if(!dot) return;
-  dot.className='sdot'+(s==='busy'?' busy':s==='err'?' err':'');
-  txt.textContent=s==='busy'?'Syncing…':s==='err'?'Error':'Synced';
+function syncState(s) {
+  var dot = document.getElementById('sdot'), txt = document.getElementById('stxt');
+  if (!dot) { return; }
+  dot.className = 'sdot' + (s==='busy'?' busy':s==='err'?' err':'');
+  txt.textContent = s==='busy'?'Syncing…':s==='err'?'Error':'Synced';
 }
 
-// ═══ SETUP ════════════════════════════════════════════
-function doTest(){
-  var url=document.getElementById('apiUrlInp').value.trim();
-  if(!url){showStatus('err','❌ Paste your Web App URL first');return;}
-  API_URL=url;
-  var st=document.getElementById('testStatus');
+// ═══ SETUP ════════════════════════════════════════════════════
+function doTest() {
+  var url = document.getElementById('apiUrlInp').value.trim();
+  if (!url) { showStatus('err','❌ Paste your Web App URL first'); return; }
+  API_URL = url;
+  var st = document.getElementById('testStatus');
   st.className='status-box info'; st.style.display='block';
-  st.innerHTML='⏳ Sending ping to Google Apps Script…<div class="debug">URL: '+url+'</div>';
-
-  fetch(url+'?action=ping', {method:'GET'})
-    .then(function(r){
-      var status=r.status;
-      return r.text().then(function(t){return {status:status,text:t};});
-    })
+  st.innerHTML='⏳ Connecting…<div class="debug">'+url+'</div>';
+  fetch(url + '?action=ping', {method:'GET'})
+    .then(function(r){ return r.text().then(function(t){return{s:r.status,t:t};}); })
     .then(function(res){
-      var debug='HTTP '+res.status+'\n'+res.text.substring(0,300);
-      try{
-        var d=JSON.parse(res.text);
-        if(d.ok){
-          localStorage.setItem(API_KEY,url);
+      try {
+        var d = JSON.parse(res.t);
+        if (d.ok) {
+          localStorage.setItem(API_KEY, url);
           st.className='status-box ok';
-          st.innerHTML='✅ Connected! Server responded at '+(d.data&&d.data.time?d.data.time.substring(0,19).replace('T',' '):'OK')+'<div class="debug">'+debug+'</div>';
+          st.innerHTML='✅ Connected! Server time: '+(d.data&&d.data.time?d.data.time.substring(0,19).replace('T',' '):'OK')
+            +'<div class="debug">HTTP '+res.s+'</div>';
           document.getElementById('launchBtn').style.display='inline-flex';
         } else {
           st.className='status-box err';
-          st.innerHTML='❌ Server error: '+(d.error||'unknown')+'<div class="debug">'+debug+'</div>';
+          st.innerHTML='❌ '+(d.error||'Server error')+'<div class="debug">'+res.t.substring(0,300)+'</div>';
         }
-      } catch(e){
+      } catch(e) {
         st.className='status-box err';
-        st.innerHTML='❌ Invalid response (not JSON). Check the URL is correct and the Web App is deployed.<div class="debug">'+debug+'</div>';
+        st.innerHTML='❌ Response is not JSON. Make sure the URL ends in <code>/exec</code> and access is set to <strong>Anyone</strong>.'
+          +'<div class="debug">HTTP '+res.s+'\n'+res.t.substring(0,300)+'</div>';
       }
     })
     .catch(function(e){
       st.className='status-box err';
-      st.innerHTML='❌ Network error: '+e.message+'<br><br>'
-        +'<strong>Common fixes:</strong><br>'
-        +'1. Make sure "Who has access" is set to <strong>Anyone</strong><br>'
-        +'2. Use the <strong>deployment URL</strong> (ends in /exec), not the script URL<br>'
-        +'3. Try opening the URL directly in your browser — you should see JSON<div class="debug">Error: '+e.message+'</div>';
+      st.innerHTML='❌ Network error: '+e.message
+        +'<br><br><strong>Fixes:</strong><ul style="padding-left:14px;margin-top:4px">'
+        +'<li>URL must end in <code>/exec</code></li>'
+        +'<li>Who has access must be <strong>Anyone</strong></li>'
+        +'<li>Open the URL in a browser tab — you should see JSON</li></ul>';
     });
 }
-
-function showStatus(type,html){var st=document.getElementById('testStatus');st.className='status-box '+type;st.style.display='block';st.innerHTML=html;}
+function showStatus(t,h){var s=document.getElementById('testStatus');s.className='status-box '+t;s.style.display='block';s.innerHTML=h;}
 function goLogin(){show('scLogin');}
 function goSetup(){show('scSetup');}
 
-// ═══ AUTH ═════════════════════════════════════════════
-function doLogin(){
-  var u=document.getElementById('lgUser').value.trim();
-  var p=document.getElementById('lgPass').value;
-  if(!u||!p){document.getElementById('lgErr').textContent='❌ Enter username and password';return;}
-  document.getElementById('lgErr').textContent='⏳ Signing in…';
-  api({action:'login',username:u,password:p})
-    .then(function(user){
-      me=user;
+// ═══ AUTH ════════════════════════════════════════════════════
+function doLogin() {
+  var u = document.getElementById('lgUser').value.trim();
+  var p = document.getElementById('lgPass').value;
+  if (!u || !p) { document.getElementById('lgErr').textContent='❌ Enter username and password'; return; }
+  document.getElementById('lgErr').textContent = '⏳ Signing in…';
+  api({action:'login', username:u, password:p, deviceId:DEVICE_ID})
+    .then(function(user) {
+      me = user;
+      // Save token so we can verify session later
+      localStorage.setItem(SESSION_TOKEN_KEY, user.token || '');
       show('scApp');
       buildSb();
       goView('dash');
     })
-    .catch(function(e){document.getElementById('lgErr').textContent='❌ '+e.message;});
-}
-function doLogout(){
-  me=null;myCounts={};mySession=null;C={users:[],sessions:[],subs:[],audit:[]};
-  show('scLogin');
-  document.getElementById('lgPass').value='';
-  document.getElementById('lgErr').textContent='';
+    .catch(function(e) {
+      document.getElementById('lgErr').textContent = '❌ ' + e.message;
+    });
 }
 
-// ═══ SIDEBAR ══════════════════════════════════════════
-function buildSb(){
-  var nav=RNAV[me.role]||RNAV.viewer;
-  document.getElementById('sbName').textContent=me.name;
-  document.getElementById('sbRole').textContent=me.role.toUpperCase();
-  var b=document.getElementById('sbBadge');b.textContent=me.role;b.className='sb-badge b-'+me.role;
-  var h='';
-  nav.forEach(function(n){
-    if(n.s){h+='<div class="nav-sec">'+n.s+'</div>';return;}
-    h+='<div class="ni" id="ni-'+n.id+'" onclick="goView(\''+n.id+'\')"><span style="width:17px;text-align:center">'+n.i+'</span>'+n.l+'</div>';
-  });
-  document.getElementById('sbNav').innerHTML=h;
+function doLogout() {
+  var u = me ? me.username : '';
+  var r = me ? me.role    : '';
+  api({action:'logout', deviceId:DEVICE_ID, username:u, role:r}).catch(function(){});
+  localStorage.removeItem(SESSION_TOKEN_KEY);
+  me = null; myCounts = {}; mySession = null;
+  C  = {users:[], sessions:[], subs:[], audit:[]};
+  show('scLogin');
+  document.getElementById('lgPass').value = '';
+  document.getElementById('lgErr').textContent  = '';
 }
-function toggleSb(){document.getElementById('sidebar').classList.toggle('open');}
-document.addEventListener('click',function(e){
-  var sb=document.getElementById('sidebar');
-  if(window.innerWidth<=768&&sb&&sb.classList.contains('open')&&!sb.contains(e.target)&&!e.target.closest('.menu-btn'))sb.classList.remove('open');
+
+// ═══ SIDEBAR ══════════════════════════════════════════════════
+function buildSb() {
+  var nav = RNAV[me.role] || RNAV.viewer;
+  document.getElementById('sbName').textContent   = me.name;
+  document.getElementById('sbRole').textContent   = me.role.toUpperCase();
+  document.getElementById('sbDevice').textContent = 'Device: ' + DEVICE_ID.substring(0,14) + '…';
+  var b = document.getElementById('sbBadge');
+  b.textContent = me.role; b.className = 'sb-badge b-' + me.role;
+  var h = '';
+  nav.forEach(function(n) {
+    if (n.s) { h += '<div class="nav-sec">' + n.s + '</div>'; return; }
+    h += '<div class="ni" id="ni-'+n.id+'" onclick="goView(\''+n.id+'\')"><span style="width:17px;text-align:center">'+n.i+'</span>'+n.l+'</div>';
+  });
+  document.getElementById('sbNav').innerHTML = h;
+}
+function toggleSb() { document.getElementById('sidebar').classList.toggle('open'); }
+document.addEventListener('click', function(e) {
+  var sb = document.getElementById('sidebar');
+  if (window.innerWidth<=768 && sb && sb.classList.contains('open')
+      && !sb.contains(e.target) && !e.target.closest('.menu-btn')) {
+    sb.classList.remove('open');
+  }
 });
 
-// ═══ VIEWS ════════════════════════════════════════════
-var VTITLES={dash:'📊 Dashboard',sessions:'📋 Sessions',users:'👥 Users',count:'🔢 Stock Count',subs:'📨 Submissions',compiled:'📈 Compiled Report',products:'📦 Products',audit:'🔍 Audit Log'};
-function goView(id){
-  ['dash','sessions','users','count','subs','compiled','products','audit'].forEach(function(k){
-    var v=document.getElementById('v-'+k);if(v)v.classList.toggle('on',k===id);
-    var ni=document.getElementById('ni-'+k);if(ni)ni.classList.toggle('on',k===id);
+// ═══ VIEWS ════════════════════════════════════════════════════
+var VTITLES = {dash:'📊 Dashboard',sessions:'📋 Sessions',users:'👥 Users',
+  'active-sessions':'🖥 Device Sessions',count:'🔢 Stock Count',subs:'📨 Submissions',
+  compiled:'📈 Compiled Report',products:'📦 Products',audit:'🔍 Audit Log'};
+var ALL_VIEWS = ['dash','sessions','users','active-sessions','count','subs','compiled','products','audit'];
+
+function goView(id) {
+  ALL_VIEWS.forEach(function(k) {
+    var v  = document.getElementById('v-'+k);
+    var ni = document.getElementById('ni-'+k);
+    if (v)  { v.classList.toggle('on', k===id); }
+    if (ni) { ni.classList.toggle('on', k===id); }
   });
-  document.getElementById('pgTitle').textContent=VTITLES[id]||id;
-  if(window.innerWidth<=768)document.getElementById('sidebar').classList.remove('open');
-  if(id==='dash')loadDash();
-  else if(id==='sessions')loadSessions();
-  else if(id==='users')loadUsers();
-  else if(id==='count')loadCount();
-  else if(id==='subs')loadSubs();
-  else if(id==='compiled')loadCompiled();
-  else if(id==='products')renderProds();
-  else if(id==='audit')loadAudit();
+  document.getElementById('pgTitle').textContent = VTITLES[id] || id;
+  if (window.innerWidth<=768) { document.getElementById('sidebar').classList.remove('open'); }
+  if      (id==='dash')            { loadDash(); }
+  else if (id==='sessions')        { loadSessions(); }
+  else if (id==='users')           { loadUsers(); }
+  else if (id==='active-sessions') { loadActiveSessions(); }
+  else if (id==='count')           { loadCount(); }
+  else if (id==='subs')            { loadSubs(); }
+  else if (id==='compiled')        { loadCompiled(); }
+  else if (id==='products')        { renderProds(); }
+  else if (id==='audit')           { loadAudit(); }
 }
 
-// ═══ DASHBOARD ════════════════════════════════════════
-function loadDash(){
-  Promise.all([api({action:'getSessions'}),api({action:'getSubmissions',sessionId:''}),api({action:'getAudit'})])
-  .then(function(res){
-    C.sessions=res[0];C.subs=res[1];C.audit=res[2];
-    var sess=res[0],subs=res[1],audit=res[2];
+// ═══ DASHBOARD ════════════════════════════════════════════════
+function loadDash() {
+  Promise.all([
+    api({action:'getSessions'}),
+    api({action:'getSubmissions', sessionId:''}),
+    api({action:'getAudit'})
+  ]).then(function(res) {
+    C.sessions=res[0]; C.subs=res[1]; C.audit=res[2];
+    var sess=res[0], subs=res[1], audit=res[2];
     var open=sess.filter(function(s){return s.status==='open';});
     var stats=[];
-    if(me.role==='admin'||me.role==='supervisor'){
-      var counted=[];subs.forEach(function(s){Object.keys(s.counts||{}).forEach(function(k){if(counted.indexOf(k)<0)counted.push(k);});});
-      stats=[{i:'📋',bg:'#dbeafe',n:open.length,l:'Open Sessions'},{i:'📨',bg:'#dcfce7',n:subs.length,l:'Submissions'},{i:'📦',bg:'#fef3c7',n:SKUS.length,l:'Total SKUs'},{i:'📊',bg:'#f3e8ff',n:counted.length,l:'SKUs Counted'}];
-    } else if(me.role==='staff'){
+    if (me.role==='admin'||me.role==='supervisor') {
+      var counted=[];
+      subs.forEach(function(s){Object.keys(s.counts||{}).forEach(function(k){if(counted.indexOf(k)<0)counted.push(k);});});
+      stats=[
+        {i:'📋',bg:'#dbeafe',n:open.length,l:'Open Sessions'},
+        {i:'📨',bg:'#dcfce7',n:subs.length,l:'Submissions'},
+        {i:'📦',bg:'#fef3c7',n:SKUS.length,l:'Total SKUs'},
+        {i:'📊',bg:'#f3e8ff',n:counted.length,l:'SKUs Counted'}
+      ];
+    } else if (me.role==='staff') {
       var ms=sess.filter(function(s){return s.status==='open'&&(s.assignedStaff||[]).map(Number).indexOf(Number(me.id))>=0;});
-      stats=[{i:'📋',bg:'#dbeafe',n:ms.length,l:'My Sessions'},{i:'📨',bg:'#dcfce7',n:subs.filter(function(s){return Number(s.userId)===Number(me.id);}).length,l:'My Submissions'},{i:'📦',bg:'#fef3c7',n:SKUS.length,l:'SKUs'}];
+      stats=[
+        {i:'📋',bg:'#dbeafe',n:ms.length,l:'My Sessions'},
+        {i:'📨',bg:'#dcfce7',n:subs.filter(function(s){return Number(s.userId)===Number(me.id);}).length,l:'My Submissions'},
+        {i:'📦',bg:'#fef3c7',n:SKUS.length,l:'SKUs'}
+      ];
     } else {
       stats=[{i:'📋',bg:'#dbeafe',n:sess.length,l:'Sessions'},{i:'📨',bg:'#dcfce7',n:subs.length,l:'Submissions'},{i:'📦',bg:'#fef3c7',n:SKUS.length,l:'SKUs'}];
     }
-    document.getElementById('dStats').innerHTML=stats.map(function(s){return '<div class="stat"><div class="st-ico" style="background:'+s.bg+'">'+s.i+'</div><div><div class="st-n">'+s.n+'</div><div class="st-l">'+s.l+'</div></div></div>';}).join('');
+    document.getElementById('dStats').innerHTML = stats.map(function(s){
+      return '<div class="stat"><div class="st-ico" style="background:'+s.bg+'">'+s.i+'</div><div><div class="st-n">'+s.n+'</div><div class="st-l">'+s.l+'</div></div></div>';
+    }).join('');
     var grid='';
-    if(me.role==='admin'||me.role==='supervisor'){
+    if (me.role==='admin'||me.role==='supervisor') {
       grid='<div class="card"><div class="card-h"><span class="card-t">🟢 Open Sessions</span><button class="btn btn-ghost btn-sm" onclick="goView(\'sessions\')">All</button></div>'
         +(open.slice(0,4).map(function(s){return '<div style="padding:7px 0;border-bottom:1px solid var(--bdr)"><div style="font-size:13px;font-weight:600">'+s.name+'</div><div style="font-size:11px;color:var(--sub)">'+(LOC[s.branch]||s.branch)+' · '+s.date+'</div></div>';}).join('')||'<div class="empty" style="padding:14px">No open sessions</div>')+'</div>'
         +'<div class="card"><div class="card-h"><span class="card-t">📨 Recent Submissions</span><button class="btn btn-ghost btn-sm" onclick="goView(\'subs\')">All</button></div>'
         +(subs.slice(0,4).map(function(s){return '<div style="padding:7px 0;border-bottom:1px solid var(--bdr)"><div style="font-size:13px;font-weight:600">'+s.staffName+'</div><div style="font-size:11px;color:var(--sub)">'+s.locLabel+' · '+s.itemCount+' SKUs</div></div>';}).join('')||'<div class="empty" style="padding:14px">No submissions</div>')+'</div>';
-    } else if(me.role==='staff'){
+    } else if (me.role==='staff') {
       var ms2=sess.filter(function(s){return s.status==='open'&&(s.assignedStaff||[]).map(Number).indexOf(Number(me.id))>=0;});
-      grid='<div class="card" style="grid-column:1/-1"><div class="card-h"><span class="card-t">📋 My Sessions</span></div>'+(ms2.length?ms2.map(function(s){return '<div style="padding:8px 0;border-bottom:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;font-weight:600">'+s.name+'</div><div style="font-size:11px;color:var(--sub)">'+(LOC[s.branch]||s.branch)+' · '+s.date+'</div></div><button class="btn btn-pri btn-sm" onclick="startCount('+s.id+')">Count →</button></div>';}).join(''):'<div class="empty">No sessions assigned</div>')+'</div>';
+      grid='<div class="card" style="grid-column:1/-1"><div class="card-h"><span class="card-t">📋 My Sessions</span></div>'
+        +(ms2.length?ms2.map(function(s){return '<div style="padding:8px 0;border-bottom:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;font-weight:600">'+s.name+'</div><div style="font-size:11px;color:var(--sub)">'+(LOC[s.branch]||s.branch)+' · '+s.date+'</div></div><button class="btn btn-pri btn-sm" onclick="startCount('+s.id+')">Count →</button></div>';}).join(''):'<div class="empty">No sessions assigned</div>')+'</div>';
     }
-    document.getElementById('dGrid').innerHTML=grid;
-    document.getElementById('dAudit').innerHTML=audit.slice(0,6).map(function(a){
+    document.getElementById('dGrid').innerHTML = grid;
+    document.getElementById('dAudit').innerHTML = audit.slice(0,6).map(function(a){
       var ico=a.action==='LOGIN'?'🔑':a.action==='SUBMIT_COUNT'?'📨':a.action==='LOGOUT'?'🚪':'⚙️';
-      return '<div style="padding:7px 0;border-bottom:1px solid var(--bdr);display:flex;gap:9px"><span style="font-size:15px">'+ico+'</span><div><div style="font-size:12px;font-weight:500">'+a.action+' — '+a.user+' <span class="tag t-'+(a.role||'viewer')+'">'+a.role+'</span></div><div style="font-size:11px;color:var(--sub)">'+a.detail+'</div><div style="font-size:10px;color:var(--sub);margin-top:1px">'+String(a.time).substring(0,19).replace('T',' ')+'</div></div></div>';
-    }).join('')||'<div class="empty">No activity yet</div>';
+      return '<div style="padding:7px 0;border-bottom:1px solid var(--bdr);display:flex;gap:9px">'
+        +'<span style="font-size:15px">'+ico+'</span>'
+        +'<div><div style="font-size:12px;font-weight:500">'+a.action+' — '+a.user
+        +' <span class="tag t-'+(a.role||'viewer')+'">'+a.role+'</span></div>'
+        +'<div style="font-size:11px;color:var(--sub)">'+a.detail+'</div>'
+        +'<div style="font-size:10px;color:var(--sub);margin-top:1px">'+String(a.time).substring(0,19).replace('T',' ')+'</div></div></div>';
+    }).join('') || '<div class="empty">No activity yet</div>';
   }).catch(function(e){toast('❌ '+e.message);});
 }
 
-// ═══ SESSIONS ═════════════════════════════════════════
-function loadSessions(){
+// ═══ ACTIVE DEVICE SESSIONS (Admin view) ══════════════════════
+function loadActiveSessions() {
+  document.getElementById('activeSessionsList').innerHTML = '<div class="loading"><div class="spinner"></div>Loading…</div>';
+  // Read ActiveSessions sheet via getUsers reuse — we need a dedicated call
+  // We'll use getAudit to get recent logins as proxy, plus show from sheet
+  api({action:'getUsers'}).then(function(users) {
+    C.users = users;
+    // We'll display which users are currently signed in based on audit
+    return api({action:'getAudit'});
+  }).then(function(audit) {
+    // Find most recent LOGIN per username
+    var latestLogins = {};
+    audit.forEach(function(a) {
+      if (a.action === 'LOGIN' && !latestLogins[a.user]) {
+        latestLogins[a.user] = a;
+      }
+    });
+    var loggedOutUsers = {};
+    audit.forEach(function(a) {
+      if (a.action === 'LOGOUT') {
+        var loginTime = latestLogins[a.user] ? new Date(latestLogins[a.user].time).getTime() : 0;
+        var logoutTime = new Date(a.time).getTime();
+        if (logoutTime > loginTime) { loggedOutUsers[a.user] = true; }
+      }
+    });
+    var activeSessions = Object.keys(latestLogins).filter(function(u) {
+      return !loggedOutUsers[u];
+    }).map(function(u) { return latestLogins[u]; });
+
+    var html = '';
+    if (!activeSessions.length) {
+      html = '<div class="card"><div class="empty">No active sessions found</div></div>';
+    } else {
+      html = '<div class="card"><div class="card-h"><span class="card-t">🟢 Currently Signed In (' + activeSessions.length + ')</span></div>';
+      activeSessions.forEach(function(a) {
+        var timeAgo = Math.round((Date.now() - new Date(a.time).getTime()) / 60000);
+        var timeStr = timeAgo < 1 ? 'Just now' : timeAgo + ' min ago';
+        html += '<div class="act-sess-row">'
+          + '<div class="act-sess-info">'
+          + '<div class="act-sess-user">👤 '+a.user+' <span class="tag t-'+a.role+'">'+a.role+'</span></div>'
+          + '<div class="act-sess-meta">Signed in '+timeStr+' · '+String(a.time).substring(0,19).replace('T',' ')+'</div>'
+          + '<div class="act-sess-device">'+a.detail+'</div>'
+          + '</div>'
+          + '<button class="btn btn-red btn-sm" onclick="forceLogout(\''+a.user+'\')">Force Sign Out</button>'
+          + '</div>';
+      });
+      html += '</div>';
+    }
+
+    html += '<div class="card" style="margin-top:13px"><div class="card-h"><span class="card-t" style="color:var(--sub)">ℹ️ One Device = One User Rule</span></div>'
+      + '<div style="font-size:12px;color:var(--sub);line-height:1.8">'
+      + '• Each user can only be signed in on <strong>one device</strong> at a time.<br>'
+      + '• If they try to sign in on a second device, they get an error.<br>'
+      + '• Sessions expire automatically after <strong>60 minutes</strong> of inactivity.<br>'
+      + '• Admins can force sign out any user from this page.'
+      + '</div></div>';
+
+    document.getElementById('activeSessionsList').innerHTML = html;
+  }).catch(function(e){ toast('❌ '+e.message); });
+}
+
+function forceLogout(username) {
+  if (!confirm('Force sign out "' + username + '"? They will need to sign in again.')) { return; }
+  // We log this action — the user's token will be invalidated on next checkSession
+  // In practice, since we store token in the sheet, clearing it forces logout
+  api({action:'logout', deviceId:'admin_force_'+username, username:username, role:'', by:me.name})
+    .then(function(){
+      toast('✅ ' + username + ' has been signed out');
+      loadActiveSessions();
+    })
+    .catch(function(e){ toast('❌ ' + e.message); });
+}
+
+// ═══ SESSIONS ═════════════════════════════════════════════════
+function loadSessions() {
   document.getElementById('sessTb').innerHTML='<tr><td colspan="6"><div class="loading"><div class="spinner"></div>Loading…</div></td></tr>';
   Promise.all([api({action:'getSessions'}),api({action:'getSubmissions',sessionId:''})]).then(function(res){
-    C.sessions=res[0];C.subs=res[1];
-    var canEdit=me.role==='admin'||me.role==='supervisor';
-    document.getElementById('sessTb').innerHTML=res[0].length?res[0].map(function(s){
-      var sc=res[1].filter(function(x){return x.sessionId===s.id;}).length;
-      var names=(s.assignedStaff||[]).map(function(id){var u=C.users.find(function(u){return Number(u.id)===Number(id);});return u?u.name:'';}).filter(Boolean).join(', ')||'—';
-      return '<tr><td><div style="font-weight:600">'+s.name+'</div><div style="font-size:11px;color:var(--sub);margin-top:1px">'+names+'</div></td>'
+    C.sessions=res[0]; C.subs=res[1];
+    var canEdit = me.role==='admin'||me.role==='supervisor';
+    document.getElementById('sessTb').innerHTML = res[0].length ? res[0].map(function(s){
+      var sc = res[1].filter(function(x){return x.sessionId===s.id;}).length;
+      var names = (s.assignedStaff||[]).map(function(id){var u=C.users.find(function(u){return Number(u.id)===Number(id);});return u?u.name:'';}).filter(Boolean).join(', ')||'—';
+      return '<tr>'
+        +'<td><div style="font-weight:600">'+s.name+'</div><div style="font-size:11px;color:var(--sub);margin-top:1px">'+names+'</div></td>'
         +'<td><span class="tag '+(s.branch==='shop'?'t-shop':'t-wh')+'">'+(LOC[s.branch]||s.branch)+'</span></td>'
         +'<td><span class="tag '+(s.status==='open'?'t-open':'t-closed')+'">'+s.status+'</span></td>'
-        +'<td>'+sc+'</td><td style="font-size:11px;color:var(--sub)">'+s.date+'</td>'
-        +'<td style="white-space:nowrap">'+(canEdit&&s.status==='open'?'<button class="btn btn-ghost btn-sm" onclick="closeSess('+s.id+')">Close</button> ':'')+' <button class="btn btn-ghost btn-sm" onclick="viewSubs('+s.id+')">View</button></td></tr>';
-    }).join(''):'<tr><td colspan="6" class="empty">No sessions yet.</td></tr>';
+        +'<td>'+sc+'</td>'
+        +'<td style="font-size:11px;color:var(--sub)">'+s.date+'</td>'
+        +'<td style="white-space:nowrap">'+(canEdit&&s.status==='open'?'<button class="btn btn-ghost btn-sm" onclick="closeSess('+s.id+')">Close</button> ':'')+' <button class="btn btn-ghost btn-sm" onclick="viewSubs('+s.id+')">View</button></td>'
+        +'</tr>';
+    }).join('') : '<tr><td colspan="6" class="empty">No sessions yet.</td></tr>';
   }).catch(function(e){toast('❌ '+e.message);});
 }
-function openNewSess(){
-  if(!C.users.length){api({action:'getUsers'}).then(function(u){C.users=u;openNewSess();}).catch(function(e){toast('❌ '+e.message);});return;}
-  document.getElementById('sm_date').value=new Date().toISOString().split('T')[0];
-  document.getElementById('sm_staff').innerHTML=C.users.filter(function(u){return u.role==='staff'&&u.active;}).map(function(u){return '<option value="'+u.id+'">'+u.name+' ('+(LOC[u.branch]||u.branch)+')</option>';}).join('');
+
+function openNewSess() {
+  if (!C.users.length) { api({action:'getUsers'}).then(function(u){C.users=u;openNewSess();}).catch(function(e){toast('❌ '+e.message);}); return; }
+  document.getElementById('sm_date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('sm_staff').innerHTML = C.users.filter(function(u){return u.role==='staff'&&u.active;}).map(function(u){return '<option value="'+u.id+'">'+u.name+' ('+(LOC[u.branch]||u.branch)+')</option>';}).join('');
   openM('mSess');
 }
-function saveSess(){
+function saveSess() {
   var name=document.getElementById('sm_name').value.trim();
   if(!name){toast('❌ Enter a session name');return;}
   var sel=document.getElementById('sm_staff');
@@ -760,39 +891,71 @@ function saveSess(){
     .then(function(){closeM('mSess');toast('✅ Session created!');loadSessions();})
     .catch(function(e){toast('❌ '+e.message);});
 }
-function closeSess(id){
-  if(!confirm('Close this session?')) return;
+function closeSess(id) {
+  if(!confirm('Close this session?'))return;
   api({action:'closeSession',id:id,by:me.name}).then(function(){toast('Session closed');loadSessions();}).catch(function(e){toast('❌ '+e.message);});
 }
 function viewSubs(id){document.getElementById('subFilter').value=id;goView('subs');}
 
-// ═══ USERS ════════════════════════════════════════════
-function loadUsers(){
-  document.getElementById('userTb').innerHTML='<tr><td colspan="6"><div class="loading"><div class="spinner"></div>Loading…</div></td></tr>';
+// ═══ USERS ════════════════════════════════════════════════════
+function loadUsers() {
+  document.getElementById('userTb').innerHTML='<tr><td colspan="7"><div class="loading"><div class="spinner"></div>Loading…</div></td></tr>';
   api({action:'getUsers'}).then(function(users){
-    C.users=users;
-    document.getElementById('userTb').innerHTML=users.map(function(u){
-      return '<tr><td style="font-weight:600">'+u.name+'</td><td class="mono">'+u.username+'</td>'
-        +'<td><span class="tag t-'+u.role+'">'+u.role+'</span></td>'
-        +'<td>'+(LOC[u.branch]||u.branch)+'</td>'
-        +'<td><span class="tag '+(u.active?'t-on':'t-off')+'">'+(u.active?'Active':'Inactive')+'</span></td>'
-        +'<td style="white-space:nowrap"><button class="btn-ico" onclick="editUser('+u.id+')" title="Edit">✏️</button> <button class="btn-ico" onclick="toggleUser('+u.id+')" title="Toggle">'+(u.active?'🔒':'🔓')+'</button>'+(Number(u.id)!==Number(me.id)?'<button class="btn-ico" onclick="delUser('+u.id+')" title="Delete">🗑️</button>':'')+'</td></tr>';
-    }).join('');
+    C.users = users;
+    // Check who is currently logged in (based on recent audit)
+    api({action:'getAudit'}).then(function(audit){
+      var latestLogins={}, loggedOut={};
+      audit.forEach(function(a){if(a.action==='LOGIN'&&!latestLogins[a.user])latestLogins[a.user]=a;});
+      audit.forEach(function(a){
+        if(a.action==='LOGOUT'){
+          var lt=latestLogins[a.user]?new Date(latestLogins[a.user].time).getTime():0;
+          if(new Date(a.time).getTime()>lt)loggedOut[a.user]=true;
+        }
+      });
+      document.getElementById('userTb').innerHTML = users.map(function(u){
+        var isOnline = latestLogins[u.username] && !loggedOut[u.username];
+        var onlineDot = isOnline
+          ? '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--grn);margin-right:4px"></span>'
+          : '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--bdr);margin-right:4px"></span>';
+        return '<tr>'
+          +'<td style="font-weight:600">'+u.name+'</td>'
+          +'<td class="mono">'+u.username+'</td>'
+          +'<td><span class="tag t-'+u.role+'">'+u.role+'</span></td>'
+          +'<td>'+(LOC[u.branch]||u.branch)+'</td>'
+          +'<td><span class="tag '+(u.active?'t-on':'t-off')+'">'+(u.active?'Active':'Inactive')+'</span></td>'
+          +'<td>'+onlineDot+(isOnline?'Online':'Offline')+'</td>'
+          +'<td style="white-space:nowrap">'
+          +'<button class="btn-ico" onclick="editUser('+u.id+')" title="Edit">✏️</button> '
+          +'<button class="btn-ico" onclick="toggleUser('+u.id+')" title="Toggle">'+(u.active?'🔒':'🔓')+'</button>'
+          +(Number(u.id)!==Number(me.id)?'<button class="btn-ico" onclick="delUser('+u.id+')" title="Delete">🗑️</button>':'')
+          +'</td></tr>';
+      }).join('');
+    }).catch(function(){
+      // Render users without online status
+      document.getElementById('userTb').innerHTML = users.map(function(u){
+        return '<tr><td style="font-weight:600">'+u.name+'</td><td class="mono">'+u.username+'</td><td><span class="tag t-'+u.role+'">'+u.role+'</span></td><td>'+(LOC[u.branch]||u.branch)+'</td><td><span class="tag '+(u.active?'t-on':'t-off')+'">'+(u.active?'Active':'Inactive')+'</span></td><td>—</td><td style="white-space:nowrap"><button class="btn-ico" onclick="editUser('+u.id+')" title="Edit">✏️</button> <button class="btn-ico" onclick="toggleUser('+u.id+')" title="Toggle">'+(u.active?'🔒':'🔓')+'</button>'+(Number(u.id)!==Number(me.id)?'<button class="btn-ico" onclick="delUser('+u.id+')" title="Delete">🗑️</button>':'')+'</td></tr>';
+      }).join('');
+    });
   }).catch(function(e){toast('❌ '+e.message);});
 }
+
 function openAddUser(){
   document.getElementById('mUserTitle').textContent='Add User';
   document.getElementById('um_id').value='';
   ['um_name','um_user','um_pass'].forEach(function(id){document.getElementById(id).value='';});
-  document.getElementById('um_role').value='staff';document.getElementById('um_branch').value='shop';
+  document.getElementById('um_role').value='staff';
+  document.getElementById('um_branch').value='shop';
   openM('mUser');
 }
 function editUser(id){
   var u=C.users.find(function(x){return Number(x.id)===Number(id);});if(!u)return;
   document.getElementById('mUserTitle').textContent='Edit User';
-  document.getElementById('um_id').value=u.id;document.getElementById('um_name').value=u.name;
-  document.getElementById('um_user').value=u.username;document.getElementById('um_pass').value='';
-  document.getElementById('um_role').value=u.role;document.getElementById('um_branch').value=u.branch;
+  document.getElementById('um_id').value=u.id;
+  document.getElementById('um_name').value=u.name;
+  document.getElementById('um_user').value=u.username;
+  document.getElementById('um_pass').value='';
+  document.getElementById('um_role').value=u.role;
+  document.getElementById('um_branch').value=u.branch;
   openM('mUser');
 }
 function saveUser(){
@@ -805,11 +968,16 @@ function saveUser(){
     .then(function(){closeM('mUser');toast('✅ User saved!');loadUsers();})
     .catch(function(e){toast('❌ '+e.message);});
 }
-function toggleUser(id){api({action:'toggleUser',id:id,by:me.name}).then(function(r){toast(r.active?'✅ Activated':'⚠️ Deactivated');loadUsers();}).catch(function(e){toast('❌ '+e.message);});}
-function delUser(id){if(!confirm('Delete user?'))return;api({action:'deleteUser',id:id,by:me.name}).then(function(){toast('Deleted');loadUsers();}).catch(function(e){toast('❌ '+e.message);});}
+function toggleUser(id){
+  api({action:'toggleUser',id:id,by:me.name}).then(function(r){toast(r.active?'✅ Activated':'⚠️ Deactivated');loadUsers();}).catch(function(e){toast('❌ '+e.message);});
+}
+function delUser(id){
+  if(!confirm('Delete user permanently?'))return;
+  api({action:'deleteUser',id:id,by:me.name}).then(function(){toast('Deleted');loadUsers();}).catch(function(e){toast('❌ '+e.message);});
+}
 
-// ═══ COUNT ════════════════════════════════════════════
-function loadCount(){
+// ═══ COUNT ════════════════════════════════════════════════════
+function loadCount() {
   api({action:'getSessions'}).then(function(sess){
     C.sessions=sess;
     var ms=sess.filter(function(s){return s.status==='open'&&(s.assignedStaff||[]).map(Number).indexOf(Number(me.id))>=0;});
@@ -857,7 +1025,7 @@ function submitCount(){
     .catch(function(e){toast('❌ '+e.message);});
 }
 
-// ═══ COUNT SHEET ══════════════════════════════════════
+// ═══ COUNT SHEET ══════════════════════════════════════════════
 function openSheet(sku){
   curSku=sku;var name=CAT[sku][0],vars=CAT[sku][1];
   document.getElementById('shSku').textContent=sku;
@@ -869,10 +1037,8 @@ function openSheet(sku){
   curUom=vars[0][0];curQty=(myCounts[sku]||{})[curUom]||0;
   document.getElementById('qnum').textContent=curQty;
   var prev=myCounts[sku],pw=document.getElementById('shPrevWrap');
-  if(prev&&Object.keys(prev).length){
-    pw.style.display='block';
-    document.getElementById('shPrevIn').innerHTML=Object.entries(prev).map(function(e){return '<div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg);border-radius:6px;padding:5px 9px;margin-bottom:4px;font-size:12px"><span style="font-weight:700">'+e[0]+'</span><span style="font-size:15px;font-weight:800;color:var(--pri)">'+e[1]+'</span><span style="color:var(--acc);cursor:pointer;font-size:11px" onclick="selUom(\''+e[0]+'\')">Edit</span></div>';}).join('');
-  } else pw.style.display='none';
+  if(prev&&Object.keys(prev).length){pw.style.display='block';document.getElementById('shPrevIn').innerHTML=Object.entries(prev).map(function(e){return '<div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg);border-radius:6px;padding:5px 9px;margin-bottom:4px;font-size:12px"><span style="font-weight:700">'+e[0]+'</span><span style="font-size:15px;font-weight:800;color:var(--pri)">'+e[1]+'</span><span style="color:var(--acc);cursor:pointer;font-size:11px" onclick="selUom(\''+e[0]+'\')">Edit</span></div>';}).join('');}
+  else{pw.style.display='none';}
   document.getElementById('shBg').classList.add('on');
 }
 function selUom(uom){curUom=uom;document.querySelectorAll('.uom-opt').forEach(function(b){b.classList.toggle('on',b.dataset.uom===uom);});curQty=(myCounts[curSku]||{})[uom]||0;document.getElementById('qnum').textContent=curQty;}
@@ -888,18 +1054,18 @@ function confirmCount(){
 function closeSheet(){document.getElementById('shBg').classList.remove('on');}
 function shBgClick(e){if(e.target===document.getElementById('shBg'))closeSheet();}
 
-// ═══ CAMERA ═══════════════════════════════════════════
+// ═══ CAMERA ═══════════════════════════════════════════════════
 function openCam(){
   document.getElementById('camWrap').classList.add('on');document.getElementById('camResult').value='';
   navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false})
     .then(function(s){camStream=s;document.getElementById('camVideo').srcObject=s;if(window.ZXing){zxR=new ZXing.BrowserMultiFormatReader();camActive=true;doZX();}})
-    .catch(function(){toast('📷 Camera not available — use manual SKU entry');});
+    .catch(function(){toast('📷 Camera not available — type SKU manually');});
 }
 function doZX(){if(!camActive||!zxR)return;zxR.decodeOnceFromVideoElement(document.getElementById('camVideo')).then(function(r){if(r&&camActive){document.getElementById('camResult').value=r.text;if(navigator.vibrate)navigator.vibrate([70]);}}).catch(function(){if(camActive)setTimeout(doZX,500);});}
 function closeCam(){camActive=false;if(zxR){try{zxR.reset();}catch(e){}zxR=null;}if(camStream)camStream.getTracks().forEach(function(t){t.stop();});camStream=null;document.getElementById('camVideo').srcObject=null;document.getElementById('camWrap').classList.remove('on');}
 function camConfirm(){var c=document.getElementById('camResult').value.trim().toUpperCase();if(!c){toast('No code detected');return;}closeCam();if(CAT[c]){openSheet(c);}else{var m=SKUS.find(function(s){return CAT[s][0].toUpperCase().indexOf(c)>=0;});if(m)openSheet(m);else toast('❌ SKU not found: '+c);}}
 
-// ═══ SUBMISSIONS ══════════════════════════════════════
+// ═══ SUBMISSIONS ══════════════════════════════════════════════
 function loadSubs(){
   var sid=document.getElementById('subFilter').value;
   document.getElementById('subCards').innerHTML='<div class="loading"><div class="spinner"></div>Loading…</div>';
@@ -919,7 +1085,7 @@ function viewSub(id){
   openM('mSub');
 }
 
-// ═══ COMPILED ═════════════════════════════════════════
+// ═══ COMPILED ═════════════════════════════════════════════════
 function loadCompiled(){
   if(!C.sessions.length){api({action:'getSessions'}).then(function(s){C.sessions=s;loadCompiled();}).catch(function(e){toast('❌ '+e.message);});return;}
   var sel=document.getElementById('compFilter'),cv=sel.value;
@@ -931,17 +1097,12 @@ function doCompiled(){
   document.getElementById('compiledArea').innerHTML='<div class="loading"><div class="spinner"></div>Compiling…</div>';
   api({action:'getSubmissions',sessionId:sid}).then(function(subs){
     if(!subs.length){document.getElementById('compiledArea').innerHTML='<div class="empty" style="padding:38px">No submissions yet</div>';return;}
-    var agg={};
-    subs.forEach(function(sub){Object.entries(sub.counts||{}).forEach(function(e){var sku=e[0];if(!agg[sku])agg[sku]={};var loc=sub.locLabel||'';if(!agg[sku][loc])agg[sku][loc]={};Object.entries(e[1]).forEach(function(eu){agg[sku][loc][eu[0]]=(agg[sku][loc][eu[0]]||0)+eu[1];});});});
+    var agg={};subs.forEach(function(sub){Object.entries(sub.counts||{}).forEach(function(e){var sku=e[0];if(!agg[sku])agg[sku]={};var loc=sub.locLabel||'';if(!agg[sku][loc])agg[sku][loc]={};Object.entries(e[1]).forEach(function(eu){agg[sku][loc][eu[0]]=(agg[sku][loc][eu[0]]||0)+eu[1];});});});
     var keys=Object.keys(agg);
     var rows=keys.sort().map(function(sku){
       var name=(CAT[sku]||['Unknown'])[0],vars=(CAT[sku]||['',[]]) [1]||[];
       var ut={};Object.entries(agg[sku]).forEach(function(le){Object.entries(le[1]).forEach(function(ue){if(!ut[ue[0]])ut[ue[0]]={shop:0,wh:0};var isShop=le[0].toLowerCase().indexOf('shop')>=0;if(isShop)ut[ue[0]].shop+=ue[1];else ut[ue[0]].wh+=ue[1];});});
-      return Object.entries(ut).map(function(ue){
-        var uom=ue[0],locs=ue[1],tot=locs.shop+locs.wh;
-        var sv=vars.find(function(v){return v[0]===uom;});
-        return '<tr><td class="mono">'+sku+'</td><td style="font-size:12px;max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+name+'</td><td><span class="tag t-uom">'+uom+'</span></td><td style="text-align:center">'+locs.shop+'</td><td style="text-align:center">'+locs.wh+'</td><td style="text-align:center;font-weight:700">'+tot+'</td></tr>';
-      }).join('');
+      return Object.entries(ut).map(function(ue){var uom=ue[0],locs=ue[1],tot=locs.shop+locs.wh;return '<tr><td class="mono">'+sku+'</td><td style="font-size:12px;max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+name+'</td><td><span class="tag t-uom">'+uom+'</span></td><td style="text-align:center">'+locs.shop+'</td><td style="text-align:center">'+locs.wh+'</td><td style="text-align:center;font-weight:700">'+tot+'</td></tr>';}).join('');
     }).join('');
     document.getElementById('compiledArea').innerHTML='<div class="stats" style="margin-bottom:13px"><div class="stat"><div class="st-ico" style="background:#dbeafe">📦</div><div><div class="st-n">'+keys.length+'</div><div class="st-l">SKUs counted</div></div></div><div class="stat"><div class="st-ico" style="background:#fef3c7">📨</div><div><div class="st-n">'+subs.length+'</div><div class="st-l">Submissions</div></div></div></div><div class="card"><div class="tw" style="max-height:52vh;overflow-y:auto"><table><thead><tr><th>SKU</th><th>Description</th><th>UOM</th><th>Shop Floor</th><th>Warehouse</th><th>Total</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>';
     C.compiledSubs=subs;
@@ -951,29 +1112,29 @@ function exportCSV(){
   var sid=document.getElementById('compFilter').value;
   api({action:'getSubmissions',sessionId:sid}).then(function(subs){
     if(!subs.length){toast('No data');return;}
-    var agg={};var subsBySku={};
-    subs.forEach(function(sub){Object.entries(sub.counts||{}).forEach(function(e){var sku=e[0];if(!agg[sku])agg[sku]={};var loc=sub.locLabel||'';if(!agg[sku][loc])agg[sku][loc]={};Object.entries(e[1]).forEach(function(eu){agg[sku][loc][eu[0]]=(agg[sku][loc][eu[0]]||0)+eu[1];});if(!subsBySku[sku])subsBySku[sku]=[];if(subsBySku[sku].indexOf(sub.staffName)<0)subsBySku[sku].push(sub.staffName);});});
+    var agg={};var sBySku={};
+    subs.forEach(function(sub){Object.entries(sub.counts||{}).forEach(function(e){var sku=e[0];if(!agg[sku])agg[sku]={};var loc=sub.locLabel||'';if(!agg[sku][loc])agg[sku][loc]={};Object.entries(e[1]).forEach(function(eu){agg[sku][loc][eu[0]]=(agg[sku][loc][eu[0]]||0)+eu[1];});if(!sBySku[sku])sBySku[sku]=[];if(sBySku[sku].indexOf(sub.staffName)<0)sBySku[sku].push(sub.staffName);});});
     var rows=[['SKU','Description','UOM','Shop Floor','Warehouse','Total','Staff','Session']];
-    var sessName=subs[0]?subs[0].sessionName:'';
-    Object.keys(agg).sort().forEach(function(sku){var name=(CAT[sku]||['Unknown'])[0];var ut={};Object.entries(agg[sku]).forEach(function(le){Object.entries(le[1]).forEach(function(ue){if(!ut[ue[0]])ut[ue[0]]={shop:0,wh:0};var isShop=le[0].toLowerCase().indexOf('shop')>=0;if(isShop)ut[ue[0]].shop+=ue[1];else ut[ue[0]].wh+=ue[1];});});Object.entries(ut).forEach(function(ue){rows.push([sku,'"'+name.replace(/"/g,'""')+'"',ue[0],ue[1].shop,ue[1].wh,ue[1].shop+ue[1].wh,(subsBySku[sku]||[]).join('; '),sessName]);});});
+    var sn=subs[0]?subs[0].sessionName:'';
+    Object.keys(agg).sort().forEach(function(sku){var name=(CAT[sku]||['Unknown'])[0];var ut={};Object.entries(agg[sku]).forEach(function(le){Object.entries(le[1]).forEach(function(ue){if(!ut[ue[0]])ut[ue[0]]={shop:0,wh:0};var isShop=le[0].toLowerCase().indexOf('shop')>=0;if(isShop)ut[ue[0]].shop+=ue[1];else ut[ue[0]].wh+=ue[1];});});Object.entries(ut).forEach(function(ue){rows.push([sku,'"'+name.replace(/"/g,'""')+'"',ue[0],ue[1].shop,ue[1].wh,ue[1].shop+ue[1].wh,(sBySku[sku]||[]).join('; '),sn]);});});
     var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.map(function(r){return r.join(',');}).join('\n')],{type:'text/csv'}));a.download='StockCount_'+new Date().toLocaleDateString('en-MY').replace(/\//g,'-')+'.csv';a.click();toast('✅ CSV exported!');
   }).catch(function(e){toast('❌ '+e.message);});
 }
 
-// ═══ PRODUCTS ═════════════════════════════════════════
+// ═══ PRODUCTS ═════════════════════════════════════════════════
 function renderProds(){
   var q=(document.getElementById('prodSrch')||{}).value||'';q=q.toLowerCase().trim();
   var skus=SKUS;if(q)skus=skus.filter(function(s){return s.toLowerCase().indexOf(q)>=0||CAT[s][0].toLowerCase().indexOf(q)>=0;});
   document.getElementById('prodTb').innerHTML=skus.slice(0,100).map(function(sku){var name=CAT[sku][0],vars=CAT[sku][1];var uoms=vars.map(function(v){return '<span class="tag t-uom" style="margin-right:2px">'+v[0]+'</span>';}).join('');var pr=vars.map(function(v){return 'RM '+Number(v[1]).toFixed(2)+' ('+v[0]+')';}).join(', ');return '<tr><td class="mono">'+sku+'</td><td style="font-size:12px;max-width:200px">'+name+'</td><td>'+uoms+'</td><td style="font-size:12px;color:var(--sub)">'+pr+'</td></tr>';}).join('')+(skus.length>100?'<tr><td colspan="4" style="text-align:center;padding:10px;color:var(--sub);font-size:12px">Showing 100 of '+skus.length+'</td></tr>':'');
 }
 
-// ═══ AUDIT ════════════════════════════════════════════
+// ═══ AUDIT ════════════════════════════════════════════════════
 function loadAudit(){
   document.getElementById('auditTb').innerHTML='<tr><td colspan="5"><div class="loading"><div class="spinner"></div>Loading…</div></td></tr>';
   api({action:'getAudit'}).then(function(log){document.getElementById('auditTb').innerHTML=log.length?log.map(function(a){return '<tr><td style="font-size:11px;white-space:nowrap;color:var(--sub)">'+String(a.time).substring(0,19).replace('T',' ')+'</td><td style="font-weight:600">'+a.user+'</td><td><span class="tag t-'+(a.role||'viewer')+'">'+a.role+'</span></td><td style="font-weight:600;font-size:11px">'+a.action+'</td><td style="font-size:11px;color:var(--sub);max-width:200px">'+a.detail+'</td></tr>';}).join(''):'<tr><td colspan="5" class="empty" style="padding:26px">No entries yet</td></tr>';}).catch(function(e){toast('❌ '+e.message);});
 }
 
-// ═══ UTILS ════════════════════════════════════════════
+// ═══ UTILS ════════════════════════════════════════════════════
 function openM(id){document.getElementById(id).classList.add('on');}
 function closeM(id){document.getElementById(id).classList.remove('on');}
 function toast(msg,d){d=d||2600;var t=document.getElementById('toastEl');t.textContent=msg;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('on');},d);}
