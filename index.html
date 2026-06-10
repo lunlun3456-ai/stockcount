@@ -205,8 +205,8 @@ code{background:var(--bg);border-radius:3px;padding:1px 5px;font-family:monospac
       <div class="no-url" id="noUrlMsg">
         ⚠️ API URL not configured.<br>Contact admin to set it up in the HTML file.
       </div>
-      <div class="fld"><label>Username</label><input id="lgUser" type="text" placeholder="Enter username…" autocomplete="off"/></div>
-      <div class="fld"><label>Password</label><input id="lgPass" type="password" placeholder="Enter password…"/></div>
+      <div class="fld"><label>Username</label><input id="lgUser" type="text" placeholder="Enter username…" autocomplete="off" oninput="this.value=this.value.toLowerCase()"/></div>
+      <div class="fld"><label>PIN (6 digits)</label><input id="lgPass" type="password" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="Enter 4-digit PIN…"/></div>
       <button class="btn btn-pri btn-full" style="padding:12px;font-size:15px;margin-top:2px" onclick="doLogin()">Sign In →</button>
       <div id="lgErr" style="font-size:12px;color:var(--red);text-align:center;margin-top:9px;min-height:18px"></div>
     </div>
@@ -441,10 +441,10 @@ code{background:var(--bg);border-radius:3px;padding:1px 5px;font-family:monospac
     <div class="modal-body">
       <div class="f2">
         <div class="fld"><label>Full Name</label><input id="um_name" placeholder="Full name…"/></div>
-        <div class="fld"><label>Username</label><input id="um_user" placeholder="Username…" autocomplete="off"/></div>
+        <div class="fld"><label>Username (lowercase)</label><input id="um_user" placeholder="lowercase only…" autocomplete="off" oninput="this.value=this.value.toLowerCase()"/></div>
       </div>
       <div class="f2">
-        <div class="fld"><label>Password</label><input id="um_pass" type="password" placeholder="Password…" autocomplete="new-password"/></div>
+        <div class="fld"><label>PIN (6 digits)</label><input id="um_pass" type="password" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="6-digit PIN…" autocomplete="new-password"/></div>
         <div class="fld"><label>Role</label><select id="um_role">
           <option value="admin">Admin</option><option value="supervisor">Supervisor</option>
           <option value="staff" selected>Staff</option><option value="viewer">Viewer</option>
@@ -506,7 +506,7 @@ const SKUS = Object.keys(CAT);
 // Staff never see or touch this.
 // Admin: update this string, re-upload index.html.
 // ══════════════════════════════════════════════
-const API_URL = 'https://script.google.com/macros/s/AKfycbzR7yJ8V8fIX06z0eh-CKJ3SIAFUP6wMjEmw1EujmeXrS_UaqWSNV1MOZ2Naa_-W2jR/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxM_JDTXmworp97SNKQtD1m-MEupGku7KzN8DYYFy5r1IL_sLsEu9xQD5FIzPriuTi1/exec';
 
 // ══════════════════════════════════════════════
 // LOC LABELS
@@ -566,26 +566,65 @@ function showSc(id){
 // ══════════════════════════════════════════════
 // API — plain GET, URL-encoded params
 // ══════════════════════════════════════════════
+// ── API: GET for reads, POST for writes ──────────────────────
+// GET requests have a ~2000 char URL limit in Apps Script.
+// Large payloads (counts JSON with 80+ items) MUST use POST.
+var WRITE_ACTIONS = {
+  login:1, logout:1, saveUser:1, toggleUser:1, deleteUser:1,
+  submitCount:1, updateSubmission:1, addItem:1
+};
+
 function api(params) {
   setSyncState('busy');
   if (!API_URL || API_URL.indexOf('PASTE_YOUR') >= 0) {
     setSyncState('err');
     return Promise.reject(new Error('API URL not configured. Admin must update the HTML file.'));
   }
-  var qs = Object.keys(params).map(function(k) {
-    var v = params[k];
-    if (v === null || v === undefined) return null;
-    if (typeof v === 'object') v = JSON.stringify(v);
-    return encodeURIComponent(k) + '=' + encodeURIComponent(String(v));
-  }).filter(Boolean).join('&');
-  return fetch(API_URL + '?' + qs, {method:'GET'})
-    .then(function(r) { return r.json(); })
-    .then(function(d) {
-      setSyncState('ok');
-      if (!d.ok) throw new Error(d.error || 'Server error');
-      return d.data;
+
+  var action = params.action || '';
+  var isWrite = WRITE_ACTIONS[action] === 1;
+
+  if (isWrite) {
+    // POST: send as application/x-www-form-urlencoded
+    // Apps Script parses this reliably with no size limit issues
+    var body = Object.keys(params).map(function(k) {
+      var v = params[k];
+      if (v === null || v === undefined) return null;
+      if (typeof v === 'object') v = JSON.stringify(v);
+      return encodeURIComponent(k) + '=' + encodeURIComponent(String(v));
+    }).filter(Boolean).join('&');
+
+    return fetch(API_URL, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body:    body
     })
-    .catch(function(e) { setSyncState('err'); throw e; });
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        setSyncState('ok');
+        if (!d.ok) throw new Error(d.error || 'Server error');
+        return d.data;
+      })
+      .catch(function(e) { setSyncState('err'); throw e; });
+
+  } else {
+    // GET: safe for reads (no large payloads)
+    var qs = Object.keys(params).map(function(k) {
+      var v = params[k];
+      if (v === null || v === undefined) return null;
+      if (typeof v === 'object') v = JSON.stringify(v);
+      return encodeURIComponent(k) + '=' + encodeURIComponent(String(v));
+    }).filter(Boolean).join('&');
+
+    return fetch(API_URL + '?' + qs, { method: 'GET' })
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        setSyncState('ok');
+        if (!d.ok) throw new Error(d.error || 'Server error');
+        return d.data;
+      })
+      .catch(function(e) { setSyncState('err'); throw e; });
+  }
 }
 
 function setSyncState(s) {
@@ -603,7 +642,8 @@ function setSyncState(s) {
 function doLogin() {
   var u = document.getElementById('lgUser').value.trim();
   var p = document.getElementById('lgPass').value;
-  if (!u || !p) { document.getElementById('lgErr').textContent='❌ Enter username and password'; return; }
+  if (!u || !p) { document.getElementById('lgErr').textContent='❌ Enter username and PIN'; return; }
+  if (!/^[0-9]{4}$/.test(p)) { document.getElementById('lgErr').textContent='❌ PIN must be exactly 4 digits'; return; }
   if (!API_URL || API_URL.indexOf('PASTE_YOUR') >= 0) {
     document.getElementById('lgErr').textContent='❌ API URL not configured. Contact admin.';
     return;
@@ -1154,7 +1194,9 @@ function saveUser(){
   var pass=document.getElementById('um_pass').value,role=document.getElementById('um_role').value;
   var branch=document.getElementById('um_branch').value,eid=parseInt(document.getElementById('um_id').value)||0;
   if(!name||!user){toast('❌ Name and username required');return;}
-  if(!eid&&!pass){toast('❌ Password required');return;}
+  if(user!==user.toLowerCase()){toast('❌ Username must be lowercase');return;}
+  if(!eid&&!pass){toast('❌ PIN required');return;}
+  if(pass&&!/^[0-9]{6}$/.test(pass)){toast('❌ PIN must be exactly 6 digits');return;}
   api({action:'saveUser',id:eid||undefined,name:name,username:user,password:pass,role:role,branch:branch,by:me.name})
     .then(function(){closeM('mUser');toast('✅ User saved!');loadUsers();})
     .catch(function(e){toast('❌ '+e.message);});
