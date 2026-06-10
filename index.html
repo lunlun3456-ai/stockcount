@@ -189,6 +189,15 @@ tr:hover td{background:#f8fafc}
 .alert-warn{background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:9px 12px;font-size:12px;color:#78350f;margin-bottom:11px;line-height:1.65}
 code{background:var(--bg);border-radius:3px;padding:1px 5px;font-family:monospace;font-size:11px}
 @media(max-width:600px){.f2{grid-template-columns:1fr}.f3{grid-template-columns:1fr 1fr}}
+
+/* ── PIN KEYPAD ── */
+.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--bdr);background:var(--card);transition:background .15s}
+.pin-dot.filled{background:var(--pri);border-color:var(--pri)}
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+.kbtn{border:1.5px solid var(--bdr);border-radius:10px;padding:14px 4px;font-size:20px;font-weight:700;cursor:pointer;background:var(--card);color:var(--txt);transition:all .1s;font-family:inherit;width:100%;-webkit-tap-highlight-color:transparent}
+.kbtn:active{background:var(--pri);color:#fff;border-color:var(--pri);transform:scale(.93)}
+.kbtn-clear{font-size:14px;color:var(--red);font-weight:600}
+.kbtn-del{font-size:18px}
 </style>
 </head>
 <body>
@@ -206,8 +215,31 @@ code{background:var(--bg);border-radius:3px;padding:1px 5px;font-family:monospac
         ⚠️ API URL not configured.<br>Contact admin to set it up in the HTML file.
       </div>
       <div class="fld"><label>Username</label><input id="lgUser" type="text" placeholder="Enter username…" autocomplete="off" oninput="this.value=this.value.toLowerCase()"/></div>
-      <div class="fld"><label>PIN (6 digits)</label><input id="lgPass" type="password" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="Enter 4-digit PIN…"/></div>
-      <button class="btn btn-pri btn-full" style="padding:12px;font-size:15px;margin-top:2px" onclick="doLogin()">Sign In →</button>
+      <div class="fld">
+        <label>PIN (4 digits)</label>
+        <div id="pinDisplay" style="display:flex;gap:8px;justify-content:center;margin-bottom:10px">
+          <div class="pin-dot" id="pd0"></div>
+          <div class="pin-dot" id="pd1"></div>
+          <div class="pin-dot" id="pd2"></div>
+          <div class="pin-dot" id="pd3"></div>
+        </div>
+        <input type="hidden" id="lgPass"/>
+        <div class="keypad">
+          <button type="button" class="kbtn" onclick="kp('1')">1</button>
+          <button type="button" class="kbtn" onclick="kp('2')">2</button>
+          <button type="button" class="kbtn" onclick="kp('3')">3</button>
+          <button type="button" class="kbtn" onclick="kp('4')">4</button>
+          <button type="button" class="kbtn" onclick="kp('5')">5</button>
+          <button type="button" class="kbtn" onclick="kp('6')">6</button>
+          <button type="button" class="kbtn" onclick="kp('7')">7</button>
+          <button type="button" class="kbtn" onclick="kp('8')">8</button>
+          <button type="button" class="kbtn" onclick="kp('9')">9</button>
+          <button type="button" class="kbtn kbtn-clear" onclick="kpClear()">✕</button>
+          <button type="button" class="kbtn" onclick="kp('0')">0</button>
+          <button type="button" class="kbtn kbtn-del" onclick="kpDel()">⌫</button>
+        </div>
+      </div>
+      <button class="btn btn-pri btn-full" style="padding:12px;font-size:15px;margin-top:6px" onclick="doLogin()" id="signInBtn">Sign In →</button>
       <div id="lgErr" style="font-size:12px;color:var(--red);text-align:center;margin-top:9px;min-height:18px"></div>
     </div>
   </div>
@@ -444,7 +476,7 @@ code{background:var(--bg);border-radius:3px;padding:1px 5px;font-family:monospac
         <div class="fld"><label>Username (lowercase)</label><input id="um_user" placeholder="lowercase only…" autocomplete="off" oninput="this.value=this.value.toLowerCase()"/></div>
       </div>
       <div class="f2">
-        <div class="fld"><label>PIN (6 digits)</label><input id="um_pass" type="password" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="6-digit PIN…" autocomplete="new-password"/></div>
+        <div class="fld"><label>PIN (6 digits)</label><input id="um_pass" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="4-digit PIN…" autocomplete="new-password"/></div>
         <div class="fld"><label>Role</label><select id="um_role">
           <option value="admin">Admin</option><option value="supervisor">Supervisor</option>
           <option value="staff" selected>Staff</option><option value="viewer">Viewer</option>
@@ -643,7 +675,7 @@ function doLogin() {
   var u = document.getElementById('lgUser').value.trim();
   var p = document.getElementById('lgPass').value;
   if (!u || !p) { document.getElementById('lgErr').textContent='❌ Enter username and PIN'; return; }
-  if (!/^[0-9]{4}$/.test(p)) { document.getElementById('lgErr').textContent='❌ PIN must be exactly 4 digits'; return; }
+  if (!/^[0-9]{4}$/.test(p)) { document.getElementById('lgErr').textContent='❌ PIN must be 4 digits'; return; }
   if (!API_URL || API_URL.indexOf('PASTE_YOUR') >= 0) {
     document.getElementById('lgErr').textContent='❌ API URL not configured. Contact admin.';
     return;
@@ -1196,7 +1228,7 @@ function saveUser(){
   if(!name||!user){toast('❌ Name and username required');return;}
   if(user!==user.toLowerCase()){toast('❌ Username must be lowercase');return;}
   if(!eid&&!pass){toast('❌ PIN required');return;}
-  if(pass&&!/^[0-9]{6}$/.test(pass)){toast('❌ PIN must be exactly 6 digits');return;}
+  if(pass&&!/^[0-9]{4}$/.test(pass)){toast('❌ PIN must be exactly 4 digits');return;}
   api({action:'saveUser',id:eid||undefined,name:name,username:user,password:pass,role:role,branch:branch,by:me.name})
     .then(function(){closeM('mUser');toast('✅ User saved!');loadUsers();})
     .catch(function(e){toast('❌ '+e.message);});
@@ -1230,6 +1262,55 @@ function toast(msg,d){
   t.textContent=msg;t.classList.add('on');
   clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('on');},d);
 }
+
+// ── PIN KEYPAD ─────────────────────────────────────────────
+var _pin = '';
+
+function kp(d) {
+  if (_pin.length >= 4) return;
+  _pin += d;
+  kpUpdate();
+  if (_pin.length === 4) {
+    document.getElementById('lgPass').value = _pin;
+    // Small delay so the 4th dot shows before login fires
+    setTimeout(doLogin, 120);
+  }
+}
+
+function kpDel() {
+  if (_pin.length === 0) return;
+  _pin = _pin.slice(0, -1);
+  kpUpdate();
+}
+
+function kpClear() {
+  _pin = '';
+  kpUpdate();
+  document.getElementById('lgErr').textContent = '';
+}
+
+function kpUpdate() {
+  document.getElementById('lgPass').value = _pin;
+  for (var di = 0; di < 4; di++) {
+    var dot = document.getElementById('pd' + di);
+    if (dot) dot.classList.toggle('filled', di < _pin.length);
+  }
+}
+
+// Reset keypad on login error
+var _origDoLogin = doLogin;
+doLogin = function() {
+  _origDoLogin();
+  // If there was an error, clear the PIN after a short delay
+  setTimeout(function() {
+    var err = document.getElementById('lgErr').textContent;
+    if (err && err.indexOf('⏳') < 0) {
+      _pin = '';
+      kpUpdate();
+    }
+  }, 300);
+};
+
 </script>
 </body>
 </html>
