@@ -552,7 +552,7 @@ const SKUS = Object.keys(CAT);
 // Staff never see or touch this.
 // Admin: update this string, re-upload index.html.
 // ══════════════════════════════════════════════
-const API_URL = 'https://script.google.com/macros/s/AKfycbwdrb8dOHFCNb1VXhpD3ywpYJDyES6GZqhadDkpL0zE9NCNsqW1UtNEC2kxt7QIppFN/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzAst1NotxbvuR1_M-5Wg1bZGJpECxh84ZBX0IjcOQIHVUIgHUyXfdclQv1pYjsaEEE/exec';
 
 // ══════════════════════════════════════════════
 // LOC LABELS
@@ -612,9 +612,9 @@ function showSc(id){
 // ══════════════════════════════════════════════
 // API — plain GET, URL-encoded params
 // ══════════════════════════════════════════════
-// ── API: GET for reads, POST for writes ──────────────────────
-// GET requests have a ~2000 char URL limit in Apps Script.
-// Large payloads (counts JSON with 80+ items) MUST use POST.
+// ── API ────────────────────────────────────────────────────────
+// READ  actions → GET  (short params, no size issue)
+// WRITE actions → POST (JSON body — no URL length limit)
 var WRITE_ACTIONS = {
   login:1, logout:1, saveUser:1, toggleUser:1, deleteUser:1,
   submitCount:1, updateSubmission:1, addItem:1
@@ -624,54 +624,47 @@ function api(params) {
   setSyncState('busy');
   if (!API_URL || API_URL.indexOf('PASTE_YOUR') >= 0) {
     setSyncState('err');
-    return Promise.reject(new Error('API URL not configured. Admin must update the HTML file.'));
+    return Promise.reject(new Error('API URL not configured.'));
   }
-
-  var action = params.action || '';
+  var action  = params.action || '';
   var isWrite = WRITE_ACTIONS[action] === 1;
 
   if (isWrite) {
-    // POST: send as application/x-www-form-urlencoded
-    // Apps Script parses this reliably with no size limit issues
-    var body = Object.keys(params).map(function(k) {
-      var v = params[k];
-      if (v === null || v === undefined) return null;
-      if (typeof v === 'object') v = JSON.stringify(v);
-      return encodeURIComponent(k) + '=' + encodeURIComponent(String(v));
-    }).filter(Boolean).join('&');
-
+    // POST with JSON body — Apps Script reads via e.postData.contents
+    // This avoids ALL URL-length limits for large count payloads
     return fetch(API_URL, {
       method:  'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body:    body
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(params)
     })
       .then(function(r) { return r.json(); })
       .then(function(d) {
         setSyncState('ok');
-        if (!d.ok) throw new Error(d.error || 'Server error');
+        if (!d.ok) { throw new Error(d.error || 'Server error'); }
         return d.data;
       })
       .catch(function(e) { setSyncState('err'); throw e; });
 
   } else {
-    // GET: safe for reads (no large payloads)
+    // GET with URL params — fine for reads (small payloads)
     var qs = Object.keys(params).map(function(k) {
       var v = params[k];
-      if (v === null || v === undefined) return null;
-      if (typeof v === 'object') v = JSON.stringify(v);
+      if (v === null || v === undefined) { return null; }
+      if (typeof v === 'object') { v = JSON.stringify(v); }
       return encodeURIComponent(k) + '=' + encodeURIComponent(String(v));
     }).filter(Boolean).join('&');
-
     return fetch(API_URL + '?' + qs, { method: 'GET' })
       .then(function(r) { return r.json(); })
       .then(function(d) {
         setSyncState('ok');
-        if (!d.ok) throw new Error(d.error || 'Server error');
+        if (!d.ok) { throw new Error(d.error || 'Server error'); }
         return d.data;
       })
       .catch(function(e) { setSyncState('err'); throw e; });
   }
 }
+;
+
 
 function setSyncState(s) {
   ['sdot','adot'].forEach(function(id) {
