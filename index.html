@@ -552,7 +552,7 @@ const SKUS = Object.keys(CAT);
 // Staff never see or touch this.
 // Admin: update this string, re-upload index.html.
 // ══════════════════════════════════════════════
-const API_URL = 'https://script.google.com/macros/s/AKfycbzAst1NotxbvuR1_M-5Wg1bZGJpECxh84ZBX0IjcOQIHVUIgHUyXfdclQv1pYjsaEEE/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxXSpRIPdLDZq68Di-2AYb84yV34kXWGDMNQKP4NqIKZ2pmE6kUT3Dd-tBeSHPsIIql/exec';
 
 // ══════════════════════════════════════════════
 // LOC LABELS
@@ -612,57 +612,72 @@ function showSc(id){
 // ══════════════════════════════════════════════
 // API — plain GET, URL-encoded params
 // ══════════════════════════════════════════════
-// ── API ────────────────────────────────────────────────────────
-// READ  actions → GET  (short params, no size issue)
-// WRITE actions → POST (JSON body — no URL length limit)
-var WRITE_ACTIONS = {
-  login:1, logout:1, saveUser:1, toggleUser:1, deleteUser:1,
-  submitCount:1, updateSubmission:1, addItem:1
-};
-
+// ── API — pure GET, no custom headers, no CORS issues ─────────
+// Apps Script only works reliably with plain fetch GET from browser.
+// No Content-Type header → no preflight → no "failed to fetch".
 function api(params) {
   setSyncState('busy');
   if (!API_URL || API_URL.indexOf('PASTE_YOUR') >= 0) {
     setSyncState('err');
-    return Promise.reject(new Error('API URL not configured.'));
+    return Promise.reject(new Error('API URL not configured. Admin must update index.html.'));
   }
-  var action  = params.action || '';
-  var isWrite = WRITE_ACTIONS[action] === 1;
-
-  if (isWrite) {
-    // POST with JSON body — Apps Script reads via e.postData.contents
-    // This avoids ALL URL-length limits for large count payloads
-    return fetch(API_URL, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify(params)
+  var qs = Object.keys(params).map(function(k) {
+    var v = params[k];
+    if (v === null || v === undefined) { return null; }
+    if (typeof v === 'object') { v = JSON.stringify(v); }
+    return encodeURIComponent(k) + '=' + encodeURIComponent(String(v));
+  }).filter(Boolean).join('&');
+  return fetch(API_URL + '?' + qs, { method: 'GET' })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      setSyncState('ok');
+      if (!d.ok) { throw new Error(d.error || 'Server error'); }
+      return d.data;
     })
-      .then(function(r) { return r.json(); })
-      .then(function(d) {
-        setSyncState('ok');
-        if (!d.ok) { throw new Error(d.error || 'Server error'); }
-        return d.data;
-      })
-      .catch(function(e) { setSyncState('err'); throw e; });
-
-  } else {
-    // GET with URL params — fine for reads (small payloads)
-    var qs = Object.keys(params).map(function(k) {
-      var v = params[k];
-      if (v === null || v === undefined) { return null; }
-      if (typeof v === 'object') { v = JSON.stringify(v); }
-      return encodeURIComponent(k) + '=' + encodeURIComponent(String(v));
-    }).filter(Boolean).join('&');
-    return fetch(API_URL + '?' + qs, { method: 'GET' })
-      .then(function(r) { return r.json(); })
-      .then(function(d) {
-        setSyncState('ok');
-        if (!d.ok) { throw new Error(d.error || 'Server error'); }
-        return d.data;
-      })
-      .catch(function(e) { setSyncState('err'); throw e; });
-  }
+    .catch(function(e) { setSyncState('err'); throw e; });
 }
+
+// Batch submit: split counts into chunks of 10 SKUs per GET request
+// Keeps each URL under ~1500 chars — well within Apps Script limits
+function apiSubmitCount(staffName, staffId, location, gondola, counts) {
+  var skus    = Object.keys(counts);
+  var BATCH   = 10;
+  var batches = [];
+  var i;
+  for (i = 0; i < skus.length; i += BATCH) {
+    var chunk = {};
+    var j;
+    for (j = i; j < Math.min(i + BATCH, skus.length); j++) {
+      chunk[skus[j]] = counts[skus[j]];
+    }
+    batches.push(chunk);
+  }
+
+  // Send batches sequentially, chaining promises
+  var subId  = '';
+  var result = Promise.resolve();
+  batches.forEach(function(batch, idx) {
+    result = result.then(function() {
+      var isFinal = (idx === batches.length - 1) ? '1' : '0';
+      return api({
+        action:    'submitBatch',
+        staffName: staffName,
+        staffId:   staffId,
+        location:  location,
+        gondola:   gondola,
+        subId:     subId,
+        isFinal:   isFinal,
+        counts:    batch
+      }).then(function(r) {
+        subId = String(r.subId); // carry ID forward for next batch
+        return r;
+      });
+    });
+  });
+  return result.then(function() { return { ok: true, subId: subId }; });
+}
+;
+
 ;
 
 
@@ -812,7 +827,8 @@ function submitCount() {
   if (!g) { toast('⚠️ Enter a gondola / shelf number first'); document.getElementById('gondolaInp').focus(); return; }
   if (!n) { toast('Count at least one item first'); return; }
   if (!confirm('Submit ' + n + ' items from ' + (LOC[loc]||loc) + ' · ' + g + '?')) return;
-  api({action:'submitCount', staffName:me.name, staffId:String(me.id), location:loc, gondola:g, counts:myCounts})
+  setSyncState('busy');
+  apiSubmitCount(me.name, String(me.id), loc, g, myCounts)
     .then(function() {
       toast('✅ ' + n + ' items from ' + g + ' saved!', 3500);
       myCounts = {};
