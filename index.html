@@ -1191,8 +1191,7 @@ function exportCompiled(){
   var agg=window._cAgg;
   var dateStr=window._cDate||(document.getElementById('cDate').value||new Date().toISOString().split('T')[0]);
 
-  // ── Build summary: sum all gondolas per SKU+UOM ───────────────
-  // summary[sku][uom] = total physical qty
+  // ── 1. Build summary: sum all gondolas per SKU+UOM ────────────
   var summary={};
   Object.keys(agg).forEach(function(gon){
     Object.keys(agg[gon]).forEach(function(sku){
@@ -1203,9 +1202,8 @@ function exportCompiled(){
     });
   });
 
-  // ── Sheet 1: SUMMARY ─────────────────────────────────────────
-  // Format: ItemCode | Description | UOM | PhysicalQty
-  // One row per SKU+UOM combination (flat, importable)
+  // ── 2. Sheet 1 — SUMMARY (ItemCode / Description / UOM / PhysicalQty) ──
+  // One flat row per SKU+UOM, sorted by ItemCode
   var sumRows=[['ItemCode','Description','UOM','PhysicalQty']];
   Object.keys(summary).sort().forEach(function(sku){
     var name=(cat[sku]||['?'])[0];
@@ -1214,7 +1212,7 @@ function exportCompiled(){
     });
   });
 
-  // ── Sheet 2: DETAIL — per gondola ────────────────────────────
+  // ── 3. Sheet 2 — DETAIL (per gondola breakdown) ──────────────
   var detRows=[['Gondola','ItemCode','Description','UOM','PhysicalQty']];
   Object.keys(agg).sort().forEach(function(gon){
     Object.keys(agg[gon]).sort().forEach(function(sku){
@@ -1225,21 +1223,46 @@ function exportCompiled(){
     });
   });
 
-  // ── Build workbook ────────────────────────────────────────────
+  // ── 4. Sheet 3 — NOT COUNTED (SKUs with zero physical count) ─
+  // All SKUs in master catalog + added items that were NOT counted at all
+  var countedSkus={};
+  Object.keys(summary).forEach(function(sku){ countedSkus[sku]=1; });
+
+  var notRows=[['ItemCode','Description','Available UOMs','Remark']];
+  // Walk through every SKU in the full catalog
+  var allSkuList=Object.keys(cat).sort();
+  allSkuList.forEach(function(sku){
+    if(!countedSkus[sku]){
+      var entry=cat[sku];
+      var name=entry[0];
+      var uomList=entry[1].map(function(v){return v[0];}).join(' / ');
+      notRows.push([sku, name, uomList, 'Not Counted']);
+    }
+  });
+
+  // ── 5. Build workbook ────────────────────────────────────────
   var wb=XLSX.utils.book_new();
 
-  // Summary sheet — clean 4-column import format
+  // Sheet 1: Summary
   var ws1=XLSX.utils.aoa_to_sheet(sumRows);
   ws1['!cols']=[{wch:16},{wch:45},{wch:10},{wch:14}];
   XLSX.utils.book_append_sheet(wb,ws1,'Summary');
 
-  // Detail sheet — per-gondola breakdown
+  // Sheet 2: Detail by Gondola
   var ws2=XLSX.utils.aoa_to_sheet(detRows);
   ws2['!cols']=[{wch:28},{wch:16},{wch:45},{wch:10},{wch:14}];
   XLSX.utils.book_append_sheet(wb,ws2,'Detail by Gondola');
 
+  // Sheet 3: Not Counted
+  var ws3=XLSX.utils.aoa_to_sheet(notRows);
+  ws3['!cols']=[{wch:16},{wch:45},{wch:20},{wch:14}];
+  XLSX.utils.book_append_sheet(wb,ws3,'Not Counted');
+
   XLSX.writeFile(wb,'StockCount_'+dateStr+'.xlsx');
-  toast('✅ Excel exported!');
+
+  var nc=notRows.length-1;
+  var counted=sumRows.length-1;
+  toast('✅ Excel exported! '+counted+' SKUs counted, '+nc+' not counted.',4000);
 }
 function dlCSV(rows,fn){
   var a=document.createElement('a');
