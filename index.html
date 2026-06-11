@@ -51,13 +51,14 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,sans-serif;
 .topbar-meta{font-size:10px;color:#94a3b8}
 /* gondola row */
 .topbar-row2{display:flex;gap:7px;align-items:center}
-.gloc{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
-      color:#fff;border-radius:8px;padding:7px 10px;font-size:13px;
-      font-family:inherit;outline:none;-webkit-appearance:none}
-.ginp{flex:1;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
-      color:#fff;border-radius:8px;padding:7px 10px;font-size:14px;font-weight:700;
+.gloc{background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.25);
+      color:#fff;border-radius:9px;padding:10px 12px;font-size:15px;
+      font-family:inherit;outline:none;-webkit-appearance:none;font-weight:600}
+.ginp{flex:1;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.25);
+      color:#fff;border-radius:9px;padding:12px 13px;
+      font-size:22px;font-weight:800;letter-spacing:2px;
       font-family:inherit;outline:none}
-.ginp::placeholder{color:rgba(255,255,255,.4)}
+.ginp::placeholder{color:rgba(255,255,255,.35);font-size:14px;font-weight:400;letter-spacing:0}
 /* submit button TOP - big and obvious */
 .submit-top{width:100%;background:var(--grn);color:#fff;border:none;
             border-radius:9px;padding:11px;font-size:15px;font-weight:700;
@@ -81,8 +82,8 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,sans-serif;
 
 /* search + chips */
 .srch-row{display:flex;gap:7px;align-items:center;margin-bottom:8px}
-.srch{flex:1;border:1.5px solid var(--bdr);border-radius:9px;padding:9px 12px;
-      font-size:14px;background:var(--card);color:var(--txt);outline:none;font-family:inherit}
+.srch{flex:1;border:1.5px solid var(--bdr);border-radius:9px;padding:11px 13px;
+      font-size:16px;background:var(--card);color:var(--txt);outline:none;font-family:inherit}
 .srch:focus{border-color:var(--acc)}
 .chips{display:flex;gap:5px;overflow-x:auto;padding-bottom:3px;
        margin-bottom:10px;scrollbar-width:none}
@@ -353,14 +354,19 @@ tr:hover td{background:#f8fafc}
       <span style="font-size:10px;color:#94a3b8" id="stxt">Synced</span>
       <button class="btn btn-sm" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:11px" onclick="doLogout()">Out</button>
     </div>
-    <div class="topbar-row2">
-      <select id="locSel" class="gloc" onchange="updateBar()">
+    <!-- Location row -->
+    <div class="topbar-row2" style="margin-bottom:6px">
+      <select id="locSel" class="gloc" onchange="updateBar()" style="flex:1">
         <option value="selling">🏪 Selling Floor</option>
         <option value="store">🏭 Store</option>
       </select>
-      <input id="gonInp" class="ginp" placeholder="Gondola / Shelf e.g. A1"
+      <button class="btn btn-sm" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);color:#fff;flex-shrink:0" onclick="openCam()">📷</button>
+    </div>
+    <!-- Gondola/shelf row — big, easy to tap and type -->
+    <div style="display:flex;gap:7px;align-items:center">
+      <input id="gonInp" class="ginp" style="flex:1"
+             placeholder="Gondola / Shelf No."
              autocomplete="off" oninput="updateBar()"/>
-      <button class="btn btn-sm" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);color:#fff" onclick="openCam()">📷</button>
     </div>
     <!-- SUBMIT BUTTON — TOP, always visible -->
     <button class="submit-top dim" id="submitTopBtn" onclick="openConfirm()">
@@ -1147,10 +1153,31 @@ function loadCompiled(){
     });
     var totalSkus=0; Object.values(agg).forEach(function(g){totalSkus+=Object.keys(g).length;});
     var cat=fullCat();
+    // Build gondola status: submitted gondolas list
+    var submittedGondolas=Object.keys(agg).sort();
+    var gonTagsHtml=submittedGondolas.map(function(g){
+      return '<span style="display:inline-block;background:#dcfce7;color:#15803d;border-radius:6px;padding:3px 9px;font-size:11px;font-weight:600;margin:2px">✓ '+g+'</span>';
+    }).join('');
+
     var html='<div class="stat-row">'
       +'<div class="stat"><div class="si" style="background:#dbeafe">📦</div><div><div class="sn">'+totalSkus+'</div><div class="sl">SKUs</div></div></div>'
-      +'<div class="stat"><div class="si" style="background:#fef3c7">📍</div><div><div class="sn">'+Object.keys(agg).length+'</div><div class="sl">Gondolas</div></div></div>'
+      +'<div class="stat"><div class="si" style="background:#fef3c7">📍</div><div><div class="sn">'+Object.keys(agg).length+'</div><div class="sl">Gondolas Submitted</div></div></div>'
       +'<div class="stat"><div class="si" style="background:#dcfce7">📨</div><div><div class="sn">'+subs.length+'</div><div class="sl">Submissions</div></div></div>'
+      +'</div>'
+      // Submitted gondolas panel
+      +'<div style="background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:13px 15px;margin-bottom:12px">'
+      +'<div style="font-size:12px;font-weight:700;color:var(--pri);margin-bottom:8px">✅ Gondolas Submitted ('+submittedGondolas.length+')</div>'
+      +'<div style="line-height:1.8">'+gonTagsHtml+'</div>'
+      +'</div>'
+      // Not submitted check panel
+      +'<div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:12px;padding:13px 15px;margin-bottom:12px" id="gonCheckPanel">'
+      +'<div style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:6px">🔍 Check Missing Gondolas</div>'
+      +'<div style="font-size:11px;color:#78350f;margin-bottom:8px">Enter expected gondola/shelf numbers (comma-separated) to see which ones are missing:</div>'
+      +'<div style="display:flex;gap:7px">'
+      +'<input id="expectedGon" placeholder="e.g. A1, A2, B1, B2, C1" style="flex:1;border:1.5px solid #fcd34d;border-radius:8px;padding:8px 11px;font-size:13px;outline:none;background:#fff"/>'
+      +'<button onclick="checkMissingGondolas()" style="background:#d97706;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">Check</button>'
+      +'</div>'
+      +'<div id="missingGonResult" style="margin-top:8px"></div>'
       +'</div>';
     Object.keys(agg).sort().forEach(function(key){
       var skuData=agg[key];
@@ -1193,6 +1220,36 @@ function exportCSV(){
   dlCSV(rows,'StockCount_'+new Date().toLocaleDateString('en-MY').replace(/\//g,'-')+'.csv');
   toast('✅ CSV exported!');
 }
+function checkMissingGondolas(){
+  var val=document.getElementById('expectedGon').value;
+  if(!val.trim()){document.getElementById('missingGonResult').innerHTML='';return;}
+  var expected=val.split(',').map(function(s){return s.trim().toUpperCase();}).filter(Boolean);
+  // Build set of submitted gondola short names (strip location prefix for comparison)
+  var agg=window._cAgg||{};
+  var submittedKeys=Object.keys(agg).map(function(k){
+    // key is like "🏪 Selling Floor · A1" — extract the gondola part after ' · '
+    var parts=k.split(' · ');
+    return parts[parts.length-1].toUpperCase();
+  });
+  var missing=expected.filter(function(g){return submittedKeys.indexOf(g)<0;});
+  var found=expected.filter(function(g){return submittedKeys.indexOf(g)>=0;});
+  var html='';
+  if(missing.length){
+    html+='<div style="margin-bottom:6px"><span style="font-size:11px;font-weight:700;color:#dc2626">❌ Not submitted ('+missing.length+'):</span> '
+      +missing.map(function(g){return '<span style="display:inline-block;background:#fee2e2;color:#991b1b;border-radius:5px;padding:2px 8px;font-size:11px;font-weight:700;margin:2px">'+g+'</span>';}).join('')
+      +'</div>';
+  }
+  if(found.length){
+    html+='<div><span style="font-size:11px;font-weight:700;color:#15803d">✓ Submitted ('+found.length+'):</span> '
+      +found.map(function(g){return '<span style="display:inline-block;background:#dcfce7;color:#15803d;border-radius:5px;padding:2px 8px;font-size:11px;font-weight:700;margin:2px">'+g+'</span>';}).join('')
+      +'</div>';
+  }
+  if(!missing.length&&expected.length){
+    html='<div style="color:#15803d;font-size:12px;font-weight:700">✅ All expected gondolas have been submitted!</div>';
+  }
+  document.getElementById('missingGonResult').innerHTML=html;
+}
+
 function exportCompiled(){
   if(!window._cAgg){toast('Load compiled first');return;}
   if(typeof XLSX==='undefined'){toast('❌ Excel library not loaded');return;}
@@ -1237,16 +1294,17 @@ function exportCompiled(){
   });
 
   // ── Sheet 3 — NOT COUNTED ────────────────────────────────────
-  // Compare against SKUS (the 956-item master constant array)
-  // so added items are excluded (staff added them = they counted them)
-  var notRows=[['ItemCode','Description','Available UOMs','Remark']];
+  // One row per SKU per UOM — each UOM is its own individual row
+  var notRows=[['ItemCode','Description','UOM','Remark']];
   SKUS.forEach(function(sku){
     if(!countedSet[sku.toUpperCase()]){
       var entry=CAT[sku];
       if(!entry) return;
       var name=entry[0];
-      var uomList=entry[1].map(function(v){ return v[0]; }).join(' / ');
-      notRows.push([sku, name, uomList, 'Not Counted']);
+      var vars=entry[1];
+      vars.forEach(function(v){
+        notRows.push([sku, name, v[0], 'Not Counted']);
+      });
     }
   });
 
