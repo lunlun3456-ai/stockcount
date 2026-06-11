@@ -310,6 +310,11 @@ tr:hover td{background:#f8fafc}
 .cam-ok{width:100%;background:var(--acc);color:#fff;border:none;
         border-radius:8px;padding:11px;font-size:14px;font-weight:700;cursor:pointer}
 @media(max-width:600px){.f2,.frow2{grid-template-columns:1fr}.f3{grid-template-columns:1fr 1fr}}
+
+/* Hide number input spinners */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield}
 </style>
 </head>
 <body>
@@ -362,10 +367,13 @@ tr:hover td{background:#f8fafc}
       </select>
       <button class="btn btn-sm" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);color:#fff;flex-shrink:0" onclick="openCam()">📷</button>
     </div>
-    <!-- Gondola/shelf row — big, easy to tap and type -->
+    <!-- Gondola/shelf + Layer row — big, easy to tap and type -->
     <div style="display:flex;gap:7px;align-items:center">
-      <input id="gonInp" class="ginp" style="flex:1"
-             placeholder="Gondola / Shelf No."
+      <input id="gonInp" class="ginp" style="flex:2;min-width:0"
+             placeholder="Gondola / Shelf"
+             autocomplete="off" oninput="updateBar()"/>
+      <input id="layerInp" class="ginp" style="flex:1;min-width:0"
+             placeholder="Layer"
              autocomplete="off" oninput="updateBar()"/>
     </div>
     <!-- SUBMIT BUTTON — TOP, always visible -->
@@ -525,7 +533,13 @@ tr:hover td{background:#f8fafc}
       <div style="font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Physical count on shelf</div>
       <div class="qty-row">
         <button class="qb" onclick="qa(-1)">−</button>
-        <div class="qn" id="qnum">0</div>
+        <input class="qn" id="qnum" type="number" inputmode="numeric"
+               min="0" value="0"
+               style="border:none;outline:none;background:transparent;
+                      width:110px;text-align:center;-webkit-appearance:none;
+                      -moz-appearance:textfield;"
+               oninput="qManual(this.value)"
+               onfocus="this.select()"/>
         <button class="qb" onclick="qa(1)">+</button>
       </div>
       <div class="pset">
@@ -782,6 +796,7 @@ function initStaff() {
     new Date().toLocaleDateString('en-MY',{day:'numeric',month:'short',year:'numeric'})+' · '+(LOC[me.branch]||me.branch);
   if (me.branch==='selling'||me.branch==='store') document.getElementById('locSel').value=me.branch;
   myCounts={};
+  document.getElementById('layerInp').value='';
   updateBar(); filterList();
   document.getElementById('gonInp').focus();
 }
@@ -793,11 +808,12 @@ function allSKUs() { return Object.keys(fullCat()); }
 
 function updateBar() {
   var g=document.getElementById('gonInp').value.trim();
+  var ly=document.getElementById('layerInp').value.trim();
   var n=Object.keys(myCounts).length;
   var badge=document.getElementById('cntBadge');
   var btn=document.getElementById('submitTopBtn');
   badge.textContent=n+' item'+(n!==1?'s':'');
-  btn.classList.toggle('dim', n===0||!g);
+  btn.classList.toggle('dim', n===0||!g||!ly);
 }
 
 function goTab(i) {
@@ -843,25 +859,49 @@ function filterList() {
 // ═══════════════════════════════════════════════════════════════
 function openConfirm() {
   var g=document.getElementById('gonInp').value.trim();
+  var ly=document.getElementById('layerInp').value.trim();
   var loc=document.getElementById('locSel').value;
   var n=Object.keys(myCounts).length;
   if(!g){toast('⚠️ Enter gondola / shelf number first');document.getElementById('gonInp').focus();return;}
+  if(!ly){toast('⚠️ Enter layer number');document.getElementById('layerInp').focus();return;}
   if(!n){toast('Count at least one item first');return;}
 
   document.getElementById('confirmSummary').innerHTML=
-    '<strong>'+(LOC[loc]||loc)+'</strong> · Gondola <strong>'+g+'</strong><br>'
+    '<strong>'+(LOC[loc]||loc)+'</strong> · Gondola <strong>'+g+'</strong> · Layer <strong>'+ly+'</strong><br>'
     +'<strong>'+n+' SKU'+(n!==1?'s':'')+' counted.</strong> Review and tick each item before submitting.';
 
   var cat=fullCat();
   var html=Object.entries(myCounts).map(function(e){
     var sku=e[0], uoms=e[1];
     var name=(cat[sku]||['Unknown'])[0];
-    var detail=Object.entries(uoms).map(function(eu){return eu[0]+': '+eu[1];}).join('  ·  ');
-    return '<div class="chk-item" onclick="toggleChk(\''+sku+'\')" id="chkitem_'+sku+'">'
-      +'<div class="chk-box" id="chkbox_'+sku+'"></div>'
-      +'<div class="chk-info">'
-      +'<div class="chk-name">'+name+'</div>'
-      +'<div class="chk-detail"><span style="font-family:monospace;font-size:10px">'+sku+'</span>&nbsp;·&nbsp;'+detail+'</div>'
+    // Build editable UOM rows inside each checklist item
+    var uomRows=Object.entries(uoms).map(function(eu){
+      var uom=eu[0], qty=eu[1];
+      return '<div style="display:flex;align-items:center;gap:8px;margin-top:5px">'
+        +'<span class="tag t-uom" style="font-size:11px;flex-shrink:0">'+uom+'</span>'
+        +'<div style="display:flex;align-items:center;gap:5px">'
+        +'<button type="button" onclick="adjChkQty(\''+sku+'\',\''+uom+'\',event,-1)" '
+        +'style="width:28px;height:28px;border-radius:7px;border:1.5px solid var(--bdr);'
+        +'background:var(--card);font-size:16px;cursor:pointer;display:flex;'
+        +'align-items:center;justify-content:center;flex-shrink:0;font-weight:700">−</button>'
+        +'<input type="number" inputmode="numeric" min="0" value="'+qty+'" '
+        +'id="ciq_'+sku+'_'+uom+'" '
+        +'style="width:60px;text-align:center;border:1.5px solid var(--bdr);'
+        +'border-radius:7px;padding:4px 6px;font-size:16px;font-weight:700;'
+        +'outline:none;-webkit-appearance:none;-moz-appearance:textfield;" '
+        +'oninput="setChkQty(\''+sku+'\',\''+uom+"\',this.value)" />"
+        +'<button type="button" onclick="adjChkQty(\''+sku+'\',\''+uom+'\',event,1)" '
+        +'style="width:28px;height:28px;border-radius:7px;border:1.5px solid var(--bdr);'
+        +'background:var(--card);font-size:16px;cursor:pointer;display:flex;'
+        +'align-items:center;justify-content:center;flex-shrink:0;font-weight:700">+</button>'
+        +'</div></div>';
+    }).join('');
+    return '<div class="chk-item" id="chkitem_'+sku+'">'
+      +'<div class="chk-box" id="chkbox_'+sku+'" onclick="toggleChk(\''+sku+'\')"></div>'
+      +'<div class="chk-info" style="flex:1;min-width:0">'
+      +'<div class="chk-name" onclick="toggleChk(\''+sku+'\')">'+name+'</div>'
+      +'<div style="font-family:monospace;font-size:10px;color:var(--sub);margin-top:1px">'+sku+'</div>'
+      +uomRows
       +'</div></div>';
   }).join('');
   document.getElementById('chkList').innerHTML=html;
@@ -870,6 +910,25 @@ function openConfirm() {
 }
 
 function closeConfirm() { document.getElementById('confirmBg').classList.remove('on'); }
+
+function adjChkQty(sku, uom, evt, delta) {
+  evt.stopPropagation(); // don't toggle checkbox
+  var inp = document.getElementById('ciq_'+sku+'_'+uom);
+  if (!inp) return;
+  var cur = parseInt(inp.value) || 0;
+  var nv  = Math.max(0, cur + delta);
+  inp.value = nv;
+  setChkQty(sku, uom, nv);
+}
+
+function setChkQty(sku, uom, val) {
+  var n = parseInt(val);
+  if (isNaN(n) || n < 0) n = 0;
+  if (!myCounts[sku]) myCounts[sku] = {};
+  myCounts[sku][uom] = n;
+  // update badge count in submit button
+  updateBar();
+}
 
 function toggleChk(sku) {
   var box=document.getElementById('chkbox_'+sku);
@@ -899,15 +958,19 @@ function checkAllTicked() {
 
 function doFinalSubmit() {
   var g=document.getElementById('gonInp').value.trim();
+  var ly=document.getElementById('layerInp').value.trim();
   var loc=document.getElementById('locSel').value;
   var n=Object.keys(myCounts).length;
+  // Combine gondola + layer as the identifier, e.g. "A1-L2"
+  var gonLabel = ly ? g+' Layer '+ly : g;
   closeConfirm();
   toast('⏳ Submitting '+n+' items…');
-  submitCounts(me.name, String(me.id), loc, g, myCounts)
+  submitCounts(me.name, String(me.id), loc, gonLabel, myCounts)
     .then(function(){
-      toast('✅ '+n+' items from '+g+' saved to Google Sheet!', 4000);
+      toast('✅ '+n+' items from '+gonLabel+' saved to Google Sheet!', 4000);
       myCounts={};
       document.getElementById('gonInp').value='';
+      document.getElementById('layerInp').value='';
       updateBar(); filterList();
       document.getElementById('gonInp').focus();
     })
@@ -932,7 +995,7 @@ function openDrawer(sku) {
   }).join('');
   curUom=vars[0][0];
   curQty=(myCounts[sku]||{})[curUom]||0;
-  document.getElementById('qnum').textContent=curQty;
+  var qel=document.getElementById('qnum'); qel.value=curQty;
   var prev=myCounts[sku], pw=document.getElementById('dPrevWrap');
   if(prev&&Object.keys(prev).length){
     pw.style.display='block';
@@ -944,11 +1007,33 @@ function openDrawer(sku) {
   } else pw.style.display='none';
   document.getElementById('dBg').classList.add('on');
 }
-function selU(uom){curUom=uom;document.querySelectorAll('.uopt').forEach(function(b){b.classList.toggle('on',b.dataset.uom===uom);});curQty=(myCounts[curSku]||{})[uom]||0;document.getElementById('qnum').textContent=curQty;}
-function qa(d){curQty=Math.max(0,curQty+d);document.getElementById('qnum').textContent=curQty;}
-function qs(v){curQty=v;document.getElementById('qnum').textContent=curQty;}
+function selU(uom){
+  curUom=uom;
+  document.querySelectorAll('.uopt').forEach(function(b){b.classList.toggle('on',b.dataset.uom===uom);});
+  curQty=(myCounts[curSku]||{})[uom]||0;
+  document.getElementById('qnum').value=curQty;
+}
+function qa(d){
+  curQty=Math.max(0,curQty+d);
+  var el=document.getElementById('qnum');
+  el.value=curQty;
+}
+function qs(v){
+  curQty=v;
+  var el=document.getElementById('qnum');
+  el.value=curQty;
+}
+function qManual(v){
+  var n=parseInt(v);
+  curQty=isNaN(n)||n<0?0:n;
+}
+
 function confirmCount(){
   if(!curSku||!curUom)return;
+  // Read from input in case user typed directly
+  var el=document.getElementById('qnum');
+  var typed=parseInt(el.value);
+  curQty=isNaN(typed)||typed<0?0:typed;
   if(!myCounts[curSku])myCounts[curSku]={};
   myCounts[curSku][curUom]=curQty;
   closeDrawer();updateBar();filterList();
