@@ -719,7 +719,7 @@ const SKUS=Object.keys(CAT);
 //   1. Tap ⚙ Set API URL on the login screen (saves to localStorage)
 //   2. OR edit this file: replace the placeholder below
 // ══════════════════════════════════════════════════════════════
-var _HARDCODED = 'PASTE_YOUR_APPS_SCRIPT_EXEC_URL_HERE';
+var _HARDCODED = 'https://script.google.com/macros/s/AKfycbxRqKicO7HxuSnK9kR6Dxb-I-QVxTr45dHku5XpTLTMyxRE-DcwSX5JIQ28SWFSBJeC/exec';
 var _SAVED     = localStorage.getItem('scs_api_url') || '';
 var API_URL    = (_SAVED.indexOf('script.google.com') > 0) ? _SAVED
                : (_HARDCODED.indexOf('PASTE_YOUR') < 0)    ? _HARDCODED
