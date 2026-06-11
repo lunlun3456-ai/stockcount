@@ -310,11 +310,6 @@ tr:hover td{background:#f8fafc}
 .cam-ok{width:100%;background:var(--acc);color:#fff;border:none;
         border-radius:8px;padding:11px;font-size:14px;font-weight:700;cursor:pointer}
 @media(max-width:600px){.f2,.frow2{grid-template-columns:1fr}.f3{grid-template-columns:1fr 1fr}}
-
-/* hide number input spinners */
-input[type=number]::-webkit-outer-spin-button,
-input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-input[type=number]{-moz-appearance:textfield}
 </style>
 </head>
 <body>
@@ -367,17 +362,11 @@ input[type=number]{-moz-appearance:textfield}
       </select>
       <button class="btn btn-sm" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);color:#fff;flex-shrink:0" onclick="openCam()">📷</button>
     </div>
-    <!-- Gondola + Layer row: format 1-1 = Gondola 1, Layer 1 -->
+    <!-- Gondola/shelf row — big, easy to tap and type -->
     <div style="display:flex;gap:7px;align-items:center">
-      <input id="gonInp" class="ginp" style="flex:2;min-width:0"
-             placeholder="Gondola e.g. A1"
+      <input id="gonInp" class="ginp" style="flex:1"
+             placeholder="Gondola / Shelf No."
              autocomplete="off" oninput="updateBar()"/>
-      <input id="layerInp" class="ginp" style="flex:1;min-width:0"
-             placeholder="Layer e.g. 1"
-             autocomplete="off" oninput="updateBar()"/>
-    </div>
-    <div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:4px;padding:0 2px">
-      Combined as Gondola-Layer e.g. A1-1
     </div>
     <!-- SUBMIT BUTTON — TOP, always visible -->
     <button class="submit-top dim" id="submitTopBtn" onclick="openConfirm()">
@@ -536,12 +525,7 @@ input[type=number]{-moz-appearance:textfield}
       <div style="font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Physical count on shelf</div>
       <div class="qty-row">
         <button class="qb" onclick="qa(-1)">−</button>
-        <input class="qn" id="qnum" type="number" inputmode="numeric"
-               min="0" value="0"
-               style="border:none;outline:none;background:transparent;
-                      width:110px;text-align:center;-webkit-appearance:none;
-                      -moz-appearance:textfield;"
-               oninput="qManual(this.value)" onfocus="this.select()"/>
+        <div class="qn" id="qnum">0</div>
         <button class="qb" onclick="qa(1)">+</button>
       </div>
       <div class="pset">
@@ -809,12 +793,11 @@ function allSKUs() { return Object.keys(fullCat()); }
 
 function updateBar() {
   var g=document.getElementById('gonInp').value.trim();
-  var ly=document.getElementById('layerInp')?document.getElementById('layerInp').value.trim():'';
   var n=Object.keys(myCounts).length;
   var badge=document.getElementById('cntBadge');
   var btn=document.getElementById('submitTopBtn');
   badge.textContent=n+' item'+(n!==1?'s':'');
-  btn.classList.toggle('dim', n===0||!ly||!g);
+  btn.classList.toggle('dim', n===0||!g);
 }
 
 function goTab(i) {
@@ -862,47 +845,23 @@ function openConfirm() {
   var g=document.getElementById('gonInp').value.trim();
   var loc=document.getElementById('locSel').value;
   var n=Object.keys(myCounts).length;
-  var ly=document.getElementById('layerInp')?document.getElementById('layerInp').value.trim():'';
-  var gonLabel=g+(ly?'-'+ly:'');
-  if(!g){toast('⚠️ Enter gondola first');document.getElementById('gonInp').focus();return;}
-  if(!ly){toast('⚠️ Enter layer number');document.getElementById('layerInp').focus();return;}
+  if(!g){toast('⚠️ Enter gondola / shelf number first');document.getElementById('gonInp').focus();return;}
   if(!n){toast('Count at least one item first');return;}
 
   document.getElementById('confirmSummary').innerHTML=
-    '<strong>'+(LOC[loc]||loc)+'</strong> · Gondola-Layer <strong>'+gonLabel+'</strong><br>'
+    '<strong>'+(LOC[loc]||loc)+'</strong> · Gondola <strong>'+g+'</strong><br>'
     +'<strong>'+n+' SKU'+(n!==1?'s':'')+' counted.</strong> Review and tick each item before submitting.';
 
   var cat=fullCat();
   var html=Object.entries(myCounts).map(function(e){
     var sku=e[0], uoms=e[1];
     var name=(cat[sku]||['Unknown'])[0];
-    var uomRows=Object.entries(uoms).map(function(eu){
-      var uom=eu[0], qty=eu[1];
-      return '<div style="display:flex;align-items:center;gap:8px;margin-top:6px">'
-        +'<span class="tag t-uom" style="font-size:11px;flex-shrink:0">'+uom+'</span>'
-        +'<div style="display:flex;align-items:center;gap:5px">'
-        +'<button type="button" onclick="adjChkQty(\''+sku+'\',\''+uom+'\',event,-1)" '
-        +'style="width:28px;height:28px;border-radius:7px;border:1.5px solid var(--bdr);'
-        +'background:var(--card);font-size:16px;cursor:pointer;display:flex;'
-        +'align-items:center;justify-content:center;flex-shrink:0;font-weight:700;line-height:1">−</button>'
-        +'<input type="number" inputmode="numeric" min="0" value="'+qty+'" '
-        +'id="ciq_'+sku+'_'+uom+'" '
-        +'style="width:58px;text-align:center;border:1.5px solid var(--bdr);'
-        +'border-radius:7px;padding:4px 5px;font-size:16px;font-weight:700;'
-        +'outline:none;-webkit-appearance:none;-moz-appearance:textfield;" '
-        +'oninput="setChkQty(\''+sku+'\',\''+uom+"\',this.value)"/>"
-        +'<button type="button" onclick="adjChkQty(\''+sku+'\',\''+uom+'\',event,1)" '
-        +'style="width:28px;height:28px;border-radius:7px;border:1.5px solid var(--bdr);'
-        +'background:var(--card);font-size:16px;cursor:pointer;display:flex;'
-        +'align-items:center;justify-content:center;flex-shrink:0;font-weight:700;line-height:1">+</button>'
-        +'</div></div>';
-    }).join('');
-    return '<div class="chk-item" id="chkitem_'+sku+'">'
-      +'<div class="chk-box" id="chkbox_'+sku+'" onclick="toggleChk(\''+sku+'\')" style="cursor:pointer"></div>'
-      +'<div class="chk-info" style="flex:1;min-width:0">'
-      +'<div class="chk-name" onclick="toggleChk(\''+sku+'\')" style="cursor:pointer">'+name+'</div>'
-      +'<div style="font-family:monospace;font-size:10px;color:var(--sub);margin-top:1px">'+sku+'</div>'
-      +uomRows
+    var detail=Object.entries(uoms).map(function(eu){return eu[0]+': '+eu[1];}).join('  ·  ');
+    return '<div class="chk-item" onclick="toggleChk(\''+sku+'\')" id="chkitem_'+sku+'">'
+      +'<div class="chk-box" id="chkbox_'+sku+'"></div>'
+      +'<div class="chk-info">'
+      +'<div class="chk-name">'+name+'</div>'
+      +'<div class="chk-detail"><span style="font-family:monospace;font-size:10px">'+sku+'</span>&nbsp;·&nbsp;'+detail+'</div>'
       +'</div></div>';
   }).join('');
   document.getElementById('chkList').innerHTML=html;
@@ -912,18 +871,6 @@ function openConfirm() {
 
 function closeConfirm() { document.getElementById('confirmBg').classList.remove('on'); }
 
-function adjChkQty(sku, uom, evt, delta) {
-  evt.stopPropagation();
-  var inp=document.getElementById('ciq_'+sku+'_'+uom);
-  if(!inp) return;
-  var nv=Math.max(0,(parseInt(inp.value)||0)+delta);
-  inp.value=nv; setChkQty(sku,uom,nv);
-}
-function setChkQty(sku, uom, val) {
-  var n=parseInt(val); if(isNaN(n)||n<0) n=0;
-  if(!myCounts[sku]) myCounts[sku]={};
-  myCounts[sku][uom]=n; updateBar();
-}
 function toggleChk(sku) {
   var box=document.getElementById('chkbox_'+sku);
   if(!box)return;
@@ -952,18 +899,15 @@ function checkAllTicked() {
 
 function doFinalSubmit() {
   var g=document.getElementById('gonInp').value.trim();
-  var ly=document.getElementById('layerInp')?document.getElementById('layerInp').value.trim():'';
   var loc=document.getElementById('locSel').value;
-  var gonLabel=g+(ly?'-'+ly:'');
   var n=Object.keys(myCounts).length;
   closeConfirm();
   toast('⏳ Submitting '+n+' items…');
-  submitCounts(me.name, String(me.id), loc, gonLabel, myCounts)
+  submitCounts(me.name, String(me.id), loc, g, myCounts)
     .then(function(){
-      toast('✅ '+n+' items from '+gonLabel+' saved to Google Sheet!', 4000);
+      toast('✅ '+n+' items from '+g+' saved to Google Sheet!', 4000);
       myCounts={};
       document.getElementById('gonInp').value='';
-      if(document.getElementById('layerInp')) document.getElementById('layerInp').value='';
       updateBar(); filterList();
       document.getElementById('gonInp').focus();
     })
@@ -988,7 +932,7 @@ function openDrawer(sku) {
   }).join('');
   curUom=vars[0][0];
   curQty=(myCounts[sku]||{})[curUom]||0;
-  document.getElementById('qnum').value=curQty;
+  document.getElementById('qnum').textContent=curQty;
   var prev=myCounts[sku], pw=document.getElementById('dPrevWrap');
   if(prev&&Object.keys(prev).length){
     pw.style.display='block';
@@ -1001,15 +945,10 @@ function openDrawer(sku) {
   document.getElementById('dBg').classList.add('on');
 }
 function selU(uom){curUom=uom;document.querySelectorAll('.uopt').forEach(function(b){b.classList.toggle('on',b.dataset.uom===uom);});curQty=(myCounts[curSku]||{})[uom]||0;document.getElementById('qnum').textContent=curQty;}
-function qa(d){curQty=Math.max(0,curQty+d);var el=document.getElementById('qnum');el.value=curQty;}
-function qs(v){curQty=v;var el=document.getElementById('qnum');el.value=curQty;}
-function qManual(v){
-  var n=parseInt(v); curQty=isNaN(n)||n<0?0:n;
-}
+function qa(d){curQty=Math.max(0,curQty+d);document.getElementById('qnum').textContent=curQty;}
+function qs(v){curQty=v;document.getElementById('qnum').textContent=curQty;}
 function confirmCount(){
   if(!curSku||!curUom)return;
-  var el=document.getElementById('qnum');
-  var typed=parseInt(el.value); if(!isNaN(typed)&&typed>=0) curQty=typed;
   if(!myCounts[curSku])myCounts[curSku]={};
   myCounts[curSku][curUom]=curQty;
   closeDrawer();updateBar();filterList();
@@ -1220,11 +1159,6 @@ function loadCompiled(){
       return '<span style="display:inline-block;background:#dcfce7;color:#15803d;border-radius:6px;padding:3px 9px;font-size:11px;font-weight:600;margin:2px">✓ '+g+'</span>';
     }).join('');
 
-    var submittedGondolas=Object.keys(agg).sort();
-    var gonTagsHtml=submittedGondolas.map(function(g){
-      return '<span style="display:inline-block;background:#dcfce7;color:#15803d;border-radius:6px;padding:3px 9px;font-size:11px;font-weight:600;margin:2px">✓ '+g+'</span>';
-    }).join('');
-
     var html='<div class="stat-row">'
       +'<div class="stat"><div class="si" style="background:#dbeafe">📦</div><div><div class="sn">'+totalSkus+'</div><div class="sl">SKUs</div></div></div>'
       +'<div class="stat"><div class="si" style="background:#fef3c7">📍</div><div><div class="sn">'+Object.keys(agg).length+'</div><div class="sl">Gondolas Submitted</div></div></div>'
@@ -1240,7 +1174,7 @@ function loadCompiled(){
       +'<div style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:6px">🔍 Check Missing Gondolas</div>'
       +'<div style="font-size:11px;color:#78350f;margin-bottom:8px">Enter expected gondola/shelf numbers (comma-separated) to see which ones are missing:</div>'
       +'<div style="display:flex;gap:7px">'
-      +'<input id="expectedGon" placeholder="e.g. A1-1, A1-2, B1-1, C2-3" style="flex:1;border:1.5px solid #fcd34d;border-radius:8px;padding:8px 11px;font-size:13px;outline:none;background:#fff"/>'
+      +'<input id="expectedGon" placeholder="e.g. A1, A2, B1, B2, C1" style="flex:1;border:1.5px solid #fcd34d;border-radius:8px;padding:8px 11px;font-size:13px;outline:none;background:#fff"/>'
       +'<button onclick="checkMissingGondolas()" style="background:#d97706;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">Check</button>'
       +'</div>'
       +'<div id="missingGonResult" style="margin-top:8px"></div>'
@@ -1316,28 +1250,6 @@ function checkMissingGondolas(){
   document.getElementById('missingGonResult').innerHTML=html;
 }
 
-function checkMissingGondolas(){
-  var val=document.getElementById('expectedGon').value;
-  if(!val.trim()){document.getElementById('missingGonResult').innerHTML='';return;}
-  var expected=val.split(',').map(function(s){return s.trim().toUpperCase();}).filter(Boolean);
-  var agg=window._cAgg||{};
-  var submitted=Object.keys(agg).map(function(k){return k.toUpperCase();});
-  var missing=expected.filter(function(g){return submitted.indexOf(g)<0;});
-  var found=expected.filter(function(g){return submitted.indexOf(g)>=0;});
-  var html='';
-  if(missing.length){
-    html+='<div style="margin-bottom:5px"><span style="font-size:11px;font-weight:700;color:#dc2626">❌ Not submitted ('+missing.length+'):</span> '
-      +missing.map(function(g){return '<span style="display:inline-block;background:#fee2e2;color:#991b1b;border-radius:5px;padding:2px 8px;font-size:11px;font-weight:700;margin:2px">'+g+'</span>';}).join('')+'</div>';
-  }
-  if(found.length){
-    html+='<div><span style="font-size:11px;font-weight:700;color:#15803d">✓ Submitted ('+found.length+'):</span> '
-      +found.map(function(g){return '<span style="display:inline-block;background:#dcfce7;color:#15803d;border-radius:5px;padding:2px 8px;font-size:11px;font-weight:700;margin:2px">'+g+'</span>';}).join('')+'</div>';
-  }
-  if(!missing.length&&expected.length){
-    html='<div style="color:#15803d;font-size:12px;font-weight:700">✅ All expected gondolas have been submitted!</div>';
-  }
-  document.getElementById('missingGonResult').innerHTML=html;
-}
 function exportCompiled(){
   if(!window._cAgg){toast('Load compiled first');return;}
   if(typeof XLSX==='undefined'){toast('❌ Excel library not loaded');return;}
