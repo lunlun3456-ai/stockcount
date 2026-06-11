@@ -117,10 +117,11 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,sans-serif;
 .drawer-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:80;align-items:flex-end;justify-content:center}
 .drawer-bg.on{display:flex}
 .drawer{background:var(--card);border-radius:18px 18px 0 0;width:100%;max-width:520px;
-        max-height:88vh;overflow-y:auto;animation:shUp .2s ease}
+        max-height:88vh;overflow-y:auto;animation:shUp .2s ease;
+        padding-bottom:env(keyboard-inset-height,0px)}
 @keyframes shUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
 .drag{width:40px;height:5px;background:#cbd5e1;border-radius:3px;margin:11px auto 0}
-.dbody{padding:13px 16px 40px}
+.dbody{padding:13px 16px 20px}
 .dsku{font-size:10px;font-family:monospace;color:var(--sub)}
 .dname{font-size:16px;font-weight:700;line-height:1.3;margin:3px 0 11px}
 .blind{background:#fefce8;border:1px solid #fde047;border-radius:8px;
@@ -484,6 +485,7 @@ input[type=number]{-moz-appearance:textfield}
           <input id="cDate" type="date" class="fsrch" onchange="loadCompiled()"/>
           <button class="btn btn-ghost btn-sm" onclick="loadCompiled()">↻</button>
           <button class="btn btn-grn btn-sm" onclick="exportCompiled()">⬇ Excel</button>
+          <button class="btn btn-ghost btn-sm" onclick="syncCatalogToSheet()" title="Write all 965 SKUs to Products sheet in Google Sheet">📋 Sync SKUs→Sheet</button>
           <span id="ncBadge" style="display:none;background:#fee2e2;color:#991b1b;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;white-space:nowrap"></span>
         </div>
       </div>
@@ -547,6 +549,9 @@ input[type=number]{-moz-appearance:textfield}
         <div class="pb" onclick="qs(10)">10</div><div class="pb" onclick="qs(20)">20</div>
         <div class="pb" onclick="qs(50)">50</div><div class="pb" onclick="qs(100)">100</div>
       </div>
+    </div>
+    <!-- Sticky confirm button — always visible above keyboard -->
+    <div style="position:sticky;bottom:0;background:var(--card);padding:10px 16px 16px;border-top:1px solid var(--bdr)">
       <button class="btn btn-pri btn-full" style="padding:13px;font-size:15px" onclick="confirmCount()">✓ Confirm Count</button>
     </div>
   </div>
@@ -662,7 +667,7 @@ const SKUS=Object.keys(CAT);
 // ═══════════════════════════════════════════════════════════════
 // API URL — admin sets this before deploying
 // ═══════════════════════════════════════════════════════════════
-const API_URL = 'https://script.google.com/macros/s/AKfycbxRqKicO7HxuSnK9kR6Dxb-I-QVxTr45dHku5XpTLTMyxRE-DcwSX5JIQ28SWFSBJeC/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzuG6AfNYIdS1C8qLp-_CYS1Bmu-YBwJfFmoXw6_oYnlJd6-nNZKr8ugze2qOxjEJ_p/exec';
 
 // ═══════════════════════════════════════════════════════════════
 // DEVICE ID
@@ -839,7 +844,8 @@ function filterList() {
   if(q) skus=skus.filter(function(s){return s.toLowerCase().indexOf(q)>=0||cat[s][0].toLowerCase().indexOf(q)>=0;});
   var el=document.getElementById('itemList');
   if(!skus.length){el.innerHTML='<div class="empty">No items found</div>';return;}
-  el.innerHTML=skus.slice(0,80).map(function(sku){
+  var showAll=q.length>0;  // show all when searching, cap at 80 for browse
+  el.innerHTML=(showAll?skus:skus.slice(0,80)).map(function(sku){
     var e=cat[sku],name=e[0],vars=e[1],ok=sku in myCounts;
     var co=ok?myCounts[sku]:{},cu=Object.keys(co);
     var allDone=vars.every(function(v){return v[0] in co;});
@@ -851,7 +857,7 @@ function filterList() {
     return '<div class="prow '+cls+'" onclick="openDrawer(\''+sku+'\')">'
       +'<div class="pchk">'+chk+'</div>'
       +'<div class="pinfo"><div class="psku">'+sku+'</div><div class="pname">'+name+'</div>'+cTag+'</div></div>';
-  }).join('')+(skus.length>80?'<div class="more">Showing 80 of '+skus.length+' — search to narrow</div>':'');
+  }).join('')+(!showAll&&skus.length>80?'<div class="more">Showing 80 of '+skus.length+' — search to narrow</div>':'');
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1304,6 +1310,15 @@ function checkMissingGondolas(){
   document.getElementById('missingGonResult').innerHTML=html;
 }
 
+function syncCatalogToSheet(){
+  if(!confirm('Write all '+SKUS.length+' SKUs from the app catalog into the Products sheet in Google Sheet?\n\nThis creates/overwrites the Products tab.')) return;
+  toast('⏳ Syncing '+SKUS.length+' SKUs to Google Sheet…',5000);
+  api({action:'syncCatalog', cat:JSON.stringify(CAT)})
+    .then(function(r){
+      toast('✅ '+r.rows+' SKU-UOM rows written to Products sheet!',5000);
+    })
+    .catch(function(e){toast('❌ Sync failed: '+e.message);});
+}
 function exportCompiled(){
   if(!window._cAgg){toast('Load compiled first');return;}
   if(typeof XLSX==='undefined'){toast('❌ Excel library not loaded');return;}
