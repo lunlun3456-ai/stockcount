@@ -344,9 +344,10 @@ input[type=number]{-moz-appearance:textfield}
                oninput="this.value=this.value.toLowerCase()"/>
       </div>
       <div class="fgrp">
-        <label class="flabel">Password</label>
-        <input id="lgP" class="finp" type="password"
-               placeholder="Enter password…"
+        <label class="flabel">Password (4 digits)</label>
+        <input id="lgP" class="finp pin-inp" type="password"
+               inputmode="numeric" pattern="[0-9]*"
+               maxlength="4" placeholder="••••"
                autocomplete="off"/>
       </div>
       <button class="btn btn-pri btn-full" style="padding:13px;font-size:15px" onclick="doLogin()">Sign In →</button>
@@ -613,7 +614,7 @@ input[type=number]{-moz-appearance:textfield}
         <div class="fgrp2"><label>Username</label><input id="um_user" placeholder="lowercase…" autocomplete="off" oninput="this.value=this.value.toLowerCase()"/></div>
       </div>
       <div class="frow2">
-        <div class="fgrp2"><label>Password</label><input id="um_pin" type="password" placeholder="Enter password…" autocomplete="new-password"/></div>
+        <div class="fgrp2"><label>Password (4 digits)</label><input id="um_pin" type="password" inputmode="numeric" maxlength="4" placeholder="••••" autocomplete="new-password" style="font-size:24px;letter-spacing:8px;text-align:center"/></div>
         <div class="fgrp2"><label>Role</label><select id="um_role">
           <option value="admin">Admin</option><option value="supervisor">Supervisor</option>
           <option value="staff" selected>Staff</option><option value="viewer">Viewer</option>
@@ -671,7 +672,7 @@ const SKUS=Object.keys(CAT);
 // ═══════════════════════════════════════════════════════════════
 // API URL — admin sets this before deploying
 // ═══════════════════════════════════════════════════════════════
-const API_URL = 'https://script.google.com/macros/s/AKfycbwtJ1jM-uAF4tv6Ozk7mvKIfwj2pmRLUvtVFDtRocuoUzn2VFpr4iIDkqrUpm8nI_u2/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbw5OMjF5WxaC5GNH0ts5BiU8PRKr-hVlfcT8KbIlYXbtc1M6czJ1973ks84Le1ASiVm/exec';
 
 // ═══════════════════════════════════════════════════════════════
 // DEVICE ID
@@ -770,25 +771,41 @@ function showSc(id) {
 // AUTH
 // ═══════════════════════════════════════════════════════════════
 function doLogin() {
-  var u=document.getElementById('lgU').value.trim();
-  var p=document.getElementById('lgP').value;
-  if (!u||!p){document.getElementById('lgErr').textContent='❌ Enter username and PIN';return;}
-  if (!API_URL||API_URL.indexOf('PASTE_YOUR')>=0){
-    document.getElementById('lgErr').textContent='❌ API URL not set — contact admin';return;
+  var u = document.getElementById('lgU').value.trim();
+  var p = document.getElementById('lgP').value.trim();
+  var err = document.getElementById('lgErr');
+
+  // Basic checks
+  if (!u) { err.textContent = '❌ Enter your username'; return; }
+  if (!p) { err.textContent = '❌ Enter your 4-digit password'; return; }
+  if (!/^[0-9]{4}$/.test(p)) { err.textContent = '❌ Password must be exactly 4 digits (e.g. 1234)'; return; }
+  if (!API_URL || API_URL.indexOf('PASTE_YOUR') >= 0) {
+    err.textContent = '❌ System not set up. Contact admin.'; return;
   }
-  document.getElementById('lgErr').textContent='⏳ Signing in…';
-  api({action:'login',u:u,pin:p})
-    .then(function(user){
-      me=user; document.getElementById('lgErr').textContent='';
-      api({action:'getItems'}).then(function(items){
-        items.forEach(function(it){extraItems[it.sku]=[it.desc,[[it.uom,it.price]]];});
-      }).catch(function(){});
-      if (me.role==='admin'||me.role==='supervisor') initAdmin();
+
+  err.textContent = '⏳ Signing in…';
+  err.style.color = 'var(--sub)';
+
+  api({ action: 'login', u: u, pin: p })
+    .then(function(user) {
+      err.textContent = '';
+      me = user;
+      // Load extra items added by staff
+      api({ action: 'getItems' })
+        .then(function(items) {
+          items.forEach(function(it) {
+            extraItems[it.sku] = [it.desc, [[it.uom, it.price]]];
+          });
+        })
+        .catch(function() {});
+      if (me.role === 'admin' || me.role === 'supervisor') initAdmin();
       else initStaff();
     })
-    .catch(function(e){
-      document.getElementById('lgErr').textContent='❌ '+e.message;
-      document.getElementById('lgErr').style.color='var(--red)';
+    .catch(function(e) {
+      err.textContent = '❌ ' + e.message;
+      err.style.color = 'var(--red)';
+      // Clear password field so user can try again
+      document.getElementById('lgP').value = '';
     });
 }
 
@@ -1464,7 +1481,8 @@ function saveUser(){
   var branch=document.getElementById('um_branch').value,eid=parseInt(document.getElementById('um_id').value)||0;
   if(!name||!user){toast('❌ Name and username required');return;}
   if(!eid&&!pin){toast('❌ PIN required');return;}
-  if(pin&&pin.length<1){toast('❌ Password cannot be empty');return;}
+  if(!eid&&!pin){toast('❌ Password required');return;}
+  if(pin&&!/^[0-9]{4}$/.test(pin)){toast('❌ Password must be 4 digits');return;}
   api({action:'saveUser',id:eid||undefined,name:name,u:user,pin:pin,role:role,branch:branch,by:me.name})
     .then(function(){closeM('userBg');toast('✅ User saved!');loadUsers();})
     .catch(function(e){toast('❌ '+e.message);});
