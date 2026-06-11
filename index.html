@@ -469,6 +469,7 @@ tr:hover td{background:#f8fafc}
           <input id="cDate" type="date" class="fsrch" onchange="loadCompiled()"/>
           <button class="btn btn-ghost btn-sm" onclick="loadCompiled()">↻</button>
           <button class="btn btn-grn btn-sm" onclick="exportCompiled()">⬇ Excel</button>
+          <span id="ncBadge" style="display:none;background:#fee2e2;color:#991b1b;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;white-space:nowrap"></span>
         </div>
       </div>
       <div id="compiledArea"></div>
@@ -1164,6 +1165,14 @@ function loadCompiled(){
     });
     document.getElementById('compiledArea').innerHTML=html;
     window._cSubs=subs; window._cAgg=agg; window._cDate=document.getElementById('cDate').value||'';
+    // Show not-counted count in the compiled area
+    var cntCounted=Object.keys(agg).reduce(function(acc,g){
+      Object.keys(agg[g]).forEach(function(s){if(!acc[s])acc[s]=1;}); return acc;
+    },{});
+    var nNotCounted=SKUS.filter(function(s){return!cntCounted[s];}).length;
+    var ncBadge=document.getElementById('ncBadge');
+    if(ncBadge){ncBadge.textContent=nNotCounted+' SKUs not counted';
+      ncBadge.style.display=nNotCounted>0?'inline-block':'none';}
   }).catch(function(e){document.getElementById('compiledArea').innerHTML='<div class="empty">Error: '+e.message+'</div>';});
 }
 
@@ -1187,11 +1196,12 @@ function exportCSV(){
 function exportCompiled(){
   if(!window._cAgg){toast('Load compiled first');return;}
   if(typeof XLSX==='undefined'){toast('❌ Excel library not loaded');return;}
-  var cat=fullCat();
+
+  var cat=fullCat();   // full catalog including added items
   var agg=window._cAgg;
   var dateStr=window._cDate||(document.getElementById('cDate').value||new Date().toISOString().split('T')[0]);
 
-  // ── 1. Build summary: sum all gondolas per SKU+UOM ────────────
+  // ── Build summary: sum all gondolas per SKU+UOM ───────────────
   var summary={};
   Object.keys(agg).forEach(function(gon){
     Object.keys(agg[gon]).forEach(function(sku){
@@ -1202,8 +1212,11 @@ function exportCompiled(){
     });
   });
 
-  // ── 2. Sheet 1 — SUMMARY (ItemCode / Description / UOM / PhysicalQty) ──
-  // One flat row per SKU+UOM, sorted by ItemCode
+  // Set of counted SKUs (uppercase for safe comparison)
+  var countedSet={};
+  Object.keys(summary).forEach(function(s){ countedSet[s.toUpperCase()]=1; });
+
+  // ── Sheet 1 — SUMMARY ────────────────────────────────────────
   var sumRows=[['ItemCode','Description','UOM','PhysicalQty']];
   Object.keys(summary).sort().forEach(function(sku){
     var name=(cat[sku]||['?'])[0];
@@ -1212,7 +1225,7 @@ function exportCompiled(){
     });
   });
 
-  // ── 3. Sheet 2 — DETAIL (per gondola breakdown) ──────────────
+  // ── Sheet 2 — DETAIL by Gondola ──────────────────────────────
   var detRows=[['Gondola','ItemCode','Description','UOM','PhysicalQty']];
   Object.keys(agg).sort().forEach(function(gon){
     Object.keys(agg[gon]).sort().forEach(function(sku){
@@ -1223,37 +1236,36 @@ function exportCompiled(){
     });
   });
 
-  // ── 4. Sheet 3 — NOT COUNTED (SKUs with zero physical count) ─
-  // All SKUs in master catalog + added items that were NOT counted at all
-  var countedSkus={};
-  Object.keys(summary).forEach(function(sku){ countedSkus[sku]=1; });
-
+  // ── Sheet 3 — NOT COUNTED ────────────────────────────────────
+  // Compare against SKUS (the 956-item master constant array)
+  // so added items are excluded (staff added them = they counted them)
   var notRows=[['ItemCode','Description','Available UOMs','Remark']];
-  // Walk through every SKU in the full catalog
-  var allSkuList=Object.keys(cat).sort();
-  allSkuList.forEach(function(sku){
-    if(!countedSkus[sku]){
-      var entry=cat[sku];
+  SKUS.forEach(function(sku){
+    if(!countedSet[sku.toUpperCase()]){
+      var entry=CAT[sku];
+      if(!entry) return;
       var name=entry[0];
-      var uomList=entry[1].map(function(v){return v[0];}).join(' / ');
+      var uomList=entry[1].map(function(v){ return v[0]; }).join(' / ');
       notRows.push([sku, name, uomList, 'Not Counted']);
     }
   });
 
-  // ── 5. Build workbook ────────────────────────────────────────
+  // If nothing is uncounted add a note row so the sheet is visible
+  if(notRows.length===1){
+    notRows.push(['—','All 956 SKUs have been counted','—','Complete']);
+  }
+
+  // ── Build workbook ────────────────────────────────────────────
   var wb=XLSX.utils.book_new();
 
-  // Sheet 1: Summary
   var ws1=XLSX.utils.aoa_to_sheet(sumRows);
   ws1['!cols']=[{wch:16},{wch:45},{wch:10},{wch:14}];
   XLSX.utils.book_append_sheet(wb,ws1,'Summary');
 
-  // Sheet 2: Detail by Gondola
   var ws2=XLSX.utils.aoa_to_sheet(detRows);
   ws2['!cols']=[{wch:28},{wch:16},{wch:45},{wch:10},{wch:14}];
-  XLSX.utils.book_append_sheet(wb,ws2,'Detail by Gondola');
+  XLSX.utils.book_append_sheet(wb,ws2,'Detail');
 
-  // Sheet 3: Not Counted
   var ws3=XLSX.utils.aoa_to_sheet(notRows);
   ws3['!cols']=[{wch:16},{wch:45},{wch:20},{wch:14}];
   XLSX.utils.book_append_sheet(wb,ws3,'Not Counted');
@@ -1261,8 +1273,8 @@ function exportCompiled(){
   XLSX.writeFile(wb,'StockCount_'+dateStr+'.xlsx');
 
   var nc=notRows.length-1;
-  var counted=sumRows.length-1;
-  toast('✅ Excel exported! '+counted+' SKUs counted, '+nc+' not counted.',4000);
+  var ct=sumRows.length-1;
+  toast('✅ Done! Counted: '+ct+' SKUs  |  Not counted: '+nc+' SKUs', 5000);
 }
 function dlCSV(rows,fn){
   var a=document.createElement('a');
