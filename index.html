@@ -354,7 +354,11 @@ input[type=number]{-moz-appearance:textfield}
       <div class="lerr" id="lgErr"></div>
     </div>
   </div>
-  <div style="margin-top:10px;font-size:9px;color:rgba(255,255,255,.2)" id="devLbl"></div>
+  <div style="margin-top:10px;display:flex;align-items:center;justify-content:center;gap:14px">
+    <span style="font-size:9px;color:rgba(255,255,255,.2)" id="devLbl"></span>
+    <span onclick="openSetup()" style="font-size:11px;color:rgba(255,255,255,.35);cursor:pointer;
+          text-decoration:underline;padding:4px 8px">⚙ Set API URL</span>
+  </div>
 </div>
 
 <!-- ══ STAFF SCREEN ═══════════════════════════════════════════════ -->
@@ -662,6 +666,44 @@ input[type=number]{-moz-appearance:textfield}
   </div>
 </div>
 
+<!-- ══ API URL SETUP MODAL ════════════════════════════════════════ -->
+<div id="setupModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);
+     z-index:200;align-items:center;justify-content:center;padding:20px">
+  <div style="background:#fff;border-radius:16px;width:100%;max-width:420px;overflow:hidden;
+              box-shadow:0 20px 60px rgba(0,0,0,.4)">
+    <div style="background:var(--pri);color:#fff;padding:18px 20px">
+      <div style="font-size:16px;font-weight:800">⚙ Configure API URL</div>
+      <div style="font-size:11px;color:#94a3b8;margin-top:3px">Admin only — set Google Apps Script URL</div>
+    </div>
+    <div style="padding:18px 20px">
+      <div style="font-size:12px;color:var(--sub);margin-bottom:10px;line-height:1.7">
+        Paste your Google Apps Script <strong>/exec</strong> URL below.<br>
+        Get it from: Apps Script → Deploy → Manage deployments
+      </div>
+      <input id="setupUrlInp"
+             style="width:100%;border:1.5px solid var(--bdr);border-radius:9px;
+                    padding:10px 12px;font-size:12px;font-family:monospace;
+                    color:var(--txt);outline:none;margin-bottom:8px"
+             placeholder="https://script.google.com/macros/s/AKfycb.../exec"
+             type="url"/>
+      <div id="setupMsg" style="font-size:12px;margin-bottom:10px;min-height:18px;
+                                 border-radius:7px;padding:6px 10px;display:none"></div>
+      <div style="display:flex;gap:8px">
+        <button onclick="testSetupUrl()"
+                style="flex:1;background:var(--acc);color:#fff;border:none;border-radius:9px;
+                       padding:10px;font-size:13px;font-weight:700;cursor:pointer">
+          🔗 Test Connection
+        </button>
+        <button onclick="closeSetup()"
+                style="background:var(--bg);color:var(--txt);border:1px solid var(--bdr);
+                       border-radius:9px;padding:10px 16px;font-size:13px;cursor:pointer">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toastEl"></div>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.19.1/umd/index.min.js"></script>
@@ -672,7 +714,16 @@ const SKUS=Object.keys(CAT);
 // ═══════════════════════════════════════════════════════════════
 // API URL — admin sets this before deploying
 // ═══════════════════════════════════════════════════════════════
-const API_URL = 'https://script.google.com/macros/s/AKfycbw5OMjF5WxaC5GNH0ts5BiU8PRKr-hVlfcT8KbIlYXbtc1M6czJ1973ks84Le1ASiVm/exec';
+// ══════════════════════════════════════════════════════════════
+// API URL — two ways to set:
+//   1. Tap ⚙ Set API URL on the login screen (saves to localStorage)
+//   2. OR edit this file: replace the placeholder below
+// ══════════════════════════════════════════════════════════════
+var _HARDCODED = 'https://script.google.com/macros/s/AKfycbxRqKicO7HxuSnK9kR6Dxb-I-QVxTr45dHku5XpTLTMyxRE-DcwSX5JIQ28SWFSBJeC/exec';
+var _SAVED     = localStorage.getItem('scs_api_url') || '';
+var API_URL    = (_SAVED.indexOf('script.google.com') > 0) ? _SAVED
+               : (_HARDCODED.indexOf('PASTE_YOUR') < 0)    ? _HARDCODED
+               : '';
 
 // ═══════════════════════════════════════════════════════════════
 // DEVICE ID
@@ -699,9 +750,13 @@ document.getElementById('lgDate').textContent =
   new Date().toLocaleDateString('en-MY',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 document.getElementById('devLbl').textContent = 'Device '+DID.substring(5,17)+'…';
 
-if (!API_URL || API_URL.indexOf('PASTE_YOUR')>=0) {
+if (!API_URL || API_URL.indexOf('PASTE_YOUR') >= 0 || !API_URL) {
   var wb = document.getElementById('urlWarnBanner');
   if (wb) wb.style.display = 'block';
+} else {
+  // Hide banner if URL is set
+  var wb2 = document.getElementById('urlWarnBanner');
+  if (wb2) wb2.style.display = 'none';
 }
 
 document.getElementById('lgU').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('lgP').focus();});
@@ -771,7 +826,7 @@ function showSc(id) {
 // AUTH
 // ═══════════════════════════════════════════════════════════════
 function doLogin() {
-  var u = document.getElementById('lgU').value.trim();
+  var u = document.getElementById('lgU').value.trim().toLowerCase();
   var p = document.getElementById('lgP').value.trim();
   var err = document.getElementById('lgErr');
 
@@ -1508,7 +1563,57 @@ function loadAudit(){
 function closeM(id){document.getElementById(id).classList.remove('on');}
 function toast(msg,d){d=d||2600;var t=document.getElementById('toastEl');t.textContent=msg;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('on');},d);}
 
-// PWA
+// ── API URL SETUP ────────────────────────────────────────────────
+function openSetup() {
+  var modal = document.getElementById('setupModal');
+  modal.style.display = 'flex';
+  document.getElementById('setupUrlInp').value = API_URL || '';
+  document.getElementById('setupMsg').style.display = 'none';
+}
+
+function closeSetup() {
+  document.getElementById('setupModal').style.display = 'none';
+}
+
+function testSetupUrl() {
+  var url = document.getElementById('setupUrlInp').value.trim();
+  if (!url) { showSetupMsg('err', '❌ Paste your URL first'); return; }
+  if (url.indexOf('script.google.com') < 0) {
+    showSetupMsg('err', '❌ URL must be from script.google.com'); return;
+  }
+  showSetupMsg('info', '⏳ Testing connection…');
+  fetch(url + '?action=ping', { method: 'GET' })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.ok) {
+        localStorage.setItem('scs_api_url', url);
+        API_URL = url;
+        // Hide the warning banner
+        var wb = document.getElementById('urlWarnBanner');
+        if (wb) wb.style.display = 'none';
+        showSetupMsg('ok', '✅ Connected! URL saved. You can now sign in.');
+        // Close modal after 1.5 sec
+        setTimeout(closeSetup, 1500);
+      } else {
+        showSetupMsg('err', '❌ Server error: ' + (d.error || 'unknown'));
+      }
+    })
+    .catch(function(e) {
+      showSetupMsg('err', '❌ Cannot connect. Check URL ends in /exec and access is set to Anyone.');
+    });
+}
+
+function showSetupMsg(type, msg) {
+  var el = document.getElementById('setupMsg');
+  el.style.display = 'block';
+  el.textContent = msg;
+  el.style.background = type === 'ok'   ? '#dcfce7' :
+                        type === 'err'  ? '#fee2e2' : '#fef3c7';
+  el.style.color      = type === 'ok'   ? '#15803d' :
+                        type === 'err'  ? '#991b1b' : '#78350f';
+}
+
+// ── PWA
 window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();});
 (function(){
   var isStandalone=window.navigator.standalone===true||window.matchMedia('(display-mode:standalone)').matches;
