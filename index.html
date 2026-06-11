@@ -117,11 +117,10 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,sans-serif;
 .drawer-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:80;align-items:flex-end;justify-content:center}
 .drawer-bg.on{display:flex}
 .drawer{background:var(--card);border-radius:18px 18px 0 0;width:100%;max-width:520px;
-        max-height:88vh;overflow-y:auto;animation:shUp .2s ease;
-        padding-bottom:env(keyboard-inset-height,0px)}
+        max-height:88vh;display:flex;flex-direction:column;animation:shUp .2s ease}
 @keyframes shUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
 .drag{width:40px;height:5px;background:#cbd5e1;border-radius:3px;margin:11px auto 0}
-.dbody{padding:13px 16px 20px}
+.dbody{padding:13px 16px 16px;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .dsku{font-size:10px;font-family:monospace;color:var(--sub)}
 .dname{font-size:16px;font-weight:700;line-height:1.3;margin:3px 0 11px}
 .blind{background:#fefce8;border:1px solid #fde047;border-radius:8px;
@@ -395,7 +394,9 @@ input[type=number]{-moz-appearance:textfield}
     <div class="tabpg on" id="stpg0">
       <div class="srch-row">
         <input class="srch" id="srchInp" placeholder="🔍 Search SKU or name…"
-               oninput="filterList()" autocomplete="off"/>
+               type="text" inputmode="text"
+               oninput="filterList()" autocomplete="off"
+               autocorrect="off" autocapitalize="off" spellcheck="false"/>
       </div>
       <div class="chips">
         <span class="chip on" onclick="setCF('all',this)">All</span>
@@ -517,7 +518,7 @@ input[type=number]{-moz-appearance:textfield}
 <!-- ══ COUNT DRAWER ═══════════════════════════════════════════════ -->
 <div class="drawer-bg" id="dBg" onclick="dBgClick(event)">
   <div class="drawer">
-    <div class="drag"></div>
+    <div class="drag" style="flex-shrink:0"></div>
     <div class="dbody">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px">
         <div style="flex:1;min-width:0;padding-right:10px">
@@ -550,8 +551,8 @@ input[type=number]{-moz-appearance:textfield}
         <div class="pb" onclick="qs(50)">50</div><div class="pb" onclick="qs(100)">100</div>
       </div>
     </div>
-    <!-- Sticky confirm button — always visible above keyboard -->
-    <div style="position:sticky;bottom:0;background:var(--card);padding:10px 16px 16px;border-top:1px solid var(--bdr)">
+    <!-- Confirm button — flex footer, never hidden by keyboard -->
+    <div style="flex-shrink:0;background:var(--card);padding:10px 16px max(16px,env(safe-area-inset-bottom));border-top:1px solid var(--bdr)">
       <button class="btn btn-pri btn-full" style="padding:13px;font-size:15px" onclick="confirmCount()">✓ Confirm Count</button>
     </div>
   </div>
@@ -701,6 +702,21 @@ if (!API_URL || API_URL.indexOf('PASTE_YOUR')>=0) {
 document.getElementById('lgU').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('lgP').focus();});
 document.getElementById('lgP').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
 document.getElementById('gonInp').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('srchInp').focus();});
+
+// ── scroll qty into view on keyboard ──────────────────────────
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', function() {
+    var active = document.activeElement;
+    if (active && active.id === 'qnum') {
+      setTimeout(function() { active.scrollIntoView({block:'center',behavior:'smooth'}); }, 100);
+    }
+  });
+}
+document.addEventListener('focusin', function(e) {
+  if (e.target && e.target.id === 'qnum') {
+    setTimeout(function() { e.target.scrollIntoView({block:'center',behavior:'smooth'}); }, 350);
+  }
+});
 
 // ═══════════════════════════════════════════════════════════════
 // API — pure GET, no headers, no CORS issues
