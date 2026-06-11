@@ -328,6 +328,14 @@ input[type=number]{-moz-appearance:textfield}
       <small id="lgDate"></small>
     </div>
     <div class="lbody">
+      <div id="urlWarnBanner" style="display:none;background:#fee2e2;border:1px solid #fca5a5;
+           border-radius:9px;padding:10px 12px;font-size:12px;color:#991b1b;
+           margin-bottom:13px;line-height:1.7">
+        ⚠️ <strong>API URL not configured.</strong><br>
+        Open <code>index.html</code> in a text editor, find<br>
+        <code>https://script.google.com/macros/s/AKfycbwnEVzlkBlmA1NcglCwtURyXqSZGvKIEUO1avympxkpwuIhx2eR3bbenJmgIPCJeICU/exec</code><br>
+        and replace it with your Google Apps Script <code>/exec</code> URL.
+      </div>
       <div class="fgrp">
         <label class="flabel">Username</label>
         <input id="lgU" class="finp" type="text" placeholder="Enter username…"
@@ -662,7 +670,7 @@ const SKUS=Object.keys(CAT);
 // ═══════════════════════════════════════════════════════════════
 // API URL — admin sets this before deploying
 // ═══════════════════════════════════════════════════════════════
-const API_URL = 'https://script.google.com/macros/s/AKfycbw4Uk2rrlCXijl8J3yB1VmClqSKTbJW8cvB5ZpVi8OcSrhwjYCMUsadpF6J3HbHNlrO/exec';
+const API_URL = 'PASTE_YOUR_APPS_SCRIPT_EXEC_URL_HERE';
 
 // ═══════════════════════════════════════════════════════════════
 // DEVICE ID
@@ -690,7 +698,8 @@ document.getElementById('lgDate').textContent =
 document.getElementById('devLbl').textContent = 'Device '+DID.substring(5,17)+'…';
 
 if (!API_URL || API_URL.indexOf('PASTE_YOUR')>=0) {
-  document.getElementById('lgErr').textContent = '⚠️ API URL not configured. Admin must update index.html.';
+  var wb = document.getElementById('urlWarnBanner');
+  if (wb) wb.style.display = 'block';
 }
 
 document.getElementById('lgU').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('lgP').focus();});
@@ -764,6 +773,9 @@ function doLogin() {
   var p=document.getElementById('lgP').value;
   if (!u||!p){document.getElementById('lgErr').textContent='❌ Enter username and PIN';return;}
   if (!/^[0-9]{4}$/.test(p)){document.getElementById('lgErr').textContent='❌ PIN must be 4 digits';return;}
+  if (!API_URL||API_URL.indexOf('PASTE_YOUR')>=0){
+    document.getElementById('lgErr').textContent='❌ API URL not set — contact admin';return;
+  }
   document.getElementById('lgErr').textContent='⏳ Signing in…';
   api({action:'login',u:u,pin:p})
     .then(function(user){
@@ -774,7 +786,10 @@ function doLogin() {
       if (me.role==='admin'||me.role==='supervisor') initAdmin();
       else initStaff();
     })
-    .catch(function(e){document.getElementById('lgErr').textContent='❌ '+e.message;});
+    .catch(function(e){
+      document.getElementById('lgErr').textContent='❌ '+e.message;
+      document.getElementById('lgErr').style.color='var(--red)';
+    });
 }
 
 function doLogout() {
