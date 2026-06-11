@@ -1202,11 +1202,6 @@ function loadCompiled(){
     var totalSkus=0; Object.values(agg).forEach(function(g){totalSkus+=Object.keys(g).length;});
     var cat=fullCat();
     // Build gondola status: submitted gondolas list
-    var submittedGondolas=Object.keys(agg).sort();
-    var gonTagsHtml=submittedGondolas.map(function(g){
-      return '<span style="display:inline-block;background:#dcfce7;color:#15803d;border-radius:6px;padding:3px 9px;font-size:11px;font-weight:600;margin:2px">✓ '+g+'</span>';
-    }).join('');
-
     var submittedGons=Object.keys(agg).sort();
     var gonTags=submittedGons.map(function(g){return '<span style="display:inline-block;background:#dcfce7;color:#15803d;border-radius:6px;padding:3px 9px;font-size:11px;font-weight:600;margin:2px">✓ '+g+'</span>';}).join('');
     var html='<div class="stat-row">'
@@ -1216,8 +1211,8 @@ function loadCompiled(){
       +'</div>'
       // Submitted gondolas panel
       +'<div style="background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:13px 15px;margin-bottom:12px">'
-      +'<div style="font-size:12px;font-weight:700;color:var(--pri);margin-bottom:8px">✅ Gondolas Submitted ('+submittedGondolas.length+')</div>'
-      +'<div style="line-height:1.8">'+gonTagsHtml+'</div>'
+      +'<div style="font-size:12px;font-weight:700;color:var(--pri);margin-bottom:8px">✅ Gondolas Submitted ('+submittedGons.length+')</div>'
+      +'<div style="line-height:1.8">'+gonTags+'</div>'
       +'</div>'
       // Not submitted check panel
       +'<div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:12px;padding:13px 15px;margin-bottom:12px" id="gonCheckPanel">'
