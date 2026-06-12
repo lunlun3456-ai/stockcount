@@ -701,7 +701,7 @@ function loadCatalog(cb){
 // ═══════════════════════════════════════════════════════════════
 // API URL — admin sets this before deploying
 // ═══════════════════════════════════════════════════════════════
-const API_URL = 'https://script.google.com/macros/s/AKfycbyUAo42cJrXOn_xy3Q2Z6fRhDkcLN4MeMH-QtHYFSVJihpapaa7NzOzZvc_-Ym9WtLF/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzCmdRcS1aR83bGqStAg81QX15SgJF8ndcsfW1hXYz1vB8fv10SjRGbAutfJYYo_n2g/exec';
 
 // ═══════════════════════════════════════════════════════════════
 // DEVICE ID
@@ -1179,7 +1179,7 @@ function loadHistory() {
       }).join('');
       return '<div class="hrow">'
         +'<div class="hrow-top"><div>'
-        +'<div class="hloc">📍 '+(LOC[s.loc]||s.loc)+' · '+s.gon+'</div>'
+        +'<div class="hloc">📍 '+(LOC[s.loc]||s.loc)+(s.gon?' · Gondola <b>'+s.gon+'</b>':'')+'</div>'
         +'<div class="hmeta">'+gmt8DateTimeStr(s.time)
         +(s.updated?' · Corrected '+gmt8DateTimeStr(s.updated):'')+'</div>'
         +'<div class="hmeta">'+s.items+' SKUs · '+s.uoms+' UOM entries</div></div>'
