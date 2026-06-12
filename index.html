@@ -508,7 +508,7 @@ input[type=number]{-moz-appearance:textfield}
         <button class="btn btn-ghost btn-sm" onclick="loadAudit()">↻</button>
       </div>
       <div class="card"><div class="tw" style="max-height:60vh;overflow-y:auto">
-        <table><thead><tr><th>Time</th><th>User</th><th>Action</th><th>Detail</th></tr></thead>
+        <table><thead><tr><th>Time</th><th>User</th><th>Role</th><th>Action</th><th>Detail</th></tr></thead>
         <tbody id="auditTb"></tbody></table>
       </div></div>
     </div>
@@ -714,7 +714,7 @@ function loadCatalog(cb){
 // ═══════════════════════════════════════════════════════════════
 // API URL — admin sets this before deploying
 // ═══════════════════════════════════════════════════════════════
-const API_URL = 'https://script.google.com/macros/s/AKfycbwzYZZSZr9T5g_12RaNUSw2tyE4XjI_r96Fh1DYXgNp_9Vpaf6IUFVkB0DzN8Bo9GTs/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxrSprCm5BmphdD4PSJ7bXIPWf9Et-db6gJKJmg6SjW3nrenElFURlaud1An1uyPsx8/exec';
 
 // ═══════════════════════════════════════════════════════════════
 // DEVICE ID
@@ -1617,6 +1617,7 @@ function loadAudit(){
     document.getElementById('auditTb').innerHTML=log.length?log.map(function(a){
       return '<tr><td style="font-size:11px;white-space:nowrap;color:var(--sub)">'+gmt8DateTimeStr(a.t)+'</td>'
         +'<td style="font-weight:600">'+a.u+'</td>'
+        +'<td style="font-size:10px;color:var(--sub)">'+a.role+'</td>'
         +'<td style="font-size:11px;font-weight:600">'+a.a+'</td>'
         +'<td style="font-size:11px;color:var(--sub)">'+a.d+'</td></tr>';
     }).join(''):'<tr><td colspan="4" class="empty" style="padding:22px">No entries</td></tr>';
