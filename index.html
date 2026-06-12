@@ -701,7 +701,7 @@ function loadCatalog(cb){
 // ═══════════════════════════════════════════════════════════════
 // API URL — admin sets this before deploying
 // ═══════════════════════════════════════════════════════════════
-const API_URL = 'https://script.google.com/macros/s/AKfycbyjUfYIUxBP2kUBlnwfqwmB2c-yOIKcGg7usGX93v23I3TOWi35IT-JwkU2GgLnJ-5W/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzBzfCioCPuFIMQqlDCbvBziVWvBWJXbda5LU4SprnnDqMufLqoqDXR7xIpxtNtuShF/exec';
 
 // ═══════════════════════════════════════════════════════════════
 // DEVICE ID
@@ -721,11 +721,41 @@ var cfFilter='all', camStream=null, zxR=null, camActive=false;
 var adminSubs=[], adminUsers=[], extraItems={};
 var corrSubId=null, corrCounts=null;
 
+// ── GMT+8 time helpers (Malaysia / Kuala Lumpur) ─────────────────
+function gmt8Now() {
+  // Returns a Date object adjusted to GMT+8
+  var now = new Date();
+  return new Date(now.getTime() + (8 * 60 * 60 * 1000 - now.getTimezoneOffset() * 60 * 1000));
+}
+function gmt8DateStr(d) {
+  // Returns YYYY-MM-DD in GMT+8
+  var t = d ? new Date(new Date(d).getTime() + (8*60*60*1000 - new Date(d).getTimezoneOffset()*60*1000)) : gmt8Now();
+  var y=t.getUTCFullYear(), m=t.getUTCMonth()+1, dd=t.getUTCDate();
+  return y+'-'+(m<10?'0':'')+m+'-'+(dd<10?'0':'')+dd;
+}
+function gmt8TimeStr(d) {
+  // Returns HH:MM in GMT+8 (24h, no timezone label)
+  var t = d ? new Date(new Date(d).getTime() + (8*60*60*1000 - new Date(d).getTimezoneOffset()*60*1000)) : gmt8Now();
+  var h=t.getUTCHours(), m=t.getUTCMinutes();
+  return (h<10?'0':'')+h+':'+(m<10?'0':'')+m;
+}
+function gmt8DateTimeStr(d) {
+  // Returns YYYY-MM-DD HH:MM in GMT+8 (no timezone label)
+  return gmt8DateStr(d)+' '+gmt8TimeStr(d);
+}
+function gmt8LongDate(d) {
+  // Returns e.g. "Monday, 12 June 2026" in GMT+8
+  var t = d ? new Date(new Date(d).getTime() + (8*60*60*1000 - new Date(d).getTimezoneOffset()*60*1000)) : gmt8Now();
+  var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var months=['January','February','March','April','May','June',
+              'July','August','September','October','November','December'];
+  return days[t.getUTCDay()]+', '+t.getUTCDate()+' '+months[t.getUTCMonth()]+' '+t.getUTCFullYear();
+}
 // ═══════════════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════════════
 document.getElementById('lgDate').textContent =
-  new Date().toLocaleDateString('en-MY',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  gmt8LongDate();
 document.getElementById('devLbl').textContent = 'Device '+DID.substring(5,17)+'…';
 
 if (!API_URL || API_URL.indexOf('PASTE_YOUR')>=0) {
@@ -854,7 +884,7 @@ function initStaff() {
   showSc('scStaff');
   document.getElementById('tbName').textContent=me.name;
   document.getElementById('tbMeta').textContent=
-    new Date().toLocaleDateString('en-MY',{day:'numeric',month:'short',year:'numeric'})+' · '+(LOC[me.branch]||me.branch);
+    (function(){var t=gmt8Now();var ms=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return t.getUTCDate()+' '+ms[t.getUTCMonth()]+' '+t.getUTCFullYear();})()+' · '+(LOC[me.branch]||me.branch);
   if (me.branch==='selling'||me.branch==='store') document.getElementById('locSel').value=me.branch;
   myCounts={};
   updateBar(); filterList();
@@ -1130,11 +1160,11 @@ function dBgClick(e){if(e.target===document.getElementById('dBg'))closeDrawer();
 // HISTORY & CORRECTION
 // ═══════════════════════════════════════════════════════════════
 function loadHistory() {
-  var d=document.getElementById('histDate').value||new Date().toISOString().split('T')[0];
+  var d=document.getElementById('histDate').value||gmt8DateStr();
   document.getElementById('histList').innerHTML='<div class="loading"><div class="spinner"></div>Loading…</div>';
   api({action:'getMySubs',sid:String(me.id),date:d}).then(function(subs){
     if(!subs.length){document.getElementById('histList').innerHTML='<div class="empty">No submissions</div>';return;}
-    var today=new Date().toISOString().split('T')[0];
+    var today=gmt8DateStr();
     var cat=fullCat();
     document.getElementById('histList').innerHTML=subs.map(function(s){
       var canEdit=s.date===today;
@@ -1146,8 +1176,8 @@ function loadHistory() {
       return '<div class="hrow">'
         +'<div class="hrow-top"><div>'
         +'<div class="hloc">📍 '+(LOC[s.loc]||s.loc)+' · '+s.gon+'</div>'
-        +'<div class="hmeta">'+String(s.time).substring(0,16).replace('T',' ')
-        +(s.updated?' · Corrected '+String(s.updated).substring(0,16).replace('T',' '):'')+'</div>'
+        +'<div class="hmeta">'+gmt8DateTimeStr(s.time)
+        +(s.updated?' · Corrected '+gmt8DateTimeStr(s.updated):'')+'</div>'
         +'<div class="hmeta">'+s.items+' SKUs · '+s.uoms+' UOM entries</div></div>'
         +'<span class="hbadge '+(s.status==='corrected'?'hb-cor':'hb-sub')+'">'+(s.status==='corrected'?'✏️ Corrected':'✅ Submitted')+'</span>'
         +'</div>'
@@ -1160,13 +1190,13 @@ function loadHistory() {
 }
 
 function openCorr(subId) {
-  api({action:'getMySubs',sid:String(me.id),date:new Date().toISOString().split('T')[0]})
+  api({action:'getMySubs',sid:String(me.id),date:gmt8DateStr()})
     .then(function(subs){
       var s=subs.find(function(x){return x.id===subId;}); if(!s){toast('Not found');return;}
       corrSubId=subId;
       corrCounts=JSON.parse(JSON.stringify(s.counts||{}));
       var cat=fullCat();
-      document.getElementById('corrMeta').textContent=(LOC[s.loc]||s.loc)+' · '+s.gon+' · '+String(s.time).substring(0,16).replace('T',' ');
+      document.getElementById('corrMeta').textContent=(LOC[s.loc]||s.loc)+' · '+s.gon+' · '+gmt8DateTimeStr(s.time);
       document.getElementById('corrBody').innerHTML=Object.entries(corrCounts).map(function(en){
         var sku=en[0],uoms=en[1],name=(cat[sku]||['?'])[0];
         return '<div style="border:1px solid var(--bdr);border-radius:9px;padding:10px 12px;margin-bottom:9px">'
@@ -1253,7 +1283,7 @@ function camOK(){var c=document.getElementById('camRes').value.trim().toUpperCas
 // ═══════════════════════════════════════════════════════════════
 function initAdmin(){
   showSc('scAdmin');
-  var td=new Date().toISOString().split('T')[0];
+  var td=gmt8DateStr();
   document.getElementById('fDate').value=td;
   document.getElementById('cDate').value=td;
   loadAdminSubs(); loadUsers();
@@ -1284,7 +1314,7 @@ function loadAdminSubs(){
           var badge=s.status==='corrected'?'<span style="font-size:10px;background:#fef3c7;color:#92400e;border-radius:4px;padding:1px 6px;margin-left:5px;font-weight:700">✏️</span>':'';
           return '<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-bottom:1px solid var(--bdr)">'
             +'<div><div style="font-size:13px;font-weight:600">👤 '+s.staff+badge+'</div>'
-            +'<div style="font-size:11px;color:var(--sub)">'+String(s.time).substring(0,16).replace('T',' ')+' · '+s.items+' SKUs</div></div>'
+            +'<div style="font-size:11px;color:var(--sub)">'+gmt8DateTimeStr(s.time)+' · '+s.items+' SKUs</div></div>'
             +'<button class="btn btn-ghost btn-sm" onclick="viewSub('+s.id+')">Detail</button></div>';
         }).join('')+'</div>';
     }).join('');
@@ -1296,7 +1326,7 @@ function viewSub(id){
   var cat=fullCat();
   document.getElementById('subDTitle').textContent=s.staff+' · '+(LOC[s.loc]||s.loc)+' · '+s.gon;
   document.getElementById('subDBody').innerHTML=
-    '<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:8px 11px;font-size:12px;color:#0c4a6e;margin-bottom:11px">'+String(s.time).substring(0,19).replace('T',' ')+(s.updated?' · Corrected '+String(s.updated).substring(0,16).replace('T',' '):'')+'</div>'
+    '<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:8px 11px;font-size:12px;color:#0c4a6e;margin-bottom:11px">'+gmt8DateTimeStr(s.time)+(s.updated?' · Corrected '+gmt8DateTimeStr(s.updated):'')+'</div>'
     +Object.entries(s.counts||{}).map(function(en){
       var name=(cat[en[0]]||['?'])[0];
       var tags=Object.entries(en[1]).map(function(eu){return '<span class="tag t-uom" style="margin:2px">'+eu[0]+': '+eu[1]+'</span>';}).join('');
@@ -1378,12 +1408,12 @@ function exportCSV(){
       var name=(cat[en[0]]||['?'])[0];
       Object.entries(en[1]).forEach(function(eu){
         rows.push([s.id,s.date,s.staff,LOC[s.loc]||s.loc,s.gon,
-          String(s.time).substring(0,19).replace('T',' '),
+          gmt8DateTimeStr(s.time),
           en[0],'"'+name.replace(/"/g,'""')+'"',eu[0],eu[1],s.status]);
       });
     });
   });
-  dlCSV(rows,'StockCount_'+new Date().toLocaleDateString('en-MY').replace(/\//g,'-')+'.csv');
+  dlCSV(rows,'StockCount_'+gmt8DateStr()+'.csv');
   toast('✅ CSV exported!');
 }
 function checkMissingGondolas(){
@@ -1422,7 +1452,7 @@ function exportCompiled(){
 
   var cat=fullCat();   // full catalog including added items
   var agg=window._cAgg;
-  var dateStr=window._cDate||(document.getElementById('cDate').value||new Date().toISOString().split('T')[0]);
+  var dateStr=window._cDate||(document.getElementById('cDate').value||gmt8DateStr());
 
   // ── Build summary: sum all gondolas per SKU+UOM ───────────────
   var summary={};
@@ -1552,7 +1582,7 @@ function loadAudit(){
   document.getElementById('auditTb').innerHTML='<tr><td colspan="4"><div class="loading"><div class="spinner"></div>Loading…</div></td></tr>';
   api({action:'getAudit'}).then(function(log){
     document.getElementById('auditTb').innerHTML=log.length?log.map(function(a){
-      return '<tr><td style="font-size:11px;white-space:nowrap;color:var(--sub)">'+String(a.t).substring(0,19).replace('T',' ')+'</td>'
+      return '<tr><td style="font-size:11px;white-space:nowrap;color:var(--sub)">'+gmt8DateTimeStr(a.t)+'</td>'
         +'<td style="font-weight:600">'+a.u+'</td>'
         +'<td style="font-size:11px;font-weight:600">'+a.a+'</td>'
         +'<td style="font-size:11px;color:var(--sub)">'+a.d+'</td></tr>';
