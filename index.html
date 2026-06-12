@@ -590,7 +590,20 @@ input[type=number]{-moz-appearance:textfield}
       <button class="btn-ico" onclick="closeM('corrBg')" style="font-size:20px">✕</button>
     </div>
     <div class="mbody">
-      <div class="warn-box">Edit counts below then tap Save.</div>
+      <div class="warn-box">Edit gondola, layer and counts below then tap Save.</div>
+      <!-- Gondola + Layer edit -->
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <div style="flex:2">
+          <label style="font-size:11px;font-weight:700;color:var(--sub);display:block;margin-bottom:4px">GONDOLA</label>
+          <input id="corrGon" class="finp" style="font-size:18px;font-weight:800;letter-spacing:1px;padding:10px 12px"
+                 placeholder="e.g. A1" autocomplete="off"/>
+        </div>
+        <div style="flex:1">
+          <label style="font-size:11px;font-weight:700;color:var(--sub);display:block;margin-bottom:4px">LAYER</label>
+          <input id="corrLayer" class="finp" style="font-size:18px;font-weight:800;padding:10px 12px"
+                 placeholder="e.g. 2" autocomplete="off"/>
+        </div>
+      </div>
       <div id="corrBody"></div>
     </div>
     <div class="mfoot">
@@ -701,7 +714,7 @@ function loadCatalog(cb){
 // ═══════════════════════════════════════════════════════════════
 // API URL — admin sets this before deploying
 // ═══════════════════════════════════════════════════════════════
-const API_URL = 'https://script.google.com/macros/s/AKfycbzCmdRcS1aR83bGqStAg81QX15SgJF8ndcsfW1hXYz1vB8fv10SjRGbAutfJYYo_n2g/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwzYZZSZr9T5g_12RaNUSw2tyE4XjI_r96Fh1DYXgNp_9Vpaf6IUFVkB0DzN8Bo9GTs/exec';
 
 // ═══════════════════════════════════════════════════════════════
 // DEVICE ID
@@ -1200,6 +1213,12 @@ function openCorr(subId) {
       corrSubId=subId;
       corrCounts=JSON.parse(JSON.stringify(s.counts||{}));
       var cat=fullCat();
+      // Parse gondola-layer: "A1-2" → gon="A1", layer="2"
+      var gonParts=s.gon?s.gon.split('-'):['',''];
+      var gonVal=gonParts[0]||'';
+      var layerVal=gonParts.slice(1).join('-')||''; // handle multi-dash like "A1-2"
+      document.getElementById('corrGon').value=gonVal;
+      document.getElementById('corrLayer').value=layerVal;
       document.getElementById('corrMeta').textContent=(LOC[s.loc]||s.loc)+' · '+s.gon+' · '+gmt8DateTimeStr(s.time);
       document.getElementById('corrBody').innerHTML=Object.entries(corrCounts).map(function(en){
         var sku=en[0],uoms=en[1],name=(cat[sku]||['?'])[0];
@@ -1227,9 +1246,19 @@ function adjCorr(sku,uom,d) {
 }
 
 function saveCorr() {
-  if(!corrSubId||!corrCounts)return;
-  api({action:'correctSub',id:corrSubId,sid:String(me.id),role:me.role,staff:me.name,counts:corrCounts})
-    .then(function(){closeM('corrBg');toast('✅ Correction saved!');loadHistory();})
+  if(!corrSubId||!corrCounts) return;
+  var g=document.getElementById('corrGon').value.trim();
+  var ly=document.getElementById('corrLayer').value.trim();
+  if(!g){toast('⚠️ Enter gondola number');document.getElementById('corrGon').focus();return;}
+  if(!ly){toast('⚠️ Enter layer number');document.getElementById('corrLayer').focus();return;}
+  var gonLabel=g+'-'+ly;
+  api({action:'correctSub',id:corrSubId,sid:String(me.id),role:me.role,
+       staff:me.name,counts:corrCounts,gon:gonLabel})
+    .then(function(){
+      closeM('corrBg');
+      toast('✅ Correction saved! Gondola: '+gonLabel);
+      loadHistory();
+    })
     .catch(function(e){toast('❌ '+e.message);});
 }
 
