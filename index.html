@@ -123,8 +123,8 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,sans-serif;
 .dbody{padding:13px 16px 16px;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .dsku{font-size:10px;font-family:monospace;color:var(--sub)}
 .dname{font-size:16px;font-weight:700;line-height:1.3;margin:3px 0 11px}
-.blind{background:#fefce8;border:1px solid #fde047;border-radius:8px;
-       padding:8px 11px;font-size:12px;color:#713f12;margin-bottom:11px;line-height:1.6}
+.blind{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;
+       padding:8px 11px;font-size:11px;margin-bottom:10px;text-align:center}
 .uoms{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:13px}
 .uopt{border:2.5px solid var(--bdr);border-radius:10px;padding:12px 16px;
       cursor:pointer;background:var(--card);text-align:center;min-width:90px;
@@ -527,7 +527,7 @@ input[type=number]{-moz-appearance:textfield}
         </div>
         <button class="btn-ico" onclick="closeDrawer()" style="font-size:20px">✕</button>
       </div>
-      <div class="blind">🙈 Count what you physically see — system qty is hidden.</div>
+      <div class="blind" id="dSysQty">🙈 Count what you see on the shelf.</div>
       <div style="font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px">Select Unit of Measure</div>
       <div class="uoms" id="dUoms"></div>
       <div id="dPrevWrap" style="display:none" class="prev-wrap">
@@ -1068,6 +1068,7 @@ function openDrawer(sku) {
   curUom=defaultUom;
   curQty=prevCounts[curUom]||0;
   document.getElementById('qnum').value=curQty;
+  showSysQty(sku, curUom);
   var prev=myCounts[sku], pw=document.getElementById('dPrevWrap');
   if(prev&&Object.keys(prev).length){
     pw.style.display='block';
@@ -1079,7 +1080,38 @@ function openDrawer(sku) {
   } else pw.style.display='none';
   document.getElementById('dBg').classList.add('on');
 }
-function selU(uom){curUom=uom;document.querySelectorAll('.uopt').forEach(function(b){b.classList.toggle('on',b.dataset.uom===uom);});curQty=(myCounts[curSku]||{})[uom]||0;document.getElementById('qnum').value=curQty;}
+function selU(uom){
+  curUom=uom;
+  document.querySelectorAll('.uopt').forEach(function(b){b.classList.toggle('on',b.dataset.uom===uom);});
+  curQty=(myCounts[curSku]||{})[uom]||0;
+  document.getElementById('qnum').value=curQty;
+  showSysQty(curSku, uom);
+}
+function showSysQty(sku, uom){
+  var el=document.getElementById('dSysQty'); if(!el) return;
+  // Only admin and supervisor can see system qty
+  var isAdmin=(me&&(me.role==='admin'||me.role==='supervisor'));
+  if(!isAdmin){
+    el.innerHTML='<span style="font-size:10px;color:#94a3b8">🙈 Count what you see on the shelf.</span>';
+    return;
+  }
+  var cat=fullCat(), e=cat[sku]; if(!e) return;
+  var vars=e[1], i;
+  for(i=0;i<vars.length;i++){
+    if(vars[i][0]===uom){
+      var sq=vars[i][2];
+      if(sq!==null&&sq!==undefined){
+        el.innerHTML='<span style="font-size:11px;color:#64748b">System Qty: </span>'
+          +'<span style="font-size:13px;font-weight:800;color:#1b2e4b">'+sq+'</span>'
+          +'<span style="font-size:10px;color:#94a3b8;margin-left:4px">'+uom+'</span>'
+          +' <span style="font-size:9px;color:#94a3b8">(admin only)</span>';
+      } else {
+        el.innerHTML='<span style="font-size:10px;color:#94a3b8">🙈 Count what you see on the shelf.</span>';
+      }
+      return;
+    }
+  }
+}
 function qa(d){curQty=Math.max(0,curQty+d);document.getElementById('qnum').value=curQty;}
 function qs(v){curQty=v;document.getElementById('qnum').value=curQty;}
 function qManual(v){var n=parseInt(v);curQty=isNaN(n)||n<0?0:n;}
@@ -1408,11 +1440,20 @@ function exportCompiled(){
   Object.keys(summary).forEach(function(s){ countedSet[s.toUpperCase()]=1; });
 
   // ── Sheet 1 — SUMMARY ────────────────────────────────────────
-  var sumRows=[['ItemCode','Description','UOM','PhysicalQty']];
+  var sumRows=[['ItemCode','Description','UOM','SystemQty','PhysicalQty','Variance']];
   Object.keys(summary).sort().forEach(function(sku){
     var name=(cat[sku]||['?'])[0];
     Object.keys(summary[sku]).sort().forEach(function(uom){
-      sumRows.push([sku, name, uom, summary[sku][uom]]);
+      var sysq2='';
+    if(cat[sku]&&cat[sku][1]){
+      var v_=cat[sku][1], vi_;
+      for(vi_=0;vi_<v_.length;vi_++){
+        if(v_[vi_][0]===uom){sysq2=(v_[vi_][2]!==null&&v_[vi_][2]!==undefined)?v_[vi_][2]:'';break;}
+      }
+    }
+    var phyQty=summary[sku][uom];
+    var variance_=(sysq2!=='')?( phyQty - Number(sysq2) ):'';
+    sumRows.push([sku, name, uom, sysq2, phyQty, variance_]);
     });
   });
 
@@ -1429,7 +1470,7 @@ function exportCompiled(){
 
   // ── Sheet 3 — NOT COUNTED ────────────────────────────────────
   // One row per SKU per UOM — each UOM is its own individual row
-  var notRows=[['ItemCode','Description','UOM','Remark']];
+  var notRows=[['ItemCode','Description','UOM','SystemQty','Remark']];
   SKUS.forEach(function(sku){
     if(!countedSet[sku.toUpperCase()]){
       var entry=CAT[sku];
@@ -1437,14 +1478,15 @@ function exportCompiled(){
       var name=entry[0];
       var vars=entry[1];
       vars.forEach(function(v){
-        notRows.push([sku, name, v[0], 'Not Counted']);
+        var sysq=(v[2]!==null&&v[2]!==undefined)?v[2]:'';
+        notRows.push([sku, name, v[0], sysq, 'Not Counted']);
       });
     }
   });
 
   // If nothing is uncounted add a note row so the sheet is visible
   if(notRows.length===1){
-    notRows.push(['—','All 956 SKUs have been counted','—','Complete']);
+    notRows.push(['—','All '+SKUS.length+' SKUs have been counted','—','Complete']);
   }
 
   // ── Build workbook ────────────────────────────────────────────
