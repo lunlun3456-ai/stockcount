@@ -126,8 +126,9 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,sans-serif;
 .blind{background:#fefce8;border:1px solid #fde047;border-radius:8px;
        padding:8px 11px;font-size:12px;color:#713f12;margin-bottom:11px;line-height:1.6}
 .uoms{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:13px}
-.uopt{border:2.5px solid var(--bdr);border-radius:9px;padding:9px 13px;
-      cursor:pointer;background:var(--card);text-align:center;min-width:80px}
+.uopt{border:2.5px solid var(--bdr);border-radius:10px;padding:12px 16px;
+      cursor:pointer;background:var(--card);text-align:center;min-width:90px;
+      flex:1;max-width:160px}
 .uopt:active{transform:scale(.95)}
 .uopt.on{border-color:var(--acc);background:#eff6ff}
 .unm{font-size:14px;font-weight:800}.upr{font-size:10px;color:var(--sub);margin-top:1px}
@@ -678,9 +679,12 @@ function loadCatalog(cb){
     // Fall back to embedded PRODUCT_ROWS
     toast('ℹ️ Loading local catalog ('+PRODUCT_ROWS.length+' rows)…',2000);
     PRODUCT_ROWS.forEach(function(r){
-      var sku=r[0],name=r[1],uom=r[2],price=r[3];
+      var sku=String(r[0]||'').trim(), name=r[1], uom=String(r[2]||'').trim(), price=r[3];
+      if(!sku||!uom) return;
       if(!CAT[sku]) CAT[sku]=[name,[]];
-      CAT[sku][1].push([uom,price]);
+      // avoid duplicate UOMs
+      var has=CAT[sku][1].some(function(x){return x[0]===uom;});
+      if(!has) CAT[sku][1].push([uom,price]);
     });
     SKUS=Object.keys(CAT).sort();
     _catLoaded=true;
@@ -901,7 +905,12 @@ function filterList() {
     var chk=allDone?'✓':cu.length?'~':'';
     var cTag=cu.length
       ?'<div class="pcnt" style="color:'+(allDone?'var(--grn)':'var(--org)')+'">'+cu.map(function(u){return u+':'+co[u];}).join(' ')+'</div>'
-      :'<div class="puom">'+vars.map(function(v){return v[0];}).join(' / ')+(!(sku in CAT)?' <span class="tag t-new">NEW</span>':'')+'</div>';
+      :'<div class="puom">'+vars.map(function(v){
+          var u=v[0], done=co&&(u in co);
+          return '<span style="'+(done?'color:var(--grn);text-decoration:line-through':'color:var(--org);font-weight:700')+'">'+u+'</span>';
+        }).join(' <span style="color:var(--sub)">·</span> ')
+        +(!(sku in CAT)?' <span class="tag t-new">NEW</span>':'')
+        +'</div>';
     return '<div class="prow '+cls+'" onclick="openDrawer(\''+sku+'\')">'
       +'<div class="pchk">'+chk+'</div>'
       +'<div class="pinfo"><div class="psku">'+sku+'</div><div class="pname">'+name+'</div>'+cTag+'</div></div>';
@@ -1038,14 +1047,18 @@ function openDrawer(sku) {
   vars.forEach(function(v){if(firstUncounted===null&&!(v[0] in prevCounts))firstUncounted=v[0];});
   var defaultUom=firstUncounted||vars[0][0];
   document.getElementById('dUoms').innerHTML=vars.map(function(v){
-    var uom=v[0],price=v[1],prev=prevCounts[uom];
+    var uom=String(v[0]||''), price=v[1];
+    if(!uom) return '';
+    var prev=prevCounts[uom];
     var isDone=prev!==undefined;
     var isActive=uom===defaultUom;
+    var priceStr=(!isNaN(parseFloat(price))&&parseFloat(price)>0)?'RM '+parseFloat(price).toFixed(2):'';
     return '<div class="uopt'+(isActive?' on':'')+'" onclick="selU(\''+uom+'\')" data-uom="'+uom+'"'
-      +(isDone?'':' style="border-color:#f97316;background:#fff7ed"')+'>'  
-      +'<div class="unm">'+uom+'</div><div class="upr">RM '+Number(price).toFixed(2)+'</div>'
+      +(isDone?'':' style="border-color:#f97316;background:#fff7ed"')+'>'
+      +'<div class="unm" style="font-size:15px;font-weight:800">'+uom+'</div>'
+      +(priceStr?'<div class="upr">'+priceStr+'</div>':'')
       +(isDone?'<div style="font-size:10px;color:var(--grn);font-weight:700;margin-top:2px">✓ '+prev+'</div>'
-             :'<div style="font-size:10px;color:#f97316;font-weight:700;margin-top:2px">not counted</div>')
+             :'<div style="font-size:10px;color:#f97316;font-weight:700;margin-top:2px">⬤ not yet</div>')
       +'</div>';
   }).join('');
   curUom=defaultUom;
