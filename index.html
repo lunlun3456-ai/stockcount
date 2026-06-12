@@ -701,7 +701,7 @@ function loadCatalog(cb){
 // ═══════════════════════════════════════════════════════════════
 // API URL — admin sets this before deploying
 // ═══════════════════════════════════════════════════════════════
-const API_URL = 'https://script.google.com/macros/s/AKfycbzBzfCioCPuFIMQqlDCbvBziVWvBWJXbda5LU4SprnnDqMufLqoqDXR7xIpxtNtuShF/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbyUAo42cJrXOn_xy3Q2Z6fRhDkcLN4MeMH-QtHYFSVJihpapaa7NzOzZvc_-Ym9WtLF/exec';
 
 // ═══════════════════════════════════════════════════════════════
 // DEVICE ID
@@ -721,31 +721,27 @@ var cfFilter='all', camStream=null, zxR=null, camActive=false;
 var adminSubs=[], adminUsers=[], extraItems={};
 var corrSubId=null, corrCounts=null;
 
-// ── GMT+8 time helpers (Malaysia / Kuala Lumpur) ─────────────────
-function gmt8Now() {
-  // Returns a Date object adjusted to GMT+8
-  var now = new Date();
-  return new Date(now.getTime() + (8 * 60 * 60 * 1000 - now.getTimezoneOffset() * 60 * 1000));
+// ── GMT+8 helpers (Malaysia/Kuala Lumpur, UTC+8) ─────────────────
+// Rule: UTC ms + 8h ms → fake-UTC Date → read with getUTC* methods
+// Never use getTimezoneOffset() — it depends on the device locale
+var _8H = 8 * 60 * 60 * 1000;
+function _t8(d) {
+  // Convert any input to a Date shifted to GMT+8
+  var utcMs = d ? new Date(d).getTime() : Date.now();
+  return new Date(utcMs + _8H);
 }
-function gmt8DateStr(d) {
-  // Returns YYYY-MM-DD in GMT+8
-  var t = d ? new Date(new Date(d).getTime() + (8*60*60*1000 - new Date(d).getTimezoneOffset()*60*1000)) : gmt8Now();
-  var y=t.getUTCFullYear(), m=t.getUTCMonth()+1, dd=t.getUTCDate();
-  return y+'-'+(m<10?'0':'')+m+'-'+(dd<10?'0':'')+dd;
+function gmt8Now()           { return _t8(); }
+function gmt8DateStr(d)      {
+  var t=_t8(d), m=t.getUTCMonth()+1, dd=t.getUTCDate();
+  return t.getUTCFullYear()+'-'+(m<10?'0':'')+m+'-'+(dd<10?'0':'')+dd;
 }
-function gmt8TimeStr(d) {
-  // Returns HH:MM in GMT+8 (24h, no timezone label)
-  var t = d ? new Date(new Date(d).getTime() + (8*60*60*1000 - new Date(d).getTimezoneOffset()*60*1000)) : gmt8Now();
-  var h=t.getUTCHours(), m=t.getUTCMinutes();
+function gmt8TimeStr(d)      {
+  var t=_t8(d), h=t.getUTCHours(), m=t.getUTCMinutes();
   return (h<10?'0':'')+h+':'+(m<10?'0':'')+m;
 }
-function gmt8DateTimeStr(d) {
-  // Returns YYYY-MM-DD HH:MM in GMT+8 (no timezone label)
-  return gmt8DateStr(d)+' '+gmt8TimeStr(d);
-}
-function gmt8LongDate(d) {
-  // Returns e.g. "Monday, 12 June 2026" in GMT+8
-  var t = d ? new Date(new Date(d).getTime() + (8*60*60*1000 - new Date(d).getTimezoneOffset()*60*1000)) : gmt8Now();
+function gmt8DateTimeStr(d)  { return gmt8DateStr(d)+' '+gmt8TimeStr(d); }
+function gmt8LongDate(d)     {
+  var t=_t8(d);
   var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   var months=['January','February','March','April','May','June',
               'July','August','September','October','November','December'];
