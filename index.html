@@ -722,13 +722,21 @@ var adminSubs=[], adminUsers=[], extraItems={};
 var corrSubId=null, corrCounts=null;
 
 // ── GMT+8 helpers (Malaysia/Kuala Lumpur, UTC+8) ─────────────────
-// Rule: UTC ms + 8h ms → fake-UTC Date → read with getUTC* methods
-// Never use getTimezoneOffset() — it depends on the device locale
+// GS stores times as plain "YYYY-MM-DD HH:MM:SS" strings — already GMT+8.
+// ISO strings ending in Z (e.g. "2026-06-12T06:35:00Z") are UTC → need +8h.
+// Plain strings WITHOUT Z/T are treated as already GMT+8 — display as-is.
 var _8H = 8 * 60 * 60 * 1000;
 function _t8(d) {
-  // Convert any input to a Date shifted to GMT+8
-  var utcMs = d ? new Date(d).getTime() : Date.now();
-  return new Date(utcMs + _8H);
+  if (!d) return new Date(Date.now() + _8H);  // current time → UTC+8h
+  var s = String(d);
+  // If it has Z or ends with offset (+HH:MM), it's a true UTC ISO string → add 8h
+  if (s.indexOf('Z') >= 0 || s.indexOf('+') >= 0 || s.indexOf('T') >= 0) {
+    return new Date(new Date(s).getTime() + _8H);
+  }
+  // Otherwise it's already a GMT+8 plain string from GS — parse as UTC to avoid
+  // browser local-time interpretation, then read directly (no extra offset)
+  // "2026-06-12 14:35:22" → treat as "2026-06-12T14:35:22Z" so getUTC* gives correct values
+  return new Date(s.replace(' ', 'T') + 'Z');
 }
 function gmt8Now()           { return _t8(); }
 function gmt8DateStr(d)      {
