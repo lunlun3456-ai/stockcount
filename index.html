@@ -1340,7 +1340,7 @@ function loadAdminSubs(){
     if(!subs.length){document.getElementById('subList').innerHTML='<div class="empty">No submissions for this date/location</div>';return;}
     var byG={};
     subs.forEach(function(s){var k=(LOC[s.loc]||s.loc)+' · '+s.gon;if(!byG[k])byG[k]=[];byG[k].push(s);});
-    document.getElementById('subList').innerHTML=Object.keys(byG).sort().map(function(key){
+    document.getElementById('subList').innerHTML=Object.keys(byG).sort(natSort).map(function(key){
       return '<div class="card" style="padding:0;overflow:hidden;margin-bottom:10px">'
         +'<div style="background:var(--pri);color:#fff;padding:8px 13px;font-size:13px;font-weight:700">📍 '+key+'</div>'
         +byG[key].map(function(s){
@@ -1388,7 +1388,7 @@ function loadCompiled(){
     // Build gondola status: submitted gondolas list
     // Group submitted gondola-layers by gondola number (strip layer suffix)
     var gonLayerMap={};  // { gonOnly: [fullKey, fullKey, ...] }
-    Object.keys(agg).sort().forEach(function(k){
+    Object.keys(agg).sort(natSort).forEach(function(k){
       // k = "🏪 Selling Floor · 1-2" → extract gonLayer part after last ' · '
       var parts=k.split(' · ');
       var gonLayer=parts[parts.length-1]; // e.g. "1-2"
@@ -1399,9 +1399,9 @@ function loadCompiled(){
       if(!gonLayerMap[mapKey]) gonLayerMap[mapKey]=[];
       gonLayerMap[mapKey].push(gonLayer);
     });
-    var uniqueGons=Object.keys(gonLayerMap).sort();
+    var uniqueGons=Object.keys(gonLayerMap).sort(natSort);
     var gonTags=uniqueGons.map(function(g){
-      var layers=gonLayerMap[g];
+      var layers=gonLayerMap[g].slice().sort(natSort);
       var layerBadges=layers.map(function(l){
         return '<span style="background:#bbf7d0;color:#15803d;border-radius:4px;padding:1px 5px;font-size:10px;margin-left:3px">'+l+'</span>';
       }).join('');
@@ -1430,7 +1430,7 @@ function loadCompiled(){
       +'</div>'
       +'<div id="missingGonResult" style="margin-top:8px"></div>'
       +'</div>';
-    Object.keys(agg).sort().forEach(function(key){
+    Object.keys(agg).sort(natSort).forEach(function(key){
       var skuData=agg[key];
       var rows=Object.keys(skuData).sort().map(function(sku){
         var name=(cat[sku]||['?'])[0];
@@ -1561,8 +1561,8 @@ function exportCompiled(){
 
   // ── Sheet 2 — DETAIL by Gondola ──────────────────────────────
   var detRows=[['Gondola','ItemCode','Description','UOM','PhysicalQty']];
-  Object.keys(agg).sort().forEach(function(gon){
-    Object.keys(agg[gon]).sort().forEach(function(sku){
+  Object.keys(agg).sort(natSort).forEach(function(gon){
+    Object.keys(agg[gon]).sort(natSort).forEach(function(sku){
       var name=(cat[sku]||['?'])[0];
       Object.keys(agg[gon][sku]).sort().forEach(function(uom){
         detRows.push([gon,sku,name,uom,agg[gon][sku][uom]]);
