@@ -1401,9 +1401,9 @@ function loadCompiled(){
       // Not submitted check panel
       +'<div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:12px;padding:13px 15px;margin-bottom:12px" id="gonCheckPanel">'
       +'<div style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:6px">🔍 Check Missing Gondolas</div>'
-      +'<div style="font-size:11px;color:#78350f;margin-bottom:8px">Enter expected gondola/shelf numbers (comma-separated) to see which ones are missing:</div>'
+      +'<div style="font-size:11px;color:#78350f;margin-bottom:8px">Enter gondola numbers only (e.g. 1, 2, A1, B2) — all layers checked per gondola:</div>'
       +'<div style="display:flex;gap:7px">'
-      +'<input id="expectedGon" placeholder="e.g. A1, A2, B1, B2, C1" style="flex:1;border:1.5px solid #fcd34d;border-radius:8px;padding:8px 11px;font-size:13px;outline:none;background:#fff"/>'
+      +'<input id="expectedGon" placeholder="e.g. 1, 2, 3, A1, B2" style="flex:1;border:1.5px solid #fcd34d;border-radius:8px;padding:8px 11px;font-size:13px;outline:none;background:#fff"/>'
       +'<button onclick="checkMissingGondolas()" style="background:#d97706;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">Check</button>'
       +'</div>'
       +'<div id="missingGonResult" style="margin-top:8px"></div>'
@@ -1452,26 +1452,43 @@ function exportCSV(){
 function checkMissingGondolas(){
   var val=document.getElementById('expectedGon').value;
   if(!val.trim()){document.getElementById('missingGonResult').innerHTML='';return;}
+  // Admin types gondola numbers only e.g. "1, 2, A1, B2"
+  // Submissions are stored as "1-1","1-2","A1-1" (gondola-layer)
+  // We strip the layer suffix and check by GONDOLA only
   var expected=val.split(',').map(function(s){return s.trim().toUpperCase();}).filter(Boolean);
-  // Build set of submitted gondola short names (strip location prefix for comparison)
   var agg=window._cAgg||{};
-  var submittedKeys=Object.keys(agg).map(function(k){
-    // key is like "🏪 Selling Floor · A1" — extract the gondola part after ' · '
+
+  // Build map: gondola -> [all submitted gondola-layer keys for that gondola]
+  var submittedByGon={};
+  Object.keys(agg).forEach(function(k){
+    // k is like "🏪 Selling Floor · 1-2" — get the part after last ' · '
     var parts=k.split(' · ');
-    return parts[parts.length-1].toUpperCase();
+    var gonLayer=parts[parts.length-1].toUpperCase(); // e.g. "1-2"
+    // Strip layer: everything before the last '-'
+    var dashIdx=gonLayer.lastIndexOf('-');
+    var gonOnly=dashIdx>=0?gonLayer.substring(0,dashIdx):gonLayer; // e.g. "1"
+    if(!submittedByGon[gonOnly]) submittedByGon[gonOnly]=[];
+    submittedByGon[gonOnly].push(gonLayer);
   });
-  var missing=expected.filter(function(g){return submittedKeys.indexOf(g)<0;});
-  var found=expected.filter(function(g){return submittedKeys.indexOf(g)>=0;});
+
+  var missing=expected.filter(function(g){return !submittedByGon[g];});
+  var found=expected.filter(function(g){return !!submittedByGon[g];});
+
   var html='';
   if(missing.length){
-    html+='<div style="margin-bottom:6px"><span style="font-size:11px;font-weight:700;color:#dc2626">❌ Not submitted ('+missing.length+'):</span> '
-      +missing.map(function(g){return '<span style="display:inline-block;background:#fee2e2;color:#991b1b;border-radius:5px;padding:2px 8px;font-size:11px;font-weight:700;margin:2px">'+g+'</span>';}).join('')
-      +'</div>';
+    html+='<div style="margin-bottom:6px">'      +'<span style="font-size:11px;font-weight:700;color:#dc2626">❌ Not submitted ('+missing.length+'):</span> '
+      +missing.map(function(g){
+        return '<span style="display:inline-block;background:#fee2e2;color:#991b1b;border-radius:5px;padding:2px 8px;font-size:11px;font-weight:700;margin:2px">'+g+'</span>';
+      }).join('')+'</div>';
   }
   if(found.length){
-    html+='<div><span style="font-size:11px;font-weight:700;color:#15803d">✓ Submitted ('+found.length+'):</span> '
-      +found.map(function(g){return '<span style="display:inline-block;background:#dcfce7;color:#15803d;border-radius:5px;padding:2px 8px;font-size:11px;font-weight:700;margin:2px">'+g+'</span>';}).join('')
-      +'</div>';
+    html+='<div>'      +'<span style="font-size:11px;font-weight:700;color:#15803d">✓ Submitted ('+found.length+'):</span> '
+      +found.map(function(g){
+        // Show which layers were done for this gondola
+        var layers=submittedByGon[g].join(', ');
+        return '<span style="display:inline-block;background:#dcfce7;color:#15803d;border-radius:5px;padding:2px 8px;font-size:11px;font-weight:700;margin:2px">'
+          +g+' <span style="font-weight:400;font-size:10px">('+layers+')</span></span>';
+      }).join('')+'</div>';
   }
   if(!missing.length&&expected.length){
     html='<div style="color:#15803d;font-size:12px;font-weight:700">✅ All expected gondolas have been submitted!</div>';
