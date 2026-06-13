@@ -1386,8 +1386,30 @@ function loadCompiled(){
     var totalSkus=0; Object.values(agg).forEach(function(g){totalSkus+=Object.keys(g).length;});
     var cat=fullCat();
     // Build gondola status: submitted gondolas list
-    var submittedGons=Object.keys(agg).sort();
-    var gonTags=submittedGons.map(function(g){return '<span style="display:inline-block;background:#dcfce7;color:#15803d;border-radius:6px;padding:3px 9px;font-size:11px;font-weight:600;margin:2px">✓ '+g+'</span>';}).join('');
+    // Group submitted gondola-layers by gondola number (strip layer suffix)
+    var gonLayerMap={};  // { gonOnly: [fullKey, fullKey, ...] }
+    Object.keys(agg).sort().forEach(function(k){
+      // k = "🏪 Selling Floor · 1-2" → extract gonLayer part after last ' · '
+      var parts=k.split(' · ');
+      var gonLayer=parts[parts.length-1]; // e.g. "1-2"
+      var loc=parts.slice(0,parts.length-1).join(' · '); // e.g. "🏪 Selling Floor"
+      var dashIdx=gonLayer.lastIndexOf('-');
+      var gonOnly=dashIdx>=0?gonLayer.substring(0,dashIdx):gonLayer; // e.g. "1"
+      var mapKey=loc+' · '+gonOnly;
+      if(!gonLayerMap[mapKey]) gonLayerMap[mapKey]=[];
+      gonLayerMap[mapKey].push(gonLayer);
+    });
+    var uniqueGons=Object.keys(gonLayerMap).sort();
+    var gonTags=uniqueGons.map(function(g){
+      var layers=gonLayerMap[g];
+      var layerBadges=layers.map(function(l){
+        return '<span style="background:#bbf7d0;color:#15803d;border-radius:4px;padding:1px 5px;font-size:10px;margin-left:3px">'+l+'</span>';
+      }).join('');
+      // Show gondola name (strip location prefix)
+      var gonName=g.split(' · ').pop();
+      return '<span style="display:inline-flex;align-items:center;background:#dcfce7;color:#15803d;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:700;margin:3px;flex-wrap:wrap;gap:2px">'        +'📍 '+gonName+layerBadges+'</span>';
+    }).join('');
+    var submittedGons=uniqueGons; // for count badge
     var html='<div class="stat-row">'
       +'<div class="stat"><div class="si" style="background:#dbeafe">📦</div><div><div class="sn">'+totalSkus+'</div><div class="sl">SKUs</div></div></div>'
       +'<div class="stat"><div class="si" style="background:#fef3c7">📍</div><div><div class="sn">'+submittedGons.length+'</div><div class="sl">Gondolas Submitted</div></div></div>'
