@@ -486,8 +486,13 @@ input[type=number]{-moz-appearance:textfield}
         <div class="filters">
           <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
             <input id="cDateFrom" type="date" class="fsrch" onchange="loadCompiled()" title="From date"/>
-            <span style="font-size:11px;color:var(--sub)">to</span>
+            <span style="font-size:11px;color:var(--sub)">–</span>
             <input id="cDateTo" type="date" class="fsrch" onchange="loadCompiled()" title="To date"/>
+            <select id="cLoc" class="fsrch" onchange="loadCompiled()" style="font-size:12px">
+              <option value="">All Locations</option>
+              <option value="selling">🏪 Selling Floor</option>
+              <option value="store">🏭 Store</option>
+            </select>
             <button class="btn btn-ghost btn-sm" onclick="loadCompiled()">↻</button>
           </div>
           <button class="btn btn-grn btn-sm" onclick="exportCompiled()">⬇ Excel</button>
@@ -1364,6 +1369,7 @@ function initAdmin(){
   document.getElementById('fDate').value=td;
   document.getElementById('cDateFrom').value=td;
   document.getElementById('cDateTo').value=td;
+  if(document.getElementById('cLoc')) document.getElementById('cLoc').value='';
   loadAdminSubs(); loadUsers();
 }
 
@@ -1414,15 +1420,24 @@ function viewSub(id){
 }
 
 function loadCompiled(){
-  document.getElementById('compiledArea').innerHTML='<div class="loading"><div class="spinner"></div>Compiling…</div>';
   var p={action:'getSubs'};
   var dFrom=document.getElementById('cDateFrom').value;
   var dTo=document.getElementById('cDateTo').value;
+  var loc=document.getElementById('cLoc')?document.getElementById('cLoc').value:'';
   if(dFrom) p.dateFrom=dFrom;
   if(dTo)   p.dateTo=dTo;
-  // legacy single-date fallback removed
+  if(loc)   p.loc=loc;
+  // Show what range is loading
+  var rangeLabel=dFrom?(dFrom===(dTo||dFrom)?dFrom:dFrom+' → '+dTo):'All dates';
+  document.getElementById('compiledArea').innerHTML=
+    '<div class="loading"><div class="spinner"></div>Loading '+rangeLabel+'…</div>';
   api(p).then(function(subs){
-    if(!subs.length){document.getElementById('compiledArea').innerHTML='<div class="empty">No data</div>';return;}
+    if(!subs.length){
+      var rangeMsg=dFrom?(dFrom===(dTo||dFrom)?dFrom:dFrom+' to '+dTo):'All dates';
+      document.getElementById('compiledArea').innerHTML=
+        '<div class="empty">No submissions found for '+rangeMsg+'<br><span style="font-size:11px;color:var(--sub)">Check the date range and try again</span></div>';
+      return;
+    }
     var agg={};
     subs.forEach(function(s){
       var key=(LOC[s.loc]||s.loc)+' · '+s.gon;
