@@ -484,8 +484,12 @@ input[type=number]{-moz-appearance:textfield}
       <div class="page-hdr">
         <span class="page-title">Compiled by Gondola</span>
         <div class="filters">
-          <input id="cDate" type="date" class="fsrch" onchange="loadCompiled()"/>
-          <button class="btn btn-ghost btn-sm" onclick="loadCompiled()">↻</button>
+          <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+            <input id="cDateFrom" type="date" class="fsrch" onchange="loadCompiled()" title="From date"/>
+            <span style="font-size:11px;color:var(--sub)">to</span>
+            <input id="cDateTo" type="date" class="fsrch" onchange="loadCompiled()" title="To date"/>
+            <button class="btn btn-ghost btn-sm" onclick="loadCompiled()">↻</button>
+          </div>
           <button class="btn btn-grn btn-sm" onclick="exportCompiled()">⬇ Excel</button>
           <span id="ncBadge" style="display:none;background:#fee2e2;color:#991b1b;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;white-space:nowrap"></span>
         </div>
@@ -816,16 +820,43 @@ document.addEventListener('focusin', function(e) {
 // ═══════════════════════════════════════════════════════════════
 function api(p) {
   setSS('busy');
-  if (!API_URL||API_URL.indexOf('PASTE_YOUR')>=0) { setSS('err'); return Promise.reject(new Error('API URL not set.')); }
+  if (!API_URL||API_URL.indexOf('PASTE_YOUR')>=0) {
+    setSS('err');
+    return Promise.reject(new Error('API URL not configured. Tap ⚙ Set API URL on the login screen.'));
+  }
   var qs=Object.keys(p).map(function(k){
     var v=p[k]; if(v===null||v===undefined)return null;
     if(typeof v==='object') v=JSON.stringify(v);
     return encodeURIComponent(k)+'='+encodeURIComponent(String(v));
   }).filter(Boolean).join('&');
   return fetch(API_URL+'?'+qs,{method:'GET'})
-    .then(function(r){return r.json();})
-    .then(function(d){setSS('ok');if(!d.ok)throw new Error(d.error||'Server error');return d.data;})
-    .catch(function(e){setSS('err');throw e;});
+    .then(function(r){
+      var ct=r.headers.get('content-type')||'';
+      if(ct.indexOf('json')<0){
+        // Server returned HTML (error page) instead of JSON
+        return r.text().then(function(txt){
+          if(txt.indexOf('Authorization')<0&&txt.indexOf('script.google')<0){
+            throw new Error('Server returned an error page. Please redeploy the Apps Script as a new deployment and update the URL.');
+          }
+          throw new Error('Apps Script requires re-authorisation. Open the deployment URL directly in your browser to re-authorise.');
+        });
+      }
+      return r.json();
+    })
+    .then(function(d){
+      setSS('ok');
+      if(!d.ok) throw new Error(d.error||'Server error');
+      return d.data;
+    })
+    .catch(function(e){
+      setSS('err');
+      // Make the error message human-readable
+      var msg=e.message||String(e);
+      if(msg.indexOf('DOCTYPE')>=0||msg.indexOf('not valid JSON')>=0){
+        msg='Server returned an HTML page instead of data. Most likely cause: the Apps Script deployment is outdated or the URL is wrong. Please create a New Deployment in Apps Script and update the URL.';
+      }
+      throw new Error(msg);
+    });
 }
 
 // Submit counts in batches of 8 SKUs each (keeps URL short)
@@ -1331,7 +1362,8 @@ function initAdmin(){
   showSc('scAdmin');
   var td=gmt8DateStr();
   document.getElementById('fDate').value=td;
-  document.getElementById('cDate').value=td;
+  document.getElementById('cDateFrom').value=td;
+  document.getElementById('cDateTo').value=td;
   loadAdminSubs(); loadUsers();
 }
 
@@ -1384,7 +1416,11 @@ function viewSub(id){
 function loadCompiled(){
   document.getElementById('compiledArea').innerHTML='<div class="loading"><div class="spinner"></div>Compiling…</div>';
   var p={action:'getSubs'};
-  var d=document.getElementById('cDate').value; if(d)p.date=d;
+  var dFrom=document.getElementById('cDateFrom').value;
+  var dTo=document.getElementById('cDateTo').value;
+  if(dFrom) p.dateFrom=dFrom;
+  if(dTo)   p.dateTo=dTo;
+  // legacy single-date fallback removed
   api(p).then(function(subs){
     if(!subs.length){document.getElementById('compiledArea').innerHTML='<div class="empty">No data</div>';return;}
     var agg={};
@@ -1455,7 +1491,7 @@ function loadCompiled(){
         +'<div class="tw" style="max-height:260px;overflow-y:auto"><table><thead><tr><th>SKU</th><th>Description</th><th>Count</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>';
     });
     document.getElementById('compiledArea').innerHTML=html;
-    window._cSubs=subs; window._cAgg=agg; window._cDate=document.getElementById('cDate').value||'';
+    window._cSubs=subs; window._cAgg=agg; window._cDate=document.getElementById('cDateFrom').value||'';
     // Show not-counted count in the compiled area
     var cntCounted=Object.keys(agg).reduce(function(acc,g){
       Object.keys(agg[g]).forEach(function(s){if(!acc[s])acc[s]=1;}); return acc;
@@ -1537,7 +1573,9 @@ function exportCompiled(){
 
   var cat=fullCat();   // full catalog including added items
   var agg=window._cAgg;
-  var dateStr=window._cDate||(document.getElementById('cDate').value||gmt8DateStr());
+  var dF=document.getElementById('cDateFrom').value||gmt8DateStr();
+  var dT=document.getElementById('cDateTo').value||gmt8DateStr();
+  var dateStr=dF===dT?dF:(dF+'_to_'+dT);
 
   // ── Build summary: sum all gondolas per SKU+UOM ───────────────
   var summary={};
